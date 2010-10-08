@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta name="Description" content="CouchDB, NoSQL" />
+<meta name="Keywords" content="CouchDB, NoSQL" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Distribution" content="Global" />
+<meta name="Author" content="Tamás Benke - tombenke@gmail.com" />
+<meta name="Robots" content="index,follow" />
+
+<link rel="stylesheet" href="images/Refresh.css" type="text/css" />
+
+<title>Web-es alkalmazások fejlesztése couchDB-vel és CouchApp-pal</title>
+
+
+</head>
+
+<body>
+<!-- wrap starts here -->
+<div id="wrap">
+
+		<!--header -->
+		<div id="header">
+
+			<h1 id="logo-text">Couch<span class="gray">Me</span></h1>
+			<h2 id="slogan">Web-es alkalmazások fejlesztése CouchDB-vel</h2>
+
+			<!--form class="search" method="post" action="#">
+				<p>
+	  			<input class="textbox" type="text" name="search_query" value="" />
+	 			<input class="button" type="submit" name="Submit" value="Search" />
+				</p>
+			</form-->
+
+		</div>
+
+		<!-- menu -->
+		<div  id="menu">
+			<ul>
+				<li id="current"><a href="index.html">Címlap</a></li>
+				<li><a href="downloads.html">Letöltések</a></li>
+				<li><a href="resources.html">Linkek</a></li>
+			</ul>
+		</div>
+
+		<!-- content-wrap starts here -->
+		<div id="content-wrap">
+
+			<div id="sidebar">
+
+				<h1>Tartalom</h1>
+				<div class="left-box">
+					<ul class="sidemenu">
+						<li><a href="index.html">Címlap</a></li>
+						<li><a href="intro.html">Bevezetés</a></li>
+						<li><a href="install.html">Installálás</a></li>
+						<li><a href="dataUpload.html">Adatfeltöltés</a></li>
+					</ul>
+				</div>
+
+				<h1>Egyéb</h1>
+				<div class="left-box">
+					<ul class="sidemenu">
+						<li><a href="downloads.html">Letöltések</a></li>
+						<li><a href="resources.html">Linkek</a></li>
+					</ul>
+				</div>
+
+				<!--h1>Wise Words</h1>
+				<div class="left-box">
+					<p>&quot;To be concious that you are ignorant of the
+					facts is a great step to knowledge&quot; </p>
+
+					<p class="align-right">- Benjamin Disraeli</p>
+				</div>
+
+				<h1>Support Styleshout</h1>
+				<div class="left-box">
+					<p>If you are interested in supporting my work and would like to contribute, you are
+					welcome to make a small donation through the
+					<a href="http://www.styleshout.com/">donate link</a> on my website - it will
+					be a great help and will surely be appreciated.</p>
+				</div-->
+
+
+			</div>
+
+			<div id="main">
+
+				<a name="TemplateInfo"></a>
+<h1>Hasznos linkek</h1>
+
+<h2>Bevezetés</h2>
+
+<ul>
+<li><a href="http://couchdb.apache.org/">The CouchDB Project Page</a></li>
+<li><a href="http://wiki.apache.org/couchdb/">The CouchDB Wiki</a></li>
+<li><a href="http://wiki.apache.org/couchdb/TitleIndex">Wiki title Index</a></li>
+<li><a href="http://wiki.apache.org/couchdb/CouchIn15Minutes">CouchIn15Minutes</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Frequently_asked_questions?action=show&amp;redirect=FrequentlyAskedQuestions">Frequently Asked Questions</a></li>
+<li><a href="http://wiki.apache.org/couchdb/FrontPage">Couchdb<em>Wiki</em>FrontPage</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Getting%20Help">Getting Help</a></li>
+<li><a href="http://wiki.apache.org/couchdb/How-To_Guides">How-To_Guides</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Reference">CouchDB Reference</a></li>
+<li><a href="http://wiki.apache.org/couchdb/URI_templates">URI_templates</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Related_Projects?action=show&amp;redirect=RelatedProjects">Related_Projects</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Technical%20Overview">Technical Overview</a></li>
+<li><a href="http://planet.couchdb.org/">Planet CouchDB</a></li>
+<li><a href="http://hosting.couch.io/">CouchOne (formerly Couchio)</a></li>
+</ul>
+
+<h2>Programozás</h2>
+
+<h3>HTTP APIs</h3>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/HTTP_REST_API?action=show&amp;redirect=HttpRestApi">HTTP<em>REST</em>API</a></li>
+<li><a href="http://wiki.apache.org/couchdb/HTTP_database_API?action=show&amp;redirect=HttpDatabaseApi">HTTP<em>database</em>API</a></li>
+<li><a href="http://wiki.apache.org/couchdb/HTTP_Document_API?action=show&amp;redirect=HttpDocumentApi">HTTP<em>Document</em>API</a></li>
+<li><a href="http://wiki.apache.org/couchdb/HTTP_view_API?action=show&amp;redirect=HttpViewApi">HTTP<em>view</em>API</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Complete_HTTP_API_Reference">Complete<em>HTTP</em>API_Reference</a></li>
+<li><a href="http://wiki.apache.org/couchdb/API_Cheatsheet?action=show&amp;redirect=ApiCheatSheet">API_Cheatsheet</a></li>
+<li><a href="http://wiki.apache.org/couchdb/HTTP_status_list">HTTP<em>status</em>list</a></li>
+</ul>
+
+<h3>Dokumentum kezelés</h3>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/Document_Update_Handlers">Document<em>Update</em>Handlers</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Document_Update_Validation">Document<em>Update</em>Validation</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Document_revisions">Document_revisions</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Regenerating_views_on_update?action=show&amp;redirect=RegeneratingViewsOnUpdate">Update views on document save</a></li>
+<li><a href="http://wiki.apache.org/couchdb/MaxDocumentSize">MaxDocumentSize</a></li>
+</ul>
+
+<h3>Lekérdezés (Views)</h3>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/Introduction_to_CouchDB_views">Introduction to CouchDB Views</a></li>
+<li><a href="http://wiki.apache.org/couchdb/CommonJS_Modules">CommonJS_Modules</a></li>
+<li><a href="http://wiki.apache.org/couchdb/View_collation">View_collation</a></li>
+<li><a href="http://wiki.apache.org/couchdb/View_server">View_server</a></li>
+<li><a href="http://wiki.apache.org/couchdb/View_Snippets">View_Snippets</a></li>
+<li><a href="http://wiki.apache.org/couchdb/EnableErlangViews">EnableErlangViews</a></li>
+<li><a href="http://69.164.211.38:5984/power/_design/reports/index.html">How to use CouchDB views with JQuery using Gridiron</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Using_Views">Using_Views</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Views_for_SQL_Jockeys">Views<em>for</em>SQL_Jockeys</a></li>
+</ul>
+
+<h3>Tartalom transzformáció, és sablonok (Show and List)</h3>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/Formatting_with_Show_and_List">Formatting with Show and List</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Generating%20HTML%20from%20Javascript%20shows%20and%20lists">Generating HTML from Javascript shows and lists</a></li>
+<li><a href="http://wiki.apache.org/couchdb/How_to_page_through_results">How<em>to</em>page<em>through</em>results</a></li>
+<li><a href="http://wiki.apache.org/couchdb/How_to_change_the_front_page">How<em>to</em>change<em>the</em>front_page</a></li>
+</ul>
+
+<h3>Adat modellezés (Data modeling)</h3>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/ApplicationSchema">A simple example of a CouchDB application schema.</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Built-In_Reduce_Functions">Built-In<em>Reduce</em>Functions</a></li>
+<li><a href="http://wiki.apache.org/couchdb/How_to_store_hierarchical_data">How<em>to</em>store<em>hierarchical</em>data</a></li>
+<li><a href="http://guide.couchdb.org/draft/recipes.html#Ordering%20Lists">How to store ordered lists</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Coding_Standards">Coding_Standards</a></li>
+<li>Tagging
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/How_to_implement_tagging">How<em>to</em>implement_tagging</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Tags_inside_documents">Tags<em>inside</em>documents</a></li>
+</ul></li>
+<li><a href="http://wiki.apache.org/couchdb/HackingFuton">HackingFuton </a></li>
+</ul>
+
+<h2>Programozási eszközök, könyvtárak</h2>
+
+<h3>CouchApp</h3>
+
+<ul>
+<li><a href="http://couchapp.org/page/index">CouchApp</a></li>
+</ul>
+
+<h3>Könyvtárak</h3>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/Getting_started_with_Java?action=show&amp;redirect=GettingStartedWithJava">Getting<em>started</em>with_Java</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Getting_started_with_Erlang?action=show&amp;redirect=GettingStartedWithErlang">Getting<em>started</em>with_Erlang</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Getting_started_with_JavaScript?action=show&amp;redirect=GettingStartedWithJavaScript">Getting<em>started</em>with_JavaScript</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Getting_started_with_Python?action=show&amp;redirect=GettingStartedWithPython">Getting<em>started</em>with_Python</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Getting_started_with_PHP?action=show&amp;redirect=GettingStartedWithPhp">Getting<em>started</em>with_PHP</a></li>
+</ul>
+
+<h3>Egyebek</h3>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/Full_text_search">Full-text Indexing and Searching</a></li>
+<li><a href="http://wiki.apache.org/couchdb/ExternalProcesses">ExternalProcesses</a></li>
+</ul>
+
+<h2>Biztonság</h2>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/Security_Features_Overview">Security Features Overview</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Setting_up_an_Admin_account">Setting<em>up</em>an<em>Admin</em>account</a></li>
+<li><a href="http://wiki.apache.org/couchdb/How_to_add_client-side_security">How<em>to</em>add<em>client-side</em>security</a></li>
+</ul>
+
+<h2>Rendszer adminisztráció</h2>
+
+<h3>Installálás</h3>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/Installation">Installation of CouchDB and Dependencies</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Verify_and_Test_Your_Installation">Verify<em>and</em>Test<em>Your</em>Installation</a></li>
+</ul>
+
+<h3>Konfigurálás</h3>
+
+<ul>
+<li><a href="">Configurationfile_couch.ini</a></li>
+</ul>
+
+<h3>Proxy-ing, Security, URL Rewriting</h3>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/Apache_As_a_Reverse_Proxy">Apache<em>As</em>a<em>Reverse</em>Proxy</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Nginx_As_a_Reverse_Proxy">Nginx<em>As</em>a<em>Reverse</em>Proxy</a></li>
+<li><a href="http://wiki.apache.org/couchdb/How_to_enable_SSL">How<em>to</em>enable_SSL</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Rewriting_urls">Rewriting_urls</a></li>
+</ul>
+
+<h3>Adat file-ok, Backup/Restore</h3>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/How_to_make_filesystem_backups?action=show&amp;redirect=FilesystemBackups">How<em>to</em>make<em>filesystem</em>backups</a></li>
+<li><a href="http://wiki.apache.org/couchdb/How%20to%20import%20your%20SQL%20dump%20to%20CouchDB">How to import your SQL dump to CouchDB</a></li>
+</ul>
+
+<h3>Adatbázis replikáció</h3>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/Replication">Replication</a></li>
+<li><a href="http://wiki.apache.org/couchdb/How_to_replicate_a_database">How<em>to</em>replicate<em>a</em>database</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Replication_and_conflicts">Replication<em>and</em>conflicts</a></li>
+<li><a href="http://wiki.apache.org/couchdb/How_to_design_for_replication">How<em>to</em>design<em>for</em>replication</a></li>
+</ul>
+
+<h3>Optimalizálás</h3>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/Runtime_Statistics">Runtime_Statistics</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Adding_Runtime_Statistics">Adding<em>Runtime</em>Statistics</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Performance">Performance</a></li>
+<li><a href="http://wiki.apache.org/couchdb/Compaction">Compaction</a></li>
+</ul>
+
+<h3>Hibaelhárítás</h3>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/Troubleshooting">Troubleshooting</a></li>
+</ul>
+
+<h2>Alkalmazási példák, Közösségi linkek</h2>
+
+<ul>
+<li><a href="http://wiki.apache.org/couchdb/CouchDB_in_the_wild">CouchDB<em>in</em>the_wild</a></li>
+<li><a href="http://www.ibm.com/developerworks/opensource/library/os-couchdb/index.html">Exploring CouchDB - IBM</a></li>
+<li><a href="http://wiki.apache.org/couchdb/CouchCamp2010">CouchCamp2010</a></li>
+<li><a href="http://couchdb.apache.org/community/lists.html">The Mailing Lists of the CouchDB community</a></li>
+<li><a href="http://damienkatz.net/">Home page of Damien Katz</a></li>
+<li><a href="http://twitter.com/CouchDB">CouchDB on twitter</a></li>
+<li><a href="http://www.bbc.co.uk/">Article on BBC web site</a></li>
+</ul>
+
+<h2>Könyvek</h2>
+
+<ul>
+<li><a href="http://guide.couchdb.org/">CouchDB The Definitive Guide (on-line version)</a></li>
+</ul>
+			</div>
+
+		<!-- content-wrap ends here -->
+		</div>
+
+		<!--footer starts here-->
+		<div id="footer">
+
+			<p>
+			&copy; 2010 <strong>TomBenke</strong> |
+			Design by: <a href="http://www.styleshout.com/">styleshout</a> |
+			Valid <a href="http://validator.w3.org/check?uri=referer">XHTML</a> |
+			<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a>
+			 | Courtesy <a href="http://www.openwebdesign.org" target="_blank">Open Web Design</a>
+			 <br/>
+   		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<!--a href="index.html">Bevezetés</a>&nbsp;|&nbsp;
+   		<a href="downloads.html">Letöltések</a>&nbsp;|&nbsp;
+	   	<a href="resources.html">Linkek</a-->
+   		</p>
+
+		</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body>
+</html>

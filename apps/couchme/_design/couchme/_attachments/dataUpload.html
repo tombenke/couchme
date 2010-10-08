@@ -1,0 +1,513 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta name="Description" content="CouchDB, NoSQL" />
+<meta name="Keywords" content="CouchDB, NoSQL" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Distribution" content="Global" />
+<meta name="Author" content="Tamás Benke - tombenke@gmail.com" />
+<meta name="Robots" content="index,follow" />
+
+<link rel="stylesheet" href="images/Refresh.css" type="text/css" />
+
+<title>Web-es alkalmazások fejlesztése couchDB-vel és CouchApp-pal</title>
+
+
+</head>
+
+<body>
+<!-- wrap starts here -->
+<div id="wrap">
+
+		<!--header -->
+		<div id="header">
+
+			<h1 id="logo-text">Couch<span class="gray">Me</span></h1>
+			<h2 id="slogan">Web-es alkalmazások fejlesztése CouchDB-vel</h2>
+
+			<!--form class="search" method="post" action="#">
+				<p>
+	  			<input class="textbox" type="text" name="search_query" value="" />
+	 			<input class="button" type="submit" name="Submit" value="Search" />
+				</p>
+			</form-->
+
+		</div>
+
+		<!-- menu -->
+		<div  id="menu">
+			<ul>
+				<li id="current"><a href="index.html">Címlap</a></li>
+				<li><a href="downloads.html">Letöltések</a></li>
+				<li><a href="resources.html">Linkek</a></li>
+			</ul>
+		</div>
+
+		<!-- content-wrap starts here -->
+		<div id="content-wrap">
+
+			<div id="sidebar">
+
+				<h1>Tartalom</h1>
+				<div class="left-box">
+					<ul class="sidemenu">
+						<li><a href="index.html">Címlap</a></li>
+						<li><a href="intro.html">Bevezetés</a></li>
+						<li><a href="install.html">Installálás</a></li>
+						<li><a href="dataUpload.html">Adatfeltöltés</a></li>
+					</ul>
+				</div>
+
+				<h1>Egyéb</h1>
+				<div class="left-box">
+					<ul class="sidemenu">
+						<li><a href="downloads.html">Letöltések</a></li>
+						<li><a href="resources.html">Linkek</a></li>
+					</ul>
+				</div>
+
+				<!--h1>Wise Words</h1>
+				<div class="left-box">
+					<p>&quot;To be concious that you are ignorant of the
+					facts is a great step to knowledge&quot; </p>
+
+					<p class="align-right">- Benjamin Disraeli</p>
+				</div>
+
+				<h1>Support Styleshout</h1>
+				<div class="left-box">
+					<p>If you are interested in supporting my work and would like to contribute, you are
+					welcome to make a small donation through the
+					<a href="http://www.styleshout.com/">donate link</a> on my website - it will
+					be a great help and will surely be appreciated.</p>
+				</div-->
+
+
+			</div>
+
+			<div id="main">
+
+				<a name="TemplateInfo"></a>
+<h1>Adatok feltöltése adatbázisba</h1>
+
+<p>Ebben a fejezetben azt tárgyaljuk, hogyan lehet egyszerűen feltölteni adatokkal
+egy adatbázist, például törzsadatok felvitele, vagy teszt-adatbázis előállítása céljából.</p>
+
+<h2>Adatok feltöltése</h2>
+
+<ol>
+<li>Előszőr létrehozunk egy adatbázist, majd</li>
+<li>feltöltjük egyedi dokumentumokkal
+(az azonosítókat az adatbáziskezelő rendeli hozzá a dokumentumokhoz).</li>
+</ol>
+
+<p>Az itt bemutatott adatfile-ok és scriptek megtalálhatóak a
+<a href="downloads/contacts.zip">contacts.zip</a> file-ban.</p>
+
+<p>Ha kibontjuk a file-t, akkor találunk benne egy <strong>data</strong> nevű aldirectory-t,
+amiben a feltöltendő dokumentumok vannak JSON formátumban:</p>
+
+<pre><code>contacts/data
+|-- charlesb.json
+|-- emma.json
+|-- ericq.json
+|-- jsmith.json
+|-- jthomas.json
+`-- uploadData.sh
+</code></pre>
+
+<p>A <strong>charlesb.json</strong> file tartalma például a következő:</p>
+
+<pre><code>{
+    "name": "Charles Bing",
+    "age": 43,
+    "country": "USA",
+    "phone": "555-821345",
+    "email": "charlesb@exmaple.com"
+}
+</code></pre>
+
+<p>Ugyancsak a <strong>data</strong> directoryban találjuk az <strong>uploadData.sh</strong> bash scriptet
+ami feltölti az összes <em>json</em> kiterjesztésű file-t az adatbázisba:</p>
+
+<pre><code>#!/bin/bash
+
+declare -rx SERVER_URL=http://localhost:5984
+declare -rx DATABASE=contacts
+
+for datafile in *.json
+do
+    curl -X POST \
+         -d @$datafile \
+         -H "Content-type: application/json" \
+         "$SERVER_URL/$DATABASE"
+done
+</code></pre>
+
+<p>Figyeljük meg, hogy a script a <strong>curl</strong> parancs használatakor a <strong>POST</strong> metódust
+alkalmazza. Ebben az esetben az adatbáziskezelő létrehoz egy új dokumentumot
+a feltöltött tartalommal, és hozzárendel egy egyedi azonosítót.</p>
+
+<p>Az egyedi azonosító egy úgynevezett UUID vagy más néven GUID.
+A rövidítések az angol "Universally (Globally) Unique IDentifier" kifejezésnek
+a megfelelői.</p>
+
+<p>Véletlenszerűen generált azonosítók, melyek ismétlődési valószínűsége
+gyakorlatilag elhanyagolható a dokumentumok létrehozási gyakoriságához viszonyítva.</p>
+
+<p>Ha többször egymás után végrehajtjuk a parancsot, akkor a dokumentumok,
+ugyanazon tartalommal, de különböző azonosítókkal, több példányban létre fognak jönni.</p>
+
+<p>Mielőtt a feltöltést végrehajtanánk, ellenőrizzük,
+hogy létezik-e már <strong>contacts</strong> nevű adatbázis:</p>
+
+<pre><code>curl -X GET http://localhost:5984/contacts
+</code></pre>
+
+<p>Ha még nincs, akkor a következő üzenetet kapjuk:</p>
+
+<pre><code>{"error":"not_found","reason":"no_db_file"}
+</code></pre>
+
+<p>Hozzuk létre az adatbázist:</p>
+
+<pre><code>curl -X PUT http://localhost:5984/contacts
+</code></pre>
+
+<p>Ha korábban beállítottuk, hogy csak authorizált userek hajthassanak végre
+adatbázis létrehozást, akkor az alábbi hibaüzenetet kapjuk:</p>
+
+<pre><code>{"error":"unauthorized","reason":"You are not a server admin."}
+</code></pre>
+
+<p>Hogy miként lehet az authorizációt beállítani, azt egy
+<a href="authorization.html">külön fejezetben</a> tárgyaljuk.</p>
+
+<p>Ha a műveletet csak az <strong>admin</strong> user hajthatja végre, akkor
+(feltéve, hogy a jelszó <em>adminpwd</em>) az alábbi parancsot kell végrehajtanunk:</p>
+
+<pre><code>curl -X PUT http://admin:adminpwd@localhost:5984/contacts
+</code></pre>
+
+<p>A sikeres végrehajtást a következő válasz jelzi:</p>
+
+<pre><code>{"ok":true}
+</code></pre>
+
+<p>Ezek után feltölthetjük a dokumentumokat a bash script elindításával:</p>
+
+<pre><code>./uploadData.sh
+</code></pre>
+
+<p>Az eredmény a következő:</p>
+
+<pre><code>{"ok":true,"id":"5fba9edd70b5b718d4bbfcb62b00c76b","rev":"1-4e2fc63dee5ccbab9850d5e77e6f7afa"}
+{"ok":true,"id":"5fba9edd70b5b718d4bbfcb62b00d022","rev":"1-1f87adcd58afa900d8082b2f796f4f44"}
+{"ok":true,"id":"5fba9edd70b5b718d4bbfcb62b00de63","rev":"1-c70e670073125c53aae0109d727eb368"}
+{"ok":true,"id":"5fba9edd70b5b718d4bbfcb62b00ecc5","rev":"1-91bd3e132e9f378568df697db8a68804"}
+{"ok":true,"id":"5fba9edd70b5b718d4bbfcb62b00f3d3","rev":"1-8010f0b12b720288fe180db488827aec"}
+</code></pre>
+
+<p>Ellenőrzésképpen kérdezzük le most ismét az adatbázis URL-jét GET művelettel:</p>
+
+<pre><code>curl -X GET http://localhost:5984/contacts
+</code></pre>
+
+<p>Eredményként a következőt kapjuk:</p>
+
+<pre><code>{
+    "db_name":"contacts",
+    "doc_count":5,
+    "doc_del_count":0,
+    "update_seq":5,
+    "purge_seq":0,
+    "compact_running":false,
+    "disk_size":4185,
+    "instance_start_time":"1286356445951353",
+    "disk_format_version":5,
+    "committed_update_seq":5
+}
+</code></pre>
+
+<p>Ha a <em>Futon</em>-nal megtekintjük az adatbázis tartalmát, akkor láthatjuk, hogy
+a dokumentumok, a server által generált <strong>_id</strong>-kkel létre lettek hozva.</p>
+
+<p><img src="images/contacts1.png" alt="A contacts adatbázisban létrehozott dokumentumok listája" title="A contacts adatbázisban létrehozott dokumentumok listája" /></p>
+
+<p>Ha beletekintünk a létrehozott dokumentumba, akkor láthatjuk benne a server által
+hozzárendelt kötelező mezőket (<strong>_id</strong>, és <strong>_rev</strong>):</p>
+
+<pre><code>{
+   "_id": "5fba9edd70b5b718d4bbfcb62b00c76b",
+   "_rev": "1-4e2fc63dee5ccbab9850d5e77e6f7afa",
+   "name": "Charles Bing",
+   "age": 43,
+   "country": "USA",
+   "phone": "555-821345",
+   "email": "charlesb@exmaple.com"
+}
+</code></pre>
+
+<h2>Meglévő dokumentum módosítása</h2>
+
+<p>Készítsünk most a <strong>charlesb.json</strong> dokumentumról egy másolatot</p>
+
+<p><strong>charlesb.update</strong> néven, és módosítsuk annak tartalmát az alábbiak szerint:</p>
+
+<pre><code>{
+   "_id": "5fba9edd70b5b718d4bbfcb62b00c76b",
+   "_rev": "1-4e2fc63dee5ccbab9850d5e77e6f7afa",
+   "name": "Charles Bronson",
+   "age": 75,
+   "profession": "actor",
+   "country": "USA",
+   "phone": "555-821345",
+   "email": "charlesb@exmaple.com"
+}
+</code></pre>
+
+<p>Látható, hogy az azonosító és a revision szám módosítatlan maradt,
+de a <em>name</em> és az <em>age</em> mezők értéke megváltozott, továbbá hozzáadtunk egy
+<em>profession</em> mezőt.</p>
+
+<p>Az ilymódon elkészített dokumentummal felülírhatjuk a korábban feltöltött változatot.
+Ehhez a PUT metódust használjuk, továbbá az <strong>_id</strong>-vel azonosítjuk,
+hogy melyik dokumentumra hivatkozunk a <strong>_rev</strong>-vel pedig, hogy annak melyik
+változatát kívánjuk felülírni:</p>
+
+<pre><code>curl -X PUT \
+    -d@charlesb.update \
+    -H "Content-type: application/json" \
+     http://localhost:5984/contacts/5fba9edd70b5b718d4bbfcb62b00c76b
+</code></pre>
+
+<p>Sikeres esetben az alábbi választ kapjuk:</p>
+
+<pre><code>{"ok":true,"id":"5fba9edd70b5b718d4bbfcb62b00c76b","rev":"2-0a109832b84939d574bd5174a43ffee6"}
+</code></pre>
+
+<p>Mindig a teljes dokumentumot kell megadnunk, vagyis nem lehet annak csak egy-egy
+részét, vagy mezőjét felülírni.</p>
+
+<p>Elenőrizzük most, hogy mi tárolódik az adatbázisban:</p>
+
+<pre><code>curl -X GET http://localhost:5984/contacts/5fba9edd70b5b718d4bbfcb62b00c76b
+</code></pre>
+
+<p>Az eredmény (a jobb olvashatóság kedvéért formázva):</p>
+
+<pre><code>{
+   "_id": "5fba9edd70b5b718d4bbfcb62b00c76b",
+   "_rev": "2-0a109832b84939d574bd5174a43ffee6",
+   "name": "Charles Bronson",
+   "age": 75,
+   "profession": "actor",
+   "country": "USA",
+   "phone": "555-821345",
+   "email": "charlesb@exmaple.com"
+}
+</code></pre>
+
+<p>A verziószám első számjegye 2-re változott.
+Most már két verzió létezik a dokumentumból az adatbázisban.</p>
+
+<h2>Tömeges adatfeltöltés és módosítás</h2>
+
+<p>A CouchDB lehetőséget biztosít arra, hogy ne csak egyenként, hanem egyszerre
+tömeges méretekben lehessen feltölteni, illetve módosítani dokumentumokat.</p>
+
+<p>Ha a CouchDB-től várjuk, hogy azonosítót rendeljen a dokumentumokhoz, akkor
+az alábbi formátumot alkalmazzuk (bulk/contacts<em>without</em>id.json):</p>
+
+<pre><code>{
+  "docs": [
+    {
+        "name": "Charles Bing",
+        "age": 43,
+        "country": "USA",
+        "phone": "555-821345",
+        "email": "charlesb@exmaple.com"
+    },
+    {
+        "name": "Emma Watson",
+        "age": 33,
+        "country": "Great Britain",
+        "phone": "555-726531",
+        "email": "emma@example.com",
+        "fax": "555-726532"
+    },
+    {
+        "name": "Eric Quinn",
+        "age": 23,
+        "country": "USA",
+        "phone": "555-012796",
+        "fax": "555-098245"
+    },
+    {
+        "name": "John Smith",
+        "age": 54,
+        "country": "Australia",
+        "phone": "55-372589",
+        "email": "jsmith@example.com",
+        "fax": "555-372590"
+    },
+    {
+        "name": "Jane Thomas",
+        "age": 14,
+        "country": "USA",
+        "phone": "555-210897",
+        "email": "jthomas@example.com"
+    }
+  ]
+}
+</code></pre>
+
+<p>A feltöltést a <strong>/{dbname}/_bulk_docs</strong> URI-re kell POST metódussal feltölteni:</p>
+
+<pre><code>curl -X POST \
+     -d @contacts_without_id.json \
+     -H "Content-type: application/json" \
+     http://admin:admin@localhost:5984/contacts/_bulk_docs
+</code></pre>
+
+<p>A válaszból látjuk, hogy a CouchDB azonosítókat rendelt a dokumentumokhoz:</p>
+
+<pre><code>[{"id":"dd1c43608c7b07afd2c2a99f420002ce",
+  "rev":"1-4e2fc63dee5ccbab9850d5e77e6f7afa"},
+ {"id":"dd1c43608c7b07afd2c2a99f420010dd",
+  "rev":"1-1f87adcd58afa900d8082b2f796f4f44"},
+ {"id":"dd1c43608c7b07afd2c2a99f42001823",
+  "rev":"1-c70e670073125c53aae0109d727eb368"},
+ {"id":"dd1c43608c7b07afd2c2a99f42002130",
+  "rev":"1-91bd3e132e9f378568df697db8a68804"},
+ {"id":"dd1c43608c7b07afd2c2a99f420026c8",
+  "rev":"1-8010f0b12b720288fe180db488827aec"}]
+</code></pre>
+
+<p>Ha a CouchDB-től várjuk, hogy azonosítót rendeljen a dokumentumokhoz, akkor
+az alábbi formátumot alkalmazzuk (bulk/contacts<em>without</em>id.json):</p>
+
+<pre><code>{
+  "docs": [
+    {
+        "_id": "charlesb",
+        "name": "Charles Bing",
+        "age": 43,
+        "country": "USA",
+        "phone": "555-821345",
+        "email": "charlesb@exmaple.com"
+    },
+    {
+        "_id": "emma",
+        "name": "Emma Watson",
+        "age": 33,
+        "country": "Great Britain",
+        "phone": "555-726531",
+        "email": "emma@example.com",
+        "fax": "555-726532"
+    },
+    {
+        "_id": "ericq",
+        "name": "Eric Quinn",
+        "age": 23,
+        "country": "USA",
+        "phone": "555-012796",
+        "fax": "555-098245"
+    },
+    {
+        "_id": "jsmith",
+        "name": "John Smith",
+        "age": 54,
+        "country": "Australia",
+        "phone": "55-372589",
+        "email": "jsmith@example.com",
+        "fax": "555-372590"
+    },
+    {
+        "_id": "jthomas",
+        "name": "Jane Thomas",
+        "age": 14,
+        "country": "USA",
+        "phone": "555-210897",
+        "email": "jthomas@example.com"
+    }
+  ]
+}
+</code></pre>
+
+<p>A feltöltéshez ugyanazt a parancsot használjuk, de értelemszerűen az
+id-vel ellátott dokumentumokat tartalmazó file-lal ((bulk/contacts<em>with</em>id.json)):</p>
+
+<pre><code>curl -X POST \
+     -d @contacts_with_id.json \
+     -H "Content-type: application/json" \
+     http://admin:admin@localhost:5984/contacts/_bulk_docs
+</code></pre>
+
+<p>a válasz pedig a következő lesz:</p>
+
+<pre><code>[{"id":"charlesb","rev":"1-4e2fc63dee5ccbab9850d5e77e6f7afa"},
+ {"id":"emma","rev":"1-1f87adcd58afa900d8082b2f796f4f44"},
+ {"id":"ericq","rev":"1-c70e670073125c53aae0109d727eb368"},
+ {"id":"jsmith","rev":"1-91bd3e132e9f378568df697db8a68804"},
+ {"id":"jthomas","rev":"1-8010f0b12b720288fe180db488827aec"}]
+</code></pre>
+
+<!-- TODO
+
+## Bulk / UPDATE
+
+There are now two bulk update models supported:
+
+    * non-atomic
+     This is the default behavior.
+     Some documents may successfully be saved and some may not.
+     The response will tell the application which documents were saved or not.
+     In the case of a power failure,
+     when the database restarts some may have been saved and some not.
+
+    * all-or-nothing
+      To use this mode, include "all_or_nothing":true as part of the request.
+      In the case of a power failure,
+      when the database restarts either all the changes will have been saved
+      or none of them. However,
+      it does not do conflict checking,
+      so the documents will be committed even if this creates conflicts.
+
+## Bulk / DELETE
+
+-->
+
+<p>A témával kapcsolatos további részletek a <a href="http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API" title="HTTP Bulk Document API">HTTP<em>Bulk</em>Document_API</a>
+wiki oldalon találhatóak.</p>
+			</div>
+
+		<!-- content-wrap ends here -->
+		</div>
+
+		<!--footer starts here-->
+		<div id="footer">
+
+			<p>
+			&copy; 2010 <strong>TomBenke</strong> |
+			Design by: <a href="http://www.styleshout.com/">styleshout</a> |
+			Valid <a href="http://validator.w3.org/check?uri=referer">XHTML</a> |
+			<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a>
+			 | Courtesy <a href="http://www.openwebdesign.org" target="_blank">Open Web Design</a>
+			 <br/>
+   		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<!--a href="index.html">Bevezetés</a>&nbsp;|&nbsp;
+   		<a href="downloads.html">Letöltések</a>&nbsp;|&nbsp;
+	   	<a href="resources.html">Linkek</a-->
+   		</p>
+
+		</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body>
+</html>

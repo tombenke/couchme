@@ -1,0 +1,12 @@
+{
+    "name": "Contacts data",
+    "description": "contacts",
+     "env" : {
+        "default" : {
+          "db" : "http://admin:admin@localhost:5984/contacts"
+        },
+        "public" : {
+          "db" : "http://tombenke.couchone.com/contacts"
+        }
+    }
+}

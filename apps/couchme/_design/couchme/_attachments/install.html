@@ -1,0 +1,280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta name="Description" content="CouchDB, NoSQL" />
+<meta name="Keywords" content="CouchDB, NoSQL" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Distribution" content="Global" />
+<meta name="Author" content="Tamás Benke - tombenke@gmail.com" />
+<meta name="Robots" content="index,follow" />
+
+<link rel="stylesheet" href="images/Refresh.css" type="text/css" />
+
+<title>Web-es alkalmazások fejlesztése couchDB-vel és CouchApp-pal</title>
+
+
+</head>
+
+<body>
+<!-- wrap starts here -->
+<div id="wrap">
+
+		<!--header -->
+		<div id="header">
+
+			<h1 id="logo-text">Couch<span class="gray">Me</span></h1>
+			<h2 id="slogan">Web-es alkalmazások fejlesztése CouchDB-vel</h2>
+
+			<!--form class="search" method="post" action="#">
+				<p>
+	  			<input class="textbox" type="text" name="search_query" value="" />
+	 			<input class="button" type="submit" name="Submit" value="Search" />
+				</p>
+			</form-->
+
+		</div>
+
+		<!-- menu -->
+		<div  id="menu">
+			<ul>
+				<li id="current"><a href="index.html">Címlap</a></li>
+				<li><a href="downloads.html">Letöltések</a></li>
+				<li><a href="resources.html">Linkek</a></li>
+			</ul>
+		</div>
+
+		<!-- content-wrap starts here -->
+		<div id="content-wrap">
+
+			<div id="sidebar">
+
+				<h1>Tartalom</h1>
+				<div class="left-box">
+					<ul class="sidemenu">
+						<li><a href="index.html">Címlap</a></li>
+						<li><a href="intro.html">Bevezetés</a></li>
+						<li><a href="install.html">Installálás</a></li>
+						<li><a href="dataUpload.html">Adatfeltöltés</a></li>
+					</ul>
+				</div>
+
+				<h1>Egyéb</h1>
+				<div class="left-box">
+					<ul class="sidemenu">
+						<li><a href="downloads.html">Letöltések</a></li>
+						<li><a href="resources.html">Linkek</a></li>
+					</ul>
+				</div>
+
+				<!--h1>Wise Words</h1>
+				<div class="left-box">
+					<p>&quot;To be concious that you are ignorant of the
+					facts is a great step to knowledge&quot; </p>
+
+					<p class="align-right">- Benjamin Disraeli</p>
+				</div>
+
+				<h1>Support Styleshout</h1>
+				<div class="left-box">
+					<p>If you are interested in supporting my work and would like to contribute, you are
+					welcome to make a small donation through the
+					<a href="http://www.styleshout.com/">donate link</a> on my website - it will
+					be a great help and will surely be appreciated.</p>
+				</div-->
+
+
+			</div>
+
+			<div id="main">
+
+				<a name="TemplateInfo"></a>
+<h1>A fejlesztői és futtató környezet létrehozása</h1>
+
+<h2>A CouchDB installálása</h2>
+
+<p>A munkához mindenek előtt szükségünk van egy működő CouchDB serverre</p>
+
+<p>Ehhez a legegyszerűbben úgy juthatunk hozzá, hogy létrehozunk egy saját,
+ingyenesen használható példányt a <a href="http://www.couch.io/get" title="CouchOne hosting">Couch<em>One</em>Hosting</a> oldalán.</p>
+
+<p>Ha saját, lokális példányt kívánunk futtatni, akkor a legegyszerűbb, ha az előre
+legyártott, bináris verziót töltjük le, és rakjuk fel a saját gépünkre.
+A megfelelő platformhoz legyártott, azonnal installálható verziók a
+<a href="http://www.couch.io/products" title="CouchOne products">Couch<em>One</em>Products</a> oldalán keresztül érhetők el.</p>
+
+<p>Ha forrásból kívánjuk reprodukálni a teljes rendszert,
+akkor ehhez a megfelelő verzió forráskódját a
+<a href="http://couchdb.apache.org/downloads.html">project download oldaláról</a>
+tudjuk megszerezni.
+Ehhez azonban az Erlang fordítóra, és számos egyéb kiegészítő könyvtárra is
+szükség van. Melyek platformról-platformra eltérő előkészítést igényelnek.
+Ráadásul egy adott platform különböző verziói között is vannak eltérések,
+a fordító környezet kialakítását illetően.
+Ezért mindenképpen a bináris, előre lefordított változattal célszerű először
+próbálkozni.</p>
+
+<p>Például Ubuntu 10.04-en, a CouchOne oldaláról letöltött
+<a href="http://www.couch.io/get#ubuntu">CouchOne for Ubuntu, all inclusive and ready to go binaries</a>
+verzió minden gond nélkül feltelepíthető.
+Ehhez mindössze el kell indítanunk az előzőleg letöltött
+<strong>install-couchdb-1.0.1_rel1-linux.bin</strong> nevű file-t.</p>
+
+<p>Az installálás során létre kell jönnie egy <strong>couchdb</strong> nevű user-nek.</p>
+
+<p>Ezt követően a server az alábbi paranccsal indítható el:</p>
+
+<pre><code>sudo -i -u couchdb couchdb
+</code></pre>
+
+<p>Erre a server valami hasonlót ír ki a konzolra
+(a konfigurációs lista a rövidített példánál lényegesen hosszabb lehet):</p>
+
+<pre><code>Apache CouchDB 1.0.1 (LogLevel=debug) is starting.
+    Configuration Settings ["/usr/local/etc/couchdb/default.ini",
+                            "/usr/local/etc/couchdb/local.ini"]:
+    [couchdb] database_dir="/usr/local/var/lib/couchdb"
+    [couchdb] max_attachment_chunk_size="4294967296"
+    [couchdb] max_dbs_open="100"
+    [couchdb] max_document_size="4294967296"
+    ...
+
+Apache CouchDB has started. Time to relax.
+    [info] [&lt;0.33.0&gt;] Apache CouchDB has started on http://127.0.0.1:5984/
+</code></pre>
+
+<p>Ezután már megszólíthatjuk az adatbáziskezelőt, hogy ellenőrizzük,
+minden rendeltetésszerűen működik-e. Ezt megtehetjük egy böngészővel,
+vagy a <strong>curl</strong> segédprogrammal, a következő paranccsal:</p>
+
+<pre><code>curl -X GET http://localhost:5984/
+</code></pre>
+
+<p>Az URL-ből látható, hogy a CouchDB alapértelmezésben a <strong>5984</strong>-es porton figyel.
+válaszképpen az alábbi JSON dokumentumot kell kapnunk:</p>
+
+<pre><code>{"couchdb":"Welcome","version":"1.0.1"}
+</code></pre>
+
+<p>A CouchDB adminisztrációs felületét, melyet <em>Futon</em>-nak hívnak a következő URL-en
+keresztül érhetjük el egy böngészővel:</p>
+
+<pre><code>http://localhost:5984/_utils
+</code></pre>
+
+<p>A böngészőben az ábrán láthatóhoz hasonlót kell látnunk:</p>
+
+<p><img src="images/Futon.png" alt="Futon bejelentkező képernyő" title="Futon bejelentkező képernyő" /></p>
+
+<p>Miután rendelkezünk egy megfelelően működő CouchDB adatbáziskezelő serverrel,
+hozzáfoghatunk az adatbázis feltöltéséhez.
+Ez a közönséges adatokon kívül a kliens oldalon megjelenítendő web-es tartalmak
+(HTML, CSS, stb.), továbbá a server oldali alkalmazások feltöltését is jelenti.</p>
+
+<p>Ez azért lehetséges, mert a CouchDB számára a web-es alkalmazások éppen olyan
+dokumentumok, mint bármi más, közönséges tartalom.</p>
+
+<p>A programokat egy speciális (<strong>_design/</strong>) mintázattal kezdődő nevű
+dokumentumban tárolja az adatbáziskezelő, JSON formátumban.</p>
+
+<p>A _design dokumentumokat létrehozhatjuk a  <em>Futon</em>-nal,
+és a kódot begépelhetjük az adminisztrációs felületen keresztül, melyet
+a web-es felület biztosít számunkra.
+Ez azonban nagyobb programok esetében nem a legoptimálisabb,
+és legkényelmesebb megoldás.</p>
+
+<p>A programok általában többféle formátumban, számos forráskód file létrehozásával
+készülnek. Ezek szerkesztéséhez speciális fejlesztői környezetek támogatását
+tudjuk igénybe venni <em>syntax highlite</em>-tal, beépített verzió követő támogatással,
+és számos egyéb funkcióval.</p>
+
+<p>A CouchDB-hez készült egy segédeszköz, ami lehetővé teszi, hogy a megszokott
+eszközeinkkel készítsük el a forrás file-jainkat (HTML, CSS, JavaScript, stb.)
+Majd ezeket feltöltsük a serverre.</p>
+
+<p>Erre a célra használható a <a href="http://couchapp.org/" title="CouchApp website">CouchApp</a> nevű segédeszköz,
+amire a továbbiak során a fejlesztéshez szükségünk lesz.</p>
+
+<p>A <a href="http://couchapp.org/" title="CouchApp website">CouchApp</a> egyebek közt segít minket abban,
+hogy a HTML5/JavaScript technológiával írt alkalmazásainkat
+a CouchDB által elvárt strutúrában,
+és JSON-ná konvertálva egyetlen parancs végrehajtásával tölthessük fel.
+Ezen felül JavaScript könyvtárakat biztosít a kliens oldalon az általunk írandó
+programok számára, hogy azok egyszerűbben elérhessék a servert,
+a server oldalon pedig ahhoz, hogy kiszolgáljuk a beérkező kéréseket,
+lekérdezéseket hajthassunk végre.</p>
+
+<p>A soron következő lépés tehát a <a href="http://couchapp.org/" title="CouchApp website">CouchApp</a> installálása.</p>
+
+<h2>A CouchApp installálása</h2>
+
+<p>A CouchApp alkalmazást legegyszerűbben a Python <strong>easy_install</strong>
+scriptjével installálhatjuk, amely a <strong>setuptools</strong> csomag része.
+Amennyiben ez nincs rajta a gépünkön,
+akkor előzetesen gondoskodni kell annak meglétéről.</p>
+
+<p>Például Ubuntu-n az alábbi paranccsal installálhatjuk:</p>
+
+<pre><code> sudo apt-get install python-setuptools
+</code></pre>
+
+<p>Miután az easy_install-t sikeresen telepítettük,
+hajtsuk végre a következő parancsot:</p>
+
+<pre><code> sudo easy_install -U couchapp
+</code></pre>
+
+<p>Próbaképpen hajtsuk végre a következő parancsot:</p>
+
+<pre><code>couchapp version
+</code></pre>
+
+<p>A válasznak a következőhöz hasonlónak kell lennie:</p>
+
+<pre><code>Couchapp (version 0.7.0)
+Copyright 2008-2010 Benoît Chesneau &lt;benoitc@e-engura.org&gt;
+Licensed under the Apache License, Version 2.0.
+</code></pre>
+
+<p>Ha sikertelen volt az installáció, annak egyik gyakori oka lehet,
+hogy nem megfelelő verziójú komponensek vannak a gépünkön.
+Ilyenkor megpróbálkozhatunk a következő
+parancsokkal upgrade-elni mind a setuptools,
+mind pedig a couchapp alkalmazást:</p>
+
+<pre><code> sudo easy_install -U setuptools
+ sudo easy_install -U couchapp
+</code></pre>
+
+<p>Ha ez is sikertelen volt, akkor a Python setuptools oldalon,
+illetve a CoucApp levelező listán próbálhatunk további segítséghez jutni.</p>
+			</div>
+
+		<!-- content-wrap ends here -->
+		</div>
+
+		<!--footer starts here-->
+		<div id="footer">
+
+			<p>
+			&copy; 2010 <strong>TomBenke</strong> |
+			Design by: <a href="http://www.styleshout.com/">styleshout</a> |
+			Valid <a href="http://validator.w3.org/check?uri=referer">XHTML</a> |
+			<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a>
+			 | Courtesy <a href="http://www.openwebdesign.org" target="_blank">Open Web Design</a>
+			 <br/>
+   		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<!--a href="index.html">Bevezetés</a>&nbsp;|&nbsp;
+   		<a href="downloads.html">Letöltések</a>&nbsp;|&nbsp;
+	   	<a href="resources.html">Linkek</a-->
+   		</p>
+
+		</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+    "name": "Web-es alkalmazások fejlesztése CouchDB-vel",
+    "description": "couchme",
+     "env" : {
+        "public" : {
+          "db" : "http://tombenke.couchone.com/couchme"
+        },
+        "lsyh" : {
+          "db" : "http://couchdb1.ws.lsy.bud.dlh.de:5984/couchme"
+        },
+        "default" : {
+          "db" : "http://localhost:5984/couchme"
+        }
+    }
+}
