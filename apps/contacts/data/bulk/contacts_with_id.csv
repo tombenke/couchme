@@ -1,0 +1,6 @@
+"_id","name","age","country","phone","email","fax"
+"charlesb","Charles Bing",43,"USA","+36 555-821345","charlesb@exmaple.com",
+"emma","Emma Watson",33,"Great Britain","+36 555-726531","emma@example.com","555-726532"
+"ericq","Eric Quinn",23,"USA","+36 555-012796",,"555-098245"
+"jsmith","John Smith",54,"Australia","+36 553-72589","jsmith@example.com","555-372590"
+"jthomas","Jane Thomas",14,"USA","+36 555-210897","jthomas@example.com",
