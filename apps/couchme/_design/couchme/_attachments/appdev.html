@@ -97,41 +97,41 @@
 <h2>Egy alkalmazás struktúrája</h2>
 
 <p>A CouchDB amellett, hogy adatbáziskezelő, web-serverként is funkcionál.
-Ez egyúttal azt is jelentki, hogy hasonló web-es alkalmazásokat futtathatunk
-rajta, mint pl. egy PHP-s alkalmazás egy Apache serveren, vagy egy Javá-s alkalmazás
+Ez egyúttal azt is jelentki, hogy hasonló web-es alkalmazásokat futtathatunk rajta,
+mint pl. egy PHP-s alkalmazás egy Apache serveren, vagy egy Jávás alkalmazás
 Apache Tomcat-en.</p>
 
 <p>Ez utóbbi két web serverhez hasonlóan, a CouchDB is meghatározott tárolási
 formátumot ír elő a rajta futtatni kívánt alkalmazások számára.
 Létezik azonban két alapelv, amely döntően befolyásolja,
-hogy milyen formában kell elkészítenünk forrásfile-jainkat.</p>
+hogy milyen formában kell elkészítenünk a rgrat.</p>
 
 <ul>
-<li><p>A fejlesztendő alkalmazást képező állományok szabványos file-ok,
+<li><p>A fejlesztendő alkalmazást képező állományok közönséges, szabványos file-ok,
 melyek formátumát a web-es és egyéb szabványok határozzák meg.
 Ezek körébe tartoznak többek között a HTML oldalak, CSS file-ok,
 továbbá JavaScript, Python, Erlang és esetleg más nyelven írt, forráskód file-ok.
 Elkészítésükhöz bármilyen, szokásos eszköz felhasználható.</p></li>
-<li><p>A CouchDB számára minden "dolog" amit tárol nem más mint (JSON formátumú) "dokumentum".
-Vagyis a web-es alkalmazások is dokumentumok.</p></li>
+<li><p>A CouchDB számára minden "dolog" amit tárol nem más mint (JSON formátumú)
+"dokumentum". Vagyis a komplett web-es alkalmazások is dokumentumok.</p></li>
 </ul>
 
 <p>Mielőtt tovább megyünk, vegyük kicsit tüzetesebben szemügyre
-a web-es alkalmazásokat tartalmazó dokumentumokat, melyeket <em>_design</em> dokumentumnak
+ezeket a speciális dokumentumokat, melyeket <strong>_design</strong> dokumentumnak
 neveznek. Az elnevezés abból adódik, hogy a dokumentum azonosítója a
-<strong>_design/</strong> előtaggal kezdődik. A _design dokumentum tehát éppen olyan JSON
-dokumentum, mint a többi adatbázisban lévő dokumentum, csak a neve kötött formátumban
-kezdődik. A <strong>_design/</strong>-t bármi követheti. ráadásul egy adott adatbázisban több
-ilyen kezdetű dokumentum is helyet foglalhat.</p>
+<strong>"_design/"</strong> előtaggal kezdődik. A <strong>_design</strong> dokumentum tehát éppen olyan JSON
+dokumentum, mint a többi adatbázisban lévő adat, csak a neve kötött formátumban
+kezdődik. A <strong>"_design/"</strong> előtagot bármi követheti.
+Ráadásul egy adott adatbázisban több ilyen kezdetű dokumentum is helyet foglalhat.</p>
 
-<p>Az alábbi nevek szabályos _design-dokumentum nevek:</p>
+<p>A következő nevek szabályos <strong>_design</strong>-dokumentum nevek:</p>
 
 <pre><code>_design/couchme
 _design/contacts
 _desing/myapp
 </code></pre>
 
-<p>Az alábbi folderstruktúrában elrendezett forrásfile-ok megfelelnek a CouchDB
+<p>Az alábbi folder-struktúrában látható állományok megfelelnek a CouchDB
 elrendezési és névadási konvencióinak:</p>
 
 <pre><code>_design/contacts
@@ -155,9 +155,12 @@ elrendezési és névadási konvencióinak:</p>
 <p>Az egyes file-ok szerepét, tartalmát a továbbiakban részletesen tárgyaljuk.
 Most egyenlőre csak a file-ok nevére, és elhelyezkedésére koncentráljunk.</p>
 
-<p>A fent kilistázott file-halmazt az alábbi formátumú JSNO dokumentummá kell
-konvertálni, annak érdekében, hogy a CouchDB azt web-es alkalmazásként képes
-legyen értelmezni:</p>
+<p>A fenti file-ok természetesen nem üresek. a js kiterjesztésűek
+JavaScript függvényeket, a json kiterjesztésű JSON adatstruktúrát tartalmaznak.</p>
+
+<p>A feltöltés során a fent kilistázott file-halmazt az alábbi formátumú
+JSON dokumentummá szükséges alakítani, annak érdekében,
+hogy a CouchDB azt web-es alkalmazásként képes legyen értelmezni:</p>
 
 <pre><code>{
    "_id": "_design/contacts",
@@ -215,15 +218,17 @@ legyen értelmezni:</p>
 }
 </code></pre>
 
-<p>Némi "hosszan-nézéssel" megállapítható, hogy a folder-struktúra, a file-nevek és
-azok tartalma egy-az-egyben megfeleltethető a JSON adatstruktúrának.</p>
+<p>Némi "hosszan-nézéssel" megállapítható, hogy a folder-struktúra, a file-nevek,
+továbbá azok tartalma egy-az-egyben megfeleltethető a JSON adatstruktúrának.</p>
 
-<p>Nézzük most meg egy picit közelebbről, hogy hogyan is néz ki egy ilyen, tipikus
+<p>Nézzük meg most egy picit közelebbről, hogy hogyan is néz ki egy ilyen, tipikus
 folder-struktúra:</p>
 
 <pre><code>_design/&lt;appname&gt;
 |-- _attachments
+|-- _id
 |-- evently
+|-- language
 |-- lists
 |-- shows
 |-- updates
@@ -232,16 +237,16 @@ folder-struktúra:</p>
 </code></pre>
 
 <p>Itt most csak röviden összefoglaljuk, hogy az egyes foldereknek mi a szerepe.
-A továbbiakban, a megfelelő fejezetekben, mindegyiket részletesen tárgyaljuk.</p>
+A továbbiakban, külön fejezetekben, mindegyiket részletesen tárgyaljuk.</p>
 
 <ul>
 <li><p>Az <strong>_attachments</strong> folderben elhelyezett állományokat a a server változtatás
 nélkül jeleníti meg. Itt helyezhetők el azok az "asset"-jellegű file-ok,
-(pl.: képek, statikus HTM loldalak, CSS file-ok ) melyekre
-az aktív tartalmak (programok) hivatkozni fognak.</p></li>
+(pl.: képek, statikus HTML oldalak, CSS file-ok) melyekre
+az aktív tartalmak (többnyire JavaScript programok) hivatkozni fognak.</p></li>
 <li><p>Az <strong>evently</strong> folder az ún. widgeteket tartalmazza. Ezek a megjelenítő retegben
-használatok "mikro MVC objektumok", melyekből a web-oldal aktív tartalma összeállítható.
-Főként speciális, CouchDB-hez fejlesztett jQuery pluginek-ből állnak.</p></li>
+használható "mikro MVC objektumok", melyekből a web-oldal aktív tartalma összeállítható.
+Ezek lényegében, CouchDB-hez fejlesztett jQuery pluginek.</p></li>
 <li><p>A <strong>lists</strong> folder JavaScript állományokat tartalmaz, melyek lekérdezések
 eredményeit adó listák megejelenítésére szolgálnak.</p></li>
 <li><p>A <strong>shows</strong> folder a lekérdezések eredményének megjelenítésére szolgáló
@@ -254,9 +259,28 @@ widgeteket tárolja.</p></li>
 függvényeket tartalmazza, amelyek az adatbázis lekérdezésére szolgálnak.</p></li>
 </ul>
 
-<p>A CouchDB Futon nevű adminisztrációs felületével gyakorlatilag közvetlenül a serveren
-létre tudunk hozni alkalmazásokat, JSON formátumban, de ez nem túl kényelmes, és
-még kevésbé hatékony megoldás.</p>
+<p>A f63dere2en 21vü3 további fileok is vannak a design dokumentum gyökerében,
+amelyek nem tartoznak szorosan az alkalmazáshoz, de adminisztrációs
+szempontból fontosak:</p>
+
+<pre><code>_design/&lt;appname&gt;
+|-- couchapp.json
+|-- .couchapprc
+|-- _id
+`-- language
+</code></pre>
+
+<ul>
+<li><p>a <strong>couchapp.json</strong> és <strong>.coucapprc</strong> file-okat a CouchApp segédprogram
+használja. Ezeket részletesen a következő fejezetben ismertetjük.</p></li>
+<li><p>Az <strong>_id</strong> magának a design dokumentumnak az azonosítója, pl.: "_design/contacts".</p></li>
+<li><p>a <strong>language</strong> azt mondja meg, hogy az alkalmazások milyen programozási nyelven
+lettek megírva. Értéke tipikusan: "javascript".</p></li>
+</ul>
+
+<p>A CouchDB Futon nevű adminisztrációs felületével gyakorlatilag közvetlenül
+a serveren létre tudunk hozni alkalmazásokat, JSON formátumban,
+de ez nem túl kényelmes, és még kevésbé hatékony megoldás.</p>
 
 <p>Az előzőleg elkészített, különféle file-okat tehát át kell alakítani
 egy JSON formátumú dokumentummá, méghozzá olymódon, hogy azokat a server értelmezni
@@ -338,9 +362,24 @@ help
     version
 </code></pre>
 
+<p>Ebben a fejezetben csak a leggyakrabban használt parancsokat tárgyaljuk, amelyek
+a mindennapi használat során szükségesek.</p>
+
+<p>További részletek a CouchApp használatával kapcsolatban a 
+<a href="http://couchapp.org/">CouchApp website</a>-on találhatóak.</p>
+
+<p>A továbbiakban feltételezzük, hogy a CouchApp utility fel van installálva a gépre.
+Ha nincs, akkor előbb gondoskodjunk annak </p>
+
 <h3>Egy új alkalmazás generálása</h3>
 
-<p>Generáljunk egy új <strong>appdev</strong> nevű alkalmazást:</p>
+<p>Az első lépés, hogy hozzunk létre egy CouchDB web alkalmazást, abban a formában
+hogy az könnyel átkonvertálható legyen design dokumentummá, és az adatbáziskezelő
+megtaláljon minden szükséges állományt az általa előírt elnevezési konvenciók
+alapján.</p>
+
+<p>Ezt a
+Generáljunk egy új <strong>appdev</strong> nevű alkalmazást:</p>
 
 <pre><code>couchapp generate appdev
 

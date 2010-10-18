@@ -4,40 +4,40 @@ Alkalmazás-fejlesztés
 ## Egy alkalmazás struktúrája
 
 A CouchDB amellett, hogy adatbáziskezelő, web-serverként is funkcionál.
-Ez egyúttal azt is jelentki, hogy hasonló web-es alkalmazásokat futtathatunk
-rajta, mint pl. egy PHP-s alkalmazás egy Apache serveren, vagy egy Javá-s alkalmazás
+Ez egyúttal azt is jelentki, hogy hasonló web-es alkalmazásokat futtathatunk rajta,
+mint pl. egy PHP-s alkalmazás egy Apache serveren, vagy egy Jávás alkalmazás
 Apache Tomcat-en.
 
 Ez utóbbi két web serverhez hasonlóan, a CouchDB is meghatározott tárolási
 formátumot ír elő a rajta futtatni kívánt alkalmazások számára.
 Létezik azonban két alapelv, amely döntően befolyásolja,
-hogy milyen formában kell elkészítenünk forrásfile-jainkat.
+hogy milyen formában kell elkészítenünk a rgrat.
 
-* A fejlesztendő alkalmazást képező állományok szabványos file-ok,
+* A fejlesztendő alkalmazást képező állományok közönséges, szabványos file-ok,
 melyek formátumát a web-es és egyéb szabványok határozzák meg.
 Ezek körébe tartoznak többek között a HTML oldalak, CSS file-ok,
 továbbá JavaScript, Python, Erlang és esetleg más nyelven írt, forráskód file-ok.
 Elkészítésükhöz bármilyen, szokásos eszköz felhasználható.
 
-* A CouchDB számára minden "dolog" amit tárol nem más mint (JSON formátumú) "dokumentum".
-Vagyis a web-es alkalmazások is dokumentumok.
+* A CouchDB számára minden "dolog" amit tárol nem más mint (JSON formátumú)
+"dokumentum". Vagyis a komplett web-es alkalmazások is dokumentumok.
 
 Mielőtt tovább megyünk, vegyük kicsit tüzetesebben szemügyre
-a web-es alkalmazásokat tartalmazó dokumentumokat, melyeket _\_design_ dokumentumnak
+ezeket a speciális dokumentumokat, melyeket __\_design__ dokumentumnak
 neveznek. Az elnevezés abból adódik, hogy a dokumentum azonosítója a
-__\_design/__ előtaggal kezdődik. A \_design dokumentum tehát éppen olyan JSON
-dokumentum, mint a többi adatbázisban lévő dokumentum, csak a neve kötött formátumban
-kezdődik. A __\_design/__-t bármi követheti. ráadásul egy adott adatbázisban több
-ilyen kezdetű dokumentum is helyet foglalhat.
+__"\_design/"__ előtaggal kezdődik. A __\_design__ dokumentum tehát éppen olyan JSON
+dokumentum, mint a többi adatbázisban lévő adat, csak a neve kötött formátumban
+kezdődik. A __"\_design/"__ előtagot bármi követheti.
+Ráadásul egy adott adatbázisban több ilyen kezdetű dokumentum is helyet foglalhat.
 
-Az alábbi nevek szabályos \_design-dokumentum nevek:
+A következő nevek szabályos __\_design__-dokumentum nevek:
 
     _design/couchme
     _design/contacts
     _desing/myapp
 
 
-Az alábbi folderstruktúrában elrendezett forrásfile-ok megfelelnek a CouchDB
+Az alábbi folder-struktúrában látható állományok megfelelnek a CouchDB
 elrendezési és névadási konvencióinak:
 
     _design/contacts
@@ -60,9 +60,12 @@ elrendezési és névadási konvencióinak:
 Az egyes file-ok szerepét, tartalmát a továbbiakban részletesen tárgyaljuk.
 Most egyenlőre csak a file-ok nevére, és elhelyezkedésére koncentráljunk.
 
-A fent kilistázott file-halmazt az alábbi formátumú JSNO dokumentummá kell
-konvertálni, annak érdekében, hogy a CouchDB azt web-es alkalmazásként képes
-legyen értelmezni:
+A fenti file-ok természetesen nem üresek. a js kiterjesztésűek
+JavaScript függvényeket, a json kiterjesztésű JSON adatstruktúrát tartalmaznak.
+
+A feltöltés során a fent kilistázott file-halmazt az alábbi formátumú
+JSON dokumentummá szükséges alakítani, annak érdekében,
+hogy a CouchDB azt web-es alkalmazásként képes legyen értelmezni:
 
     {
        "_id": "_design/contacts",
@@ -119,15 +122,17 @@ legyen értelmezni:
        }
     }
 
-Némi "hosszan-nézéssel" megállapítható, hogy a folder-struktúra, a file-nevek és
-azok tartalma egy-az-egyben megfeleltethető a JSON adatstruktúrának.
+Némi "hosszan-nézéssel" megállapítható, hogy a folder-struktúra, a file-nevek,
+továbbá azok tartalma egy-az-egyben megfeleltethető a JSON adatstruktúrának.
 
-Nézzük most meg egy picit közelebbről, hogy hogyan is néz ki egy ilyen, tipikus
+Nézzük meg most egy picit közelebbről, hogy hogyan is néz ki egy ilyen, tipikus
 folder-struktúra:
 
     _design/<appname>
     |-- _attachments
+    |-- _id
     |-- evently
+    |-- language
     |-- lists
     |-- shows
     |-- updates
@@ -135,16 +140,16 @@ folder-struktúra:
     `-- views
 
 Itt most csak röviden összefoglaljuk, hogy az egyes foldereknek mi a szerepe.
-A továbbiakban, a megfelelő fejezetekben, mindegyiket részletesen tárgyaljuk.
+A továbbiakban, külön fejezetekben, mindegyiket részletesen tárgyaljuk.
 
 * Az __\_attachments__ folderben elhelyezett állományokat a a server változtatás
 nélkül jeleníti meg. Itt helyezhetők el azok az "asset"-jellegű file-ok,
-(pl.: képek, statikus HTM loldalak, CSS file-ok ) melyekre
-az aktív tartalmak (programok) hivatkozni fognak.
+(pl.: képek, statikus HTML oldalak, CSS file-ok) melyekre
+az aktív tartalmak (többnyire JavaScript programok) hivatkozni fognak.
 
 * Az __evently__ folder az ún. widgeteket tartalmazza. Ezek a megjelenítő retegben
-használatok "mikro MVC objektumok", melyekből a web-oldal aktív tartalma összeállítható.
-Főként speciális, CouchDB-hez fejlesztett jQuery pluginek-ből állnak.
+használható "mikro MVC objektumok", melyekből a web-oldal aktív tartalma összeállítható.
+Ezek lényegében, CouchDB-hez fejlesztett jQuery pluginek.
 
 * A __lists__ folder JavaScript állományokat tartalmaz, melyek lekérdezések
 eredményeit adó listák megejelenítésére szolgálnak.
@@ -161,9 +166,28 @@ widgeteket tárolja.
 * a __views__ folder az adatbázis lekérdezéseket megvalósító, ún. map/reduce
 függvényeket tartalmazza, amelyek az adatbázis lekérdezésére szolgálnak.
 
-A CouchDB Futon nevű adminisztrációs felületével gyakorlatilag közvetlenül a serveren
-létre tudunk hozni alkalmazásokat, JSON formátumban, de ez nem túl kényelmes, és
-még kevésbé hatékony megoldás.
+A f63dere2en 21vü3 további fileok is vannak a design dokumentum gyökerében,
+amelyek nem tartoznak szorosan az alkalmazáshoz, de adminisztrációs
+szempontból fontosak:
+
+
+    _design/<appname>
+    |-- couchapp.json
+    |-- .couchapprc
+    |-- _id
+    `-- language
+
+* a __couchapp.json__ és __.coucapprc__ file-okat a CouchApp segédprogram
+használja. Ezeket részletesen a következő fejezetben ismertetjük.
+
+* Az __\_id__ magának a design dokumentumnak az azonosítója, pl.: "_design/contacts".
+
+* a __language__ azt mondja meg, hogy az alkalmazások milyen programozási nyelven
+lettek megírva. Értéke tipikusan: "javascript".
+
+A CouchDB Futon nevű adminisztrációs felületével gyakorlatilag közvetlenül
+a serveren létre tudunk hozni alkalmazásokat, JSON formátumban,
+de ez nem túl kényelmes, és még kevésbé hatékony megoldás.
 
 Az előzőleg elkészített, különféle file-okat tehát át kell alakítani
 egy JSON formátumú dokumentummá, méghozzá olymódon, hogy azokat a server értelmezni
@@ -243,9 +267,23 @@ az eredmény:
 
         version
 
+Ebben a fejezetben csak a leggyakrabban használt parancsokat tárgyaljuk, amelyek
+a mindennapi használat során szükségesek.
+
+További részletek a CouchApp használatával kapcsolatban a 
+[CouchApp website](http://couchapp.org/)-on találhatóak.
+
+A továbbiakban feltételezzük, hogy a CouchApp utility fel van installálva a gépre.
+Ha nincs, akkor előbb gondoskodjunk annak 
 
 ### Egy új alkalmazás generálása
 
+Az első lépés, hogy hozzunk létre egy CouchDB web alkalmazást, abban a formában
+hogy az könnyel átkonvertálható legyen design dokumentummá, és az adatbáziskezelő
+megtaláljon minden szükséges állományt az általa előírt elnevezési konvenciók
+alapján.
+
+Ezt a
 Generáljunk egy új __appdev__ nevű alkalmazást:
 
     couchapp generate appdev
