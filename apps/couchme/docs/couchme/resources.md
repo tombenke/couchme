@@ -74,6 +74,7 @@ Hasznos linkek
 * [Getting_started_with_PHP](http://wiki.apache.org/couchdb/Getting_started_with_PHP?action=show&redirect=GettingStartedWithPhp)
 
 ### Egyebek
+* [CouchDB Implementation](http://horicky.blogspot.com/2008/10/couchdb-implementation.html)
 * [Full-text Indexing and Searching](http://wiki.apache.org/couchdb/Full_text_search)
 * [ExternalProcesses](http://wiki.apache.org/couchdb/ExternalProcesses)
 

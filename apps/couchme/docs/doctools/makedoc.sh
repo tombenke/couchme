@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export target=couchme
-export downloads=../../_design/$target/_attachments/downloads
+export downloads=couchme/_design/$target/_attachments/downloads
 
 ./md2html.sh authorization
 ./md2html.sh appdev
@@ -18,4 +18,7 @@ export downloads=../../_design/$target/_attachments/downloads
 cp -r images ../../_design/$target/_attachments/
 cp -r ../$target/images ../../_design/$target/_attachments/
 
-zip -r $downloads/contacts.zip ../../../contacts
+cd  ../../../
+rm $downloads/contacts.zip
+zip -r $downloads/contacts.zip contacts
+cd  couchme/docs/doctools

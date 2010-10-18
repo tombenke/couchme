@@ -97,14 +97,14 @@
 <h2>Egy alkalmazás struktúrája</h2>
 
 <p>A CouchDB amellett, hogy adatbáziskezelő, web-serverként is funkcionál.
-Ez egyúttal azt is jelentki, hogy hasonló web-es alkalmazásokat futtathatunk rajta,
+Ez egyúttal azt is jelenti, hogy hasonló web-es szolgáltatásokat hozhatunk létre rajta,
 mint pl. egy PHP-s alkalmazás egy Apache serveren, vagy egy Jávás alkalmazás
 Apache Tomcat-en.</p>
 
 <p>Ez utóbbi két web serverhez hasonlóan, a CouchDB is meghatározott tárolási
 formátumot ír elő a rajta futtatni kívánt alkalmazások számára.
 Létezik azonban két alapelv, amely döntően befolyásolja,
-hogy milyen formában kell elkészítenünk a rgrat.</p>
+hogy milyen formában kell elkészítenünk azt.</p>
 
 <ul>
 <li><p>A fejlesztendő alkalmazást képező állományok közönséges, szabványos file-ok,
@@ -112,8 +112,8 @@ melyek formátumát a web-es és egyéb szabványok határozzák meg.
 Ezek körébe tartoznak többek között a HTML oldalak, CSS file-ok,
 továbbá JavaScript, Python, Erlang és esetleg más nyelven írt, forráskód file-ok.
 Elkészítésükhöz bármilyen, szokásos eszköz felhasználható.</p></li>
-<li><p>A CouchDB számára minden "dolog" amit tárol nem más mint (JSON formátumú)
-"dokumentum". Vagyis a komplett web-es alkalmazások is dokumentumok.</p></li>
+<li><p>A CouchDB számára minden "dolog" amit tárol nem más mint JSON formátumú
+dokumentum. Vagyis a komplett web-es alkalmazások is dokumentumok.</p></li>
 </ul>
 
 <p>Mielőtt tovább megyünk, vegyük kicsit tüzetesebben szemügyre
@@ -155,8 +155,9 @@ elrendezési és névadási konvencióinak:</p>
 <p>Az egyes file-ok szerepét, tartalmát a továbbiakban részletesen tárgyaljuk.
 Most egyenlőre csak a file-ok nevére, és elhelyezkedésére koncentráljunk.</p>
 
-<p>A fenti file-ok természetesen nem üresek. a js kiterjesztésűek
-JavaScript függvényeket, a json kiterjesztésű JSON adatstruktúrát tartalmaznak.</p>
+<p>A fenti file-ok természetesen nem üresek. a <em>js</em> kiterjesztésűek
+JavaScript függvényeket,
+a <em>json</em> végződésűek pedig JSON adatstruktúrát tartalmaznak.</p>
 
 <p>A feltöltés során a fent kilistázott file-halmazt az alábbi formátumú
 JSON dokumentummá szükséges alakítani, annak érdekében,
@@ -219,7 +220,7 @@ hogy a CouchDB azt web-es alkalmazásként képes legyen értelmezni:</p>
 </code></pre>
 
 <p>Némi "hosszan-nézéssel" megállapítható, hogy a folder-struktúra, a file-nevek,
-továbbá azok tartalma egy-az-egyben megfeleltethető a JSON adatstruktúrának.</p>
+továbbá azok tartalma megfeleltethető a JSON adatstruktúrának.</p>
 
 <p>Nézzük meg most egy picit közelebbről, hogy hogyan is néz ki egy ilyen, tipikus
 folder-struktúra:</p>
@@ -240,15 +241,15 @@ folder-struktúra:</p>
 A továbbiakban, külön fejezetekben, mindegyiket részletesen tárgyaljuk.</p>
 
 <ul>
-<li><p>Az <strong>_attachments</strong> folderben elhelyezett állományokat a a server változtatás
+<li><p>Az <strong>_attachments</strong> folderben elhelyezett állományokat a server változtatás
 nélkül jeleníti meg. Itt helyezhetők el azok az "asset"-jellegű file-ok,
 (pl.: képek, statikus HTML oldalak, CSS file-ok) melyekre
 az aktív tartalmak (többnyire JavaScript programok) hivatkozni fognak.</p></li>
 <li><p>Az <strong>evently</strong> folder az ún. widgeteket tartalmazza. Ezek a megjelenítő retegben
 használható "mikro MVC objektumok", melyekből a web-oldal aktív tartalma összeállítható.
-Ezek lényegében, CouchDB-hez fejlesztett jQuery pluginek.</p></li>
+Ezek lényegében, CouchDB-hez fejlesztett jQuery plugin-ek.</p></li>
 <li><p>A <strong>lists</strong> folder JavaScript állományokat tartalmaz, melyek lekérdezések
-eredményeit adó listák megejelenítésére szolgálnak.</p></li>
+eredményeit adó listák megjelenítésére szolgálnak.</p></li>
 <li><p>A <strong>shows</strong> folder a lekérdezések eredményének megjelenítésére szolgáló
 file-okat JavaScript tartalmazza.</p></li>
 <li><p>Az <strong>updates</strong> folderben olyan JavaScript függvények vannak, melyek az adatfeltöltés
@@ -259,7 +260,7 @@ widgeteket tárolja.</p></li>
 függvényeket tartalmazza, amelyek az adatbázis lekérdezésére szolgálnak.</p></li>
 </ul>
 
-<p>A f63dere2en 21vü3 további fileok is vannak a design dokumentum gyökerében,
+<p>A folderben további file-ok is vannak a design dokumentum gyökerében,
 amelyek nem tartoznak szorosan az alkalmazáshoz, de adminisztrációs
 szempontból fontosak:</p>
 
@@ -272,7 +273,7 @@ szempontból fontosak:</p>
 
 <ul>
 <li><p>a <strong>couchapp.json</strong> és <strong>.coucapprc</strong> file-okat a CouchApp segédprogram
-használja. Ezeket részletesen a következő fejezetben ismertetjük.</p></li>
+használja.</p></li>
 <li><p>Az <strong>_id</strong> magának a design dokumentumnak az azonosítója, pl.: "_design/contacts".</p></li>
 <li><p>a <strong>language</strong> azt mondja meg, hogy az alkalmazások milyen programozási nyelven
 lettek megírva. Értéke tipikusan: "javascript".</p></li>
@@ -284,12 +285,12 @@ de ez nem túl kényelmes, és még kevésbé hatékony megoldás.</p>
 
 <p>Az előzőleg elkészített, különféle file-okat tehát át kell alakítani
 egy JSON formátumú dokumentummá, méghozzá olymódon, hogy azokat a server értelmezni
-tudja. Az értelmezés azt jelenti, hogy bizonyos, előre meghatározott szervező
+tudja. Ez azt azt jelenti, hogy bizonyos, előre meghatározott szervező
 elv és elnevezési konvenciók szerint a folderekbe rendezett állományokat egy
 erre a célra szolgáló segédprogrammal átalakítjuk egy JSON dokumentummá, és
 azt feltöltjük a serverre.</p>
 
-<p>Az előírás szerinti folderstrutúrát sem kell feltétlenül manuálisan,
+<p>Az előírás szerinti folderstruktúrát sem kell feltétlenül manuálisan,
 fejből reprodukálnunk, ugyanis a konverziót és feltöltést lehetővé tevő
 program képes egy üres program vázat létrehozni, de arra is alkalmas, hogy egy
 serveren már létező programot klónozzon a lokális meghajtónkra, amit azután
@@ -297,7 +298,7 @@ módosíthatunk is ismét feltölthetünk segítségével.</p>
 
 <p>A segédprogramot, ami mindezt lehetővé teszi CochApp-nak hívják.</p>
 
-<h2>CouchApp</h2>
+<h2>A CouchApp használata</h2>
 
 <h3>Ismerkedés a CouchApp-pal</h3>
 
@@ -374,21 +375,29 @@ Ha nincs, akkor előbb gondoskodjunk annak </p>
 <h3>Egy új alkalmazás generálása</h3>
 
 <p>Az első lépés, hogy hozzunk létre egy CouchDB web alkalmazást, abban a formában
-hogy az könnyel átkonvertálható legyen design dokumentummá, és az adatbáziskezelő
+hogy az könnyen konvertálható legyen design dokumentummá, és az adatbáziskezelő
 megtaláljon minden szükséges állományt az általa előírt elnevezési konvenciók
 alapján.</p>
 
-<p>Ezt a
-Generáljunk egy új <strong>appdev</strong> nevű alkalmazást:</p>
+<p>A generálást a</p>
 
-<pre><code>couchapp generate appdev
+<pre><code>couchapp generate &lt;application-name&gt;
+</code></pre>
 
-2010-10-06 15:47:59 [INFO] /home/tombenke/sandbox/appdev generated.
+<p>formátumú paranccsal tehetjük meg, ahol az <strong>&lt;application-name&gt;</strong>
+a generálandó design dokumentumot tartalmazó folder neve lesz.</p>
+
+<p>A próba kedvéért, egy temporary directory-ba generáljunk egy új,
+design dokumentumot, melyet <strong>contacts</strong>-nak hívnak:</p>
+
+<pre><code>couchapp generate contacts
+
+2010-10-06 15:47:59 [INFO] /home/tombenke/sandbox/contacts generated.
 </code></pre>
 
 <p>A generált folder struktúra az alábbi lesz:</p>
 
-<pre><code>.
+<pre><code>/home/tombenke/sandbox/contacts
 |-- _attachments
 |   `-- style
 |-- evently
@@ -426,15 +435,212 @@ Generáljunk egy új <strong>appdev</strong> nevű alkalmazást:</p>
     `-- recent-items
 </code></pre>
 
+<p>A fenti listából láthatjuk, hogy a couchapp szinte az összes foldert és file-t 
+előállította, ami egy design dokumentumban a konvenciók szerint előfordulhat,
+sőt, úgy tűnik, hogy a <strong>vendor/couchapp/evently</strong> folderben két widgetet is
+kreált.</p>
+
+<p>Valójában ez egy működőképes web-es alkalmazás, amit azonnal feltölthetünk 
+egy létező adatbázisba, és ki is próbálhatjuk azt.</p>
+
+<p>Hozzunk most létre egy adatbázist (ha még nem létezik ilyen) a serveren a 
+Futon-nal, vagy az alábbi paranccsal:</p>
+
+<pre><code>curl -X PUT http://localhost:5984/contacts
+</code></pre>
+
+<p>Ezt követően pedig töltsük fel a design dokumentumot a <strong>couchapp push</strong> parancsával. 
+Mielőtt azonban feltöltjük, a couchapp-nak meg kell mondani, hogy hová kívánjuk 
+deployolni az imént létrehozott design dokumentumot.</p>
+
+<h3>Alkalmazás feltöltése a serverre (deployment)</h3>
+
+<p>A feltöltést a <strong>couchapp push</strong> paranccsal hajthatjuk végre:</p>
+
+<pre><code>couchapp push http://localhost:5984/contacts
+</code></pre>
+
+<p>Paraméterként megadtuk az adatbázis URL-jét, ahová a feltöltést el kell végezni.</p>
+
+<p>A parancsot a design dokumentum gyökerében kell kiadni.
+Az eredmény valami hasonló lesz:</p>
+
+<pre><code>2010-10-18 11:42:50 [INFO] Visit your CouchApp here:
+http://localhost:5984/contacts/_design/contacts/index.html
+</code></pre>
+
+<p>A couchapp átkonvertálja a teljes folder-struktúrát JSON formátumúra,
+majd feltölti azt az adatbázisba.</p>
+
+<p>Egy projektben többféle adatbázis server is lehet, ahová ugyanazt a design dokumentumot
+fel kívánjuk tölteni, annak függvényében, hogy például a teszt,
+vagy a produktív környezetre szeretnénk kirakni az alkalmazást.</p>
+
+<p>A design dokumentum gyökér directoryjában található <strong>couchapp.json</strong> file-ban
+előre definiálhatjuk ezeket a környezeteket, mint a push művelet paramétereit.</p>
+
+<p>Az alábbi file-ban látható mintapéldában, az <strong>env</strong> paraméter sorolja fel a
+névvel azonosítható környezetek adatbázisainak URL-jeit,
+ahová fel lehet tölteni a design dokumentumot:</p>
+
+<pre><code>{
+    "name": "Contacts data",
+    "description": "contacts",
+     "env" : {
+        "default" : {
+          "db" : "http://localhost:5984/contacts"
+        },
+        "public" : {
+          "db" : "http://admin:admin@tombenke.couchone.com/contacts"
+        }
+    }
+}
+</code></pre>
+
+<p>Látható, hogy itt két környezet lett definiálva:</p>
+
+<ul>
+<li><p>a <strong>default</strong> az alapértelmezés szerinti. Ha a feltöltéskor nem adjuk meg
+explicit módon a környezet nevét, akkor a couchapp automatikusan erre tölti fel.</p></li>
+<li><p>a <strong>public</strong> nevű környezet a publikus server-re hivatkozik. Látható, hogy
+ebben az esetben usernevet és jelszót is megadtunk az URL-ben, mivel ebben
+az esetben a feltöltés csak adminisztrátori jogosultsággal rendelkező
+felhasználó számára engedélyezett.</p></li>
+</ul>
+
+<p>A <strong>name</strong> és <strong>description</strong> mezők értelemszerűen a design dokumentum nevét és
+leírását határozzák meg.</p>
+
+<p>Ha a couchapp.json file létezik, és megfelelően fel van paraméterezve, akkor
+a feltöltéshez az URL helyett elegendő megadni a környezet nevét, pl.:</p>
+
+<pre><code>couchapp push public
+</code></pre>
+
+<p>Ha a default környezetre kívánjuk kirakni a design dokumentumot, akkor elegendő
+csak az alábbi parancsot kiadni:</p>
+
+<pre><code>couchapp push
+</code></pre>
+
 <h3>Létező alkalmazás klónozása</h3>
 
 <pre><code>couchapp clone http://localhost:5984/contacts/_design/contacts
 </code></pre>
 
-<h3>Alkalmazás feltöltése a serverre (deployment)</h3>
+<p>az eredmény:</p>
 
-<pre><code>couchapp push http://admin:admin@localhost:5984/contacts
+<pre><code>2010-10-18 11:35:32 [INFO] http://localhost:5984/contacts/_design/contacts cloned in contacts
 </code></pre>
+
+<p>továbbá létrejött egy <strong>contacts</strong> nevű folder az aktuális directory alatt, ami
+tartalmazza a serverről letöltött, és JSON formátumból "kicsomagolt" file-okat.</p>
+
+<p>Figyelem: a clone parancs csak a megnevezett design dokumentumot klónozza, az
+adatbázisban lévő többi dokumentumot nem!</p>
+
+<p>Ha adatbázis mentést akarunk végezni, akkor azt külön végre kell hajtanunk.</p>
+
+<p>A klónozással létrehozott design dokumentum struktúra teljes értékű,
+és tartalmaz mindent. A benne lévő file-okat módosíthatjuk a megszokott,
+kedvenc szerkesztő programunkkal, majd újra visszatölthetjük a kiválasztott
+környezetre, a <strong>couchapp push</strong> parancsával.</p>
+
+<h2>Komplett alkalmazások folder struktúrája</h2>
+
+<p>Amikor egy komplett CouchDB-s alkalmazást fejlesztünk, értelemszerűen nem
+csak design dokumentumokat hozunk létre.</p>
+
+<p>A projekthez tartoznak még például teszt és törzs adatok, dokumentáció, stb.</p>
+
+<p>Ezeket adott esetben célszerű lehet egy helyen tartani, és együtt bevonni a
+verziókövetés, archiválás alá.</p>
+
+<p>Ezért a továbbiakban az összetettebb alkalmazások fejlesztése során
+az alábbi meta-struktúrát fogjuk alkalmazni:</p>
+
+<pre><code>my-web-app/
+|-- data
+|-- _design
+|   |-- ddoc-1
+|   |-- ddoc-2
+|   `-- ddoc-n
+`-- docs
+</code></pre>
+
+<p>A <strong>my-web-app</strong> folder tartalmazza az egész projektet, és ez kerül kompletten
+be a verziókövető repository-jába.</p>
+
+<p>A <strong>data</strong> folder az adatokat a <strong>docs</strong> pedig a dokumentációt tárolására szolgál.
+A <strong>_design</strong> folder alatt tároljuk az egy vagy több design dokumentumot
+alkotó file rendszert.</p>
+
+<p>a <strong>_design</strong> nevű folder-be rakjuk azokat a directory-kat, amelyek az egyes design
+dokumentumok file-jait tartalmazzák. Ezeket külön-külön legeneráltathatjuk
+a couchapp generate paranccsal, melyet a <strong>my-web-app/_design</strong> folderben adunk ki.</p>
+
+<p>Ha több design dokumentumunk is van, akkor azokat egyetlen paranccsal egyszerre
+is feltölthetjük, ha az őket tartalmazó meta-folderben (esetünkben a my-web-app)
+kiadjuk a következő utasítást:</p>
+
+<pre><code>couchapp pushapps _design  http://localhost:5984/my-web-app
+</code></pre>
+
+<p>Egy komplett projekt folder struktúrája látható egyetlen design dokumentummal és
+adat file-okkal az alábbi ábrán:</p>
+
+<pre><code>contacts/
+|-- data
+|   |-- attachments
+|   |-- bulk
+|   |   |-- contacts_with_id.csv
+|   |   |-- contacts_with_id.json
+|   |   |-- contacts_with_id.properties
+|   |   |-- contacts_with_id.xls
+|   |   `-- contacts_without_id.json
+|   |-- charlesb.json
+|   |-- emma.json
+|   |-- ericq.json
+|   |-- jsmith.json
+|   |-- jthomas.json
+|   `-- uploadData.sh
+`-- _design
+    `-- contacts
+        |-- couchapp.json
+        |-- _id
+        |-- language
+        |-- lists
+        |   |-- contactsToJSON.js
+        |   `-- rowsToJSON.js
+        `-- views
+            |-- age_average
+            |   |-- map.js
+            |   `-- reduce.js
+            |-- age_max_min
+            |   |-- map.js
+            |   `-- reduce.js
+            `-- contacts
+                `-- map.js
+</code></pre>
+
+<p>Arra is van mód, hogy a <strong>couchapp pushapps</strong> a parancshoz hasonlóan, a <strong>data</strong>
+directory-ban tárolt json file-okat egyetlen paranccsal feltöltsük az adatbázisba:</p>
+
+<pre><code>cuchapp pushdocs data http://localhost:5984/contacts
+</code></pre>
+
+<p>Végezetül megemlítjük, hogy a couchapp igényli a JSON formátumú <strong>.couchapprc</strong>
+file meglétét a design dokumentumot tartalmazó folderben, még akkor is, ha ez
+mindössze egy üres objektumot tartalmaz.</p>
+
+<p>Ennek akkor van jelentősége, ha pl. kézzel hozzuk létre a design dokumentum
+folder-struktúráját, vagy külső repository-ról (git, hg) klónozzuk, és a file nem
+jön létre. Ilyenkor futassuk le a</p>
+
+<pre><code>couchapp init
+</code></pre>
+
+<p>parancsot, a design dokumentum directory-jában, és az létre fogja hozni a file-t.</p>
 			</div>
 
 		<!-- content-wrap ends here -->

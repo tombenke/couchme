@@ -1,27 +1,123 @@
 Lekérdezések
 ============
 
-Ebben a fejezetben egyszerű lekérdezéseket fogunk definiálni a _contacts_
+
+Ebben a fejezetben egyszerű lekérdezéseket fogunk definiálni a __contacts__
 adatbázison, amelyet az [Adatfeltöltés](dataUpload.html) fejezetben
 hoztunk létre.
 
-## contacts
+A CouchDB-ben a lekérdezések és riportok előállítására az ún. view-k szolgálnak.
 
-A _map()_ függvény:
+A view-k használata két lépésből áll:
+
+* a view-k definiálása,
+* a view-k használata (lekérdezése).
+
+Kétféle view típus létezik:
+
+* átmeneti (temporary), és
+* állandó (permanent).
+
+Az átmeneti view-kat alapvetően csak fejlesztés során alkalmazzuk.
+Végrehajthatók a Futon felületéről, vagy egy HTTP POST request-tel a következő
+URL-re:
+
+    /{dbname}/_temp_view,
+
+ahol a Content-type header változót "application/json" értékre kell állítani
+és a request tartalmának a view függvény kódját kell tartalmaznia.
+
+<!-- TODO példát írni -->
+
+Az átmeneti view-k nem tárolódnak az adatbázisban, és minden végrehajtáskor
+újra számolódnak, ami jelentős performancia visszaesést eredményezhet.
+Emiatt produktív környezetben használatát célszerű elkerülni, viszont megkönnyíti
+a fejlesztés közbeni "kísérletezést".
+
+Az állandó (permanens) view-k az ún. design dokumentumban vannak tárolva, és
+HTTP GET kérésekkel lehet lekérdezni őket, az alábbi URL minta szerint:
+
+    /{dbname}/{docid}/{viewname},
+
+ahol a __{docid}__-nek van egy __\_design/__ előtagja, amitől a CouchDB felismeri,
+hogy ez egy speciális, design dokumentum.
+A __{viewname}__ pedig a __\_view/__ prefixet tartalmazza, amiből a CouchDB
+megállapíthatja, hogy egy view-ról van szó.
+
+Az alábbi URL pl.: egy szabályos view hivatkozás:
+
+    http://localhost:5984/contacts/_design/contacts/_view/allContacts
+
+ahol a __{docid}__:
+
+    _design/contacts
+
+
+a __{viewname}__ pedig:
+
+    _view/allContacts
+
+
+Mindkét típusú view definiálása JavaScript függvények írásával történik.
+Más nyelvi implementáció is lehetséges, de mi csak a JavaScript-es verziót tárgyaljuk.
+
+Korábban volt szó róla, hogy a design dokumentumok maguk is JSON dokumentumok, akár a
+közönséges adatok. Ennek megfelelően a view-k definiálása is JSON mezők, ill. struktúrák
+létrehozásából állnak. Ezt megtehetjük közvetlenül, a JSON struktúra szerkesztésével.
+
+Mi azonban azt az utat fogjuk követni, hogy a design dokumentum egyes elemeit külön-külön
+folderekbe, és file-okba tesszük, majd a __couchapp__ utility segítségével alakítjuk át
+JSON formátumúra, és töltjük fel az adatbázisba. Helyenként, a példákban, a teljesség kedvéért
+utalunk a létrehozott, végleges JSON struktúrákra is.
+
+A view definiálásakor először adunk neki egy nevet, majd ezzel a névvel létrehozunk
+egy foldert abban a design dokumentumban, amelyben el akarjuk helyezni a view-t.
+
+Ebben a folderben két függvényt helyezhetünk el egy-egy file-ban.
+Az egyik a _map()_, a másik a _reduce()_.
+Ez utóbbi használata opcionális, viszont _map()_ megadása kötelező.
+
+Definiálásuk úgy történik, hogy a view nevével létrehozott folderben elhelyezünk
+egy __map.js__, ill. egy __reduce.js__ file-t, melyek egy-egy JavaScript
+függvényt fognak tartalmazni.
+
+A view-k kiszámítása úgy történik, hogy a __map()__ függvény meghívódik minden
+egyes dokumentumra az adatbázisban, átadva azt paraméterként a függvénynek.
+
+A __map()__ függvény pedig meghívhat egy __emit()__ nevű függvényt,
+amelynek két argumentuma van: __key__ és __value__.
+
+A __map()__ függvény annyiszor hívja meg ezt a függvényt, ahányszor jónak látja.
+Minden egyes alkalommal egy eredmény rekord tárolódik el a view-ban, amely a __key__
+értéke alapján indexelésre is kerül.
+
+Az esetek jelentős részében ezzel a view létrehozása véget is ér. Az eredmény
+egy halmaz lesz __key__ értékek alapján indexelt rekord halmaz lesz.
+
+A __key__ nem csak egyszerű, de összetett érték is lehet.
+
+Felhasználva a __customer__ adatbázis dokumentumait, ha például egy olyan listát
+szeretnénk kapni, amelyben minden személy, összes adatával szerepel, az egyedi
+dokumentum azonosítója alapján sorba rendezve, akkor az alábbi __map()__
+függvényt kell írnunk:
 
     function( doc )
     {
         emit( doc._id, doc );
     };
 
-A _reduce()_ függvény: nincs definiálva.
+Hozzunk létre a __\_design/contacts__ design dokumentum alatt egy __views__
+alkönyvtárat, majd ebben hozzunk létre egy __contacts__ aldirectory-t, és abban egy
+__map.js__ file-t, amibe írjuk be a fent látható __map()__ függvényt.
 
+Töltsük fel az adatbázist adatokkal, majd ugyancsak töltsük fel a design ű
+dokumentumunkat a couchapp utility segítségével.
 
-Lekérdezés:
+Ezek után hajtsunk végre egy keresést az alábbi paranccsal:
 
-    http://localhost:5984/contacts/_design/contacts/_view/contacts
+    curl -X GET http://localhost:5984/contacts/_design/contacts/_view/contacts
 
-Eredmény:
+az eredménynek a következőnek kell lennie:
 
     {"total_rows":5,"offset":0,"rows":[
     {"id":"8465af0d3d78f4d4b392010b5e0170ab","key":"8465af0d3d78f4d4b392010b5e0170ab","value":{"_id":"8465af0d3d78f4d4b392010b5e0170ab","_rev":"1-4e2fc63dee5ccbab9850d5e77e6f7afa","name":"Charles Bing","age":43,"country":"USA","phone":"555-821345","email":"charlesb@exmaple.com"}},
@@ -31,7 +127,20 @@ Eredmény:
     {"id":"8465af0d3d78f4d4b392010b5e018ff3","key":"8465af0d3d78f4d4b392010b5e018ff3","value":{"_id":"8465af0d3d78f4d4b392010b5e018ff3","_rev":"1-8010f0b12b720288fe180db488827aec","name":"Jane Thomas","age":14,"country":"USA","phone":"555-210897","email":"jthomas@example.com"}}
     ]}
 
+A __map()__ függvény mellett, opcionálisan írhatunk egy __reduce()__ függvényt is.
+Ez a map fázisban létrehozott eredmény listán különféle aggregációs
+(pl.: average, sum) műveletek elvégzésére szolgál.
 
+
+A view-k akkor számítódnak ki, amikor először lekérdezésre kerülnek. Egy dokumentum 
+módosulása, vagy beillesztése önmagában nem jár automatikusan a view újraszámolásával.
+Ugyanakkor ezt ki lehet váltani egy script segítségével.
+
+Ezzel szemben, egy design dokumentum alá tartozó view-k bármelyike lekérdezésre kerül, 
+az az összes, ugyanabban a design dokumentumban lévő view aktualizálását is maga után vonja.
+
+
+<!--
 ## customer -ek listázása JSON formátumban
 
 A list függvény (_\_design/contacts/lists/contactsToJSON.js_):
@@ -96,7 +205,7 @@ Eredmény:
     {"rows":[
     {"key":null,"value":33.4}
     ]}
-
+-->
 <!--
 
 ## viewName
