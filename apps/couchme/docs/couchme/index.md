@@ -48,6 +48,20 @@ A következő eszközöket fogjuk még ezen felül használni:
 * __curl__ parancs-sori HTTP kliens alkalmazás
 * web böngésző (Firefox, Chromium, stb.)
 
+## A legjobb dokumentáció a forráskód
+
+A felinstallált couchdb directoryja alatt megtalálható a forráskód.
+
+Ha mintára van szükségünk, ami biztosan működik,
+és kompatibilis az aktuálisan felinstallált verzióval,
+akkor tanulmányozzuk a forrás file-okat az alábbi helyen:
+
+    $COUCHDB\_HOME/share/couchdb/www/scripts/*.js
+    $COUCHDB\_HOME/share/couchdb/www/scripts/test/*.js
+
+A $COUCHDB\_HOME Ubuntu-n pl a következő lehet: /opt/couchdb-1.0.1
+
+
 ## Kapcsolat
 
 Szeretném, ha az erőfeszítéseim valóban használható eredményt hoznának,

@@ -92,9 +92,19 @@
 			<div id="main">
 
 				<a name="TemplateInfo"></a>
-<h1>authorizáció</h1>
+<p>http://almafa.couchone.com/marketa/<em>design/marketa/</em>list/VIR/users</p>
 
-<p>TODO</p>
+<p>Ha az "Accept: text/html" Header változót állítják be a HTTP kliensen, akkor HTML-lel tér vissza, ha "Accept: text/xml"-t, akkor XML-lel.
+Figyelem! A böngésző alapértelmezésben HTML-t kér, ezért ezt egy dedikált klienssel lehet megnézni, pl az alábbiak szerint:</p>
+
+<pre><code>curl -X GET http://almafa.couchone.com/marketa/_design/marketa/_list/VIR/users -H "Accept: text/xml"
+</code></pre>
+
+<p>Az alábbiaknál nem kell beállítani (csak HTML-t, és csak XML-t szolgáltatnak):</p>
+
+<pre><code>http://almafa.couchone.com/marketa/_design/marketa/_list/basicHTML/users
+http://almafa.couchone.com/marketa/_design/marketa/_list/basicXML/users
+</code></pre>
 			</div>
 
 		<!-- content-wrap ends here -->

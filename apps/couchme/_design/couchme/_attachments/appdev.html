@@ -1,0 +1,427 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta name="Description" content="CouchDB, NoSQL" />
+<meta name="Keywords" content="CouchDB, NoSQL" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Distribution" content="Global" />
+<meta name="Author" content="Tamás Benke - tombenke@gmail.com" />
+<meta name="Robots" content="index,follow" />
+
+<link rel="stylesheet" href="images/Refresh.css" type="text/css" />
+
+<title>Web-es alkalmazások fejlesztése couchDB-vel és CouchApp-pal</title>
+
+
+</head>
+
+<body>
+<!-- wrap starts here -->
+<div id="wrap">
+
+		<!--header -->
+		<div id="header">
+
+			<h1 id="logo-text">Couch<span class="gray">Me</span></h1>
+			<h2 id="slogan">Web-es alkalmazások fejlesztése CouchDB-vel</h2>
+
+			<!--form class="search" method="post" action="#">
+				<p>
+	  			<input class="textbox" type="text" name="search_query" value="" />
+	 			<input class="button" type="submit" name="Submit" value="Search" />
+				</p>
+			</form-->
+
+		</div>
+
+		<!-- menu -->
+		<div  id="menu">
+			<ul>
+				<li id="current"><a href="index.html">Címlap</a></li>
+				<li><a href="downloads.html">Letöltések</a></li>
+				<li><a href="resources.html">Linkek</a></li>
+			</ul>
+		</div>
+
+		<!-- content-wrap starts here -->
+		<div id="content-wrap">
+
+			<div id="sidebar">
+
+				<h1>Tartalom</h1>
+				<div class="left-box">
+					<ul class="sidemenu">
+						<li><a href="index.html">Címlap</a></li>
+						<li><a href="intro.html">Bevezetés</a></li>
+						<li><a href="install.html">Installálás</a></li>
+						<li><a href="dataUpload.html">Adatfeltöltés</a></li>
+						<li><a href="appdev.html">Alkalmazás-fejlesztés</a></li>
+						<li><a href="views.html">Lekérdezések</a></li>
+					</ul>
+				</div>
+
+				<h1>Egyéb</h1>
+				<div class="left-box">
+					<ul class="sidemenu">
+						<li><a href="downloads.html">Letöltések</a></li>
+						<li><a href="resources.html">Linkek</a></li>
+					</ul>
+				</div>
+
+				<!--h1>Wise Words</h1>
+				<div class="left-box">
+					<p>&quot;To be concious that you are ignorant of the
+					facts is a great step to knowledge&quot; </p>
+
+					<p class="align-right">- Benjamin Disraeli</p>
+				</div>
+
+				<h1>Support Styleshout</h1>
+				<div class="left-box">
+					<p>If you are interested in supporting my work and would like to contribute, you are
+					welcome to make a small donation through the
+					<a href="http://www.styleshout.com/">donate link</a> on my website - it will
+					be a great help and will surely be appreciated.</p>
+				</div-->
+
+
+			</div>
+
+			<div id="main">
+
+				<a name="TemplateInfo"></a>
+<h1>Alkalmazás-fejlesztés</h1>
+
+<h2>Egy alkalmazás struktúrája</h2>
+
+<p>A CouchDB amellett, hogy adatbáziskezelő, web-serverként is funkcionál.
+Ez egyúttal azt is jelentki, hogy hasonló web-es alkalmazásokat futtathatunk
+rajta, mint pl. egy PHP-s alkalmazás egy Apache serveren, vagy egy Javá-s alkalmazás
+Apache Tomcat-en.</p>
+
+<p>Ez utóbbi két web serverhez hasonlóan, a CouchDB is meghatározott tárolási
+formátumot ír elő a rajta futtatni kívánt alkalmazások számára.
+Létezik azonban két alapelv, amely döntően befolyásolja,
+hogy milyen formában kell elkészítenünk forrásfile-jainkat.</p>
+
+<ul>
+<li><p>A fejlesztendő alkalmazást képező állományok szabványos file-ok,
+melyek formátumát a web-es és egyéb szabványok határozzák meg.
+Ezek körébe tartoznak többek között a HTML oldalak, CSS file-ok,
+továbbá JavaScript, Python, Erlang és esetleg más nyelven írt, forráskód file-ok.
+Elkészítésükhöz bármilyen, szokásos eszköz felhasználható.</p></li>
+<li><p>A CouchDB számára minden "dolog" amit tárol nem más mint (JSON formátumú) "dokumentum".
+Vagyis a web-es alkalmazások is dokumentumok.</p></li>
+</ul>
+
+<p>Mielőtt tovább megyünk, vegyük kicsit tüzetesebben szemügyre
+a web-es alkalmazásokat tartalmazó dokumentumokat, melyeket <em>_design</em> dokumentumnak
+neveznek. Az elnevezés abból adódik, hogy a dokumentum azonosítója a
+<strong>_design/</strong> előtaggal kezdődik. A _design dokumentum tehát éppen olyan JSON
+dokumentum, mint a többi adatbázisban lévő dokumentum, csak a neve kötött formátumban
+kezdődik. A <strong>_design/</strong>-t bármi követheti. ráadásul egy adott adatbázisban több
+ilyen kezdetű dokumentum is helyet foglalhat.</p>
+
+<p>Az alábbi nevek szabályos _design-dokumentum nevek:</p>
+
+<pre><code>_design/couchme
+_design/contacts
+_desing/myapp
+</code></pre>
+
+<p>Az alábbi folderstruktúrában elrendezett forrásfile-ok megfelelnek a CouchDB
+elrendezési és névadási konvencióinak:</p>
+
+<pre><code>_design/contacts
+|-- couchapp.json
+|-- _id
+|-- language
+|-- lists
+|   |-- contactsToJSON.js
+|   `-- rowsToJSON.js
+`-- views
+    |-- age_average
+    |   |-- map.js
+    |   `-- reduce.js
+    |-- age_max_min
+    |   |-- map.js
+    |   `-- reduce.js
+    `-- contacts
+        `-- map.js
+</code></pre>
+
+<p>Az egyes file-ok szerepét, tartalmát a továbbiakban részletesen tárgyaljuk.
+Most egyenlőre csak a file-ok nevére, és elhelyezkedésére koncentráljunk.</p>
+
+<p>A fent kilistázott file-halmazt az alábbi formátumú JSNO dokumentummá kell
+konvertálni, annak érdekében, hogy a CouchDB azt web-es alkalmazásként képes
+legyen értelmezni:</p>
+
+<pre><code>{
+   "_id": "_design/contacts",
+   "_rev": "4-524e1660653d4861864690264f0fc8b9",
+   "language": "javascript",
+   "views": {
+       "age_max_min": {
+           "map": "function(doc) {\u000a     if( ! doc.age ) return;\u000a     emit( \"age_max_min\", doc.age );\u000a}",
+           "reduce": "function(key, values, rereduce ) {\u000a  var max, min;\u000a  if(rereduce == false) {\u000a    max = values[0];\u000a    min = values[0];\u000a    for(item in values) {\u000a      if(values[item] &gt; max) max = values[item];\u000a      if(values[item] &lt; min) min = values[item];\u000a    }\u000a    return { \"max\": max, \"min\": min };\u000a  } else {\u000a    max = values[0].max;\u000a    min = values[0].min;\u000a    for(item in values) {\u000a      if(values[item].max &gt; max) max = values[item].max;\u000a      if(values[item].min &lt; min) min = values[item].min;\u000a    }\u000a    return { \"max\": max, \"min\": min };\u000a  }\u000a\u000a}"
+       },
+       "age_average": {
+           "map": "function(doc) {\u000a     if( ! doc.age ) return;\u000a     emit( \"average\", doc.age );\u000a}",
+           "reduce": "function( key, values, rereduce )\u000a{\u000a    var totals = sum( values );\u000a    return Math.round( (totals / values.length) * 100 / 100);\u000a}"
+       },
+       "contacts": {
+           "map": "function( doc )\u000a{\u000a    emit( doc._id, doc );\u000a};"
+       }
+   },
+   "lists": {
+       "rowsToJSON": "function( head, req )\u000a{\u000a    send(\"head\");\u000a    var row;\u000a    while( row = getRow() )\u000a    {\u000a        log( \"row: \" + toJSON( row ) );\u000a        send( row. key );\u000a    };\u000a    return \"tail\";\u000a}",
+       "contactsToJSON": "function( head, req )\u000a{\u000a    start({\u000a        \"headers\": {\u000a            \"Content-Type\" : \"application/json\"\u000a        }\u000a    });\u000a    send( '{\"head\":' + toJSON(head) + ', ' );\u000a    send( '\"req\":' + toJSON(req) + ', ' );\u000a    send( '\"rows\":[' );\u000a    var row, sep = '\\n';\u000a    while( row = getRow() )\u000a    {\u000a        send( sep + toJSON( row ) );\u000a        sep = ', \\n';\u000a    }\u000a    return \"]}\";\u000a}"
+   },
+   "couchapp": {
+       "objects": {
+       },
+       "signatures": {
+       },
+       "name": "Contacts data",
+       "env": {
+           "default": {
+               "db": "http://localhost:5984/contacts"
+           },
+           "public": {
+               "db": "http://tombenke.couchone.com/contacts"
+           }
+       },
+       "manifest": [
+           "couchapp.json",
+           "language",
+           "views/",
+           "views/contacts/",
+           "views/contacts/map.js",
+           "views/age_max_min/",
+           "views/age_max_min/reduce.js",
+           "views/age_max_min/map.js",
+           "views/age_average/",
+           "views/age_average/reduce.js",
+           "views/age_average/map.js",
+           "lists/",
+           "lists/rowsToJSON.js",
+           "lists/contactsToJSON.js"
+       ],
+       "description": "contacts"
+   }
+}
+</code></pre>
+
+<p>Némi "hosszan-nézéssel" megállapítható, hogy a folder-struktúra, a file-nevek és
+azok tartalma egy-az-egyben megfeleltethető a JSON adatstruktúrának.</p>
+
+<p>Nézzük most meg egy picit közelebbről, hogy hogyan is néz ki egy ilyen, tipikus
+folder-struktúra:</p>
+
+<pre><code>_design/&lt;appname&gt;
+|-- _attachments
+|-- evently
+|-- lists
+|-- shows
+|-- updates
+|-- vendor
+`-- views
+</code></pre>
+
+<p>Itt most csak röviden összefoglaljuk, hogy az egyes foldereknek mi a szerepe.
+A továbbiakban, a megfelelő fejezetekben, mindegyiket részletesen tárgyaljuk.</p>
+
+<ul>
+<li><p>Az <strong>_attachments</strong> folderben elhelyezett állományokat a a server változtatás
+nélkül jeleníti meg. Itt helyezhetők el azok az "asset"-jellegű file-ok,
+(pl.: képek, statikus HTM loldalak, CSS file-ok ) melyekre
+az aktív tartalmak (programok) hivatkozni fognak.</p></li>
+<li><p>Az <strong>evently</strong> folder az ún. widgeteket tartalmazza. Ezek a megjelenítő retegben
+használatok "mikro MVC objektumok", melyekből a web-oldal aktív tartalma összeállítható.
+Főként speciális, CouchDB-hez fejlesztett jQuery pluginek-ből állnak.</p></li>
+<li><p>A <strong>lists</strong> folder JavaScript állományokat tartalmaz, melyek lekérdezések
+eredményeit adó listák megejelenítésére szolgálnak.</p></li>
+<li><p>A <strong>shows</strong> folder a lekérdezések eredményének megjelenítésére szolgáló
+file-okat JavaScript tartalmazza.</p></li>
+<li><p>Az <strong>updates</strong> folderben olyan JavaScript függvények vannak, melyek az adatfeltöltés
+során használatos update műveletek validálására szolgálnak.</p></li>
+<li><p>A <strong>vendor</strong> folder a könyvtárként újrafelhasználható, előre beépített
+widgeteket tárolja.</p></li>
+<li><p>a <strong>views</strong> folder az adatbázis lekérdezéseket megvalósító, ún. map/reduce
+függvényeket tartalmazza, amelyek az adatbázis lekérdezésére szolgálnak.</p></li>
+</ul>
+
+<p>A CouchDB Futon nevű adminisztrációs felületével gyakorlatilag közvetlenül a serveren
+létre tudunk hozni alkalmazásokat, JSON formátumban, de ez nem túl kényelmes, és
+még kevésbé hatékony megoldás.</p>
+
+<p>Az előzőleg elkészített, különféle file-okat tehát át kell alakítani
+egy JSON formátumú dokumentummá, méghozzá olymódon, hogy azokat a server értelmezni
+tudja. Az értelmezés azt jelenti, hogy bizonyos, előre meghatározott szervező
+elv és elnevezési konvenciók szerint a folderekbe rendezett állományokat egy
+erre a célra szolgáló segédprogrammal átalakítjuk egy JSON dokumentummá, és
+azt feltöltjük a serverre.</p>
+
+<p>Az előírás szerinti folderstrutúrát sem kell feltétlenül manuálisan,
+fejből reprodukálnunk, ugyanis a konverziót és feltöltést lehetővé tevő
+program képes egy üres program vázat létrehozni, de arra is alkalmas, hogy egy
+serveren már létező programot klónozzon a lokális meghajtónkra, amit azután
+módosíthatunk is ismét feltölthetünk segítségével.</p>
+
+<p>A segédprogramot, ami mindezt lehetővé teszi CochApp-nak hívják.</p>
+
+<h2>CouchApp</h2>
+
+<h3>Ismerkedés a CouchApp-pal</h3>
+
+<p>A couchapp használatáról elsőkézből magától az alkalmazástól kérhetünk
+tájékozatatást:</p>
+
+<pre><code>couchapp help
+</code></pre>
+
+<p>az eredmény:</p>
+
+<pre><code>couchapp help
+couchapp [OPTIONS] [CMD] [OPTIONSCMD] [ARGS,...]
+usage:
+
+-d/--debug   debug mode
+-h/--help    display help and exit
+--version    display version and exit
+-v/--verbose     enable additionnal output
+-q/--quiet   don't print any message
+
+list of commands:
+-----------------
+
+browse   [COUCHAPPDIR] DEST
+
+clone    [OPTION]...[-r REV] SOURCE [COUCHAPPDIR]
+-r/--rev [VAL]   clone specific revision
+
+generate     [OPTION]... [app|view,list,show,filter,function,vendor] [COUCHAPPDIR] NAME
+--template [VAL]     template name
+
+help
+
+    init     [COUCHAPPDIR]
+
+    push     [OPTION]... [COUCHAPPDIR] DEST
+    --no-atomic  send attachments one by one
+    --export     don't do push, just export doc to stdout
+    --output [VAL]   if export is selected, output to the file
+    -b/--browse  open the couchapp in the browser
+    --force  force attachments sending
+    --docid [VAL]    set docid
+
+    pushapps     [OPTION]... SOURCE DEST
+    --no-atomic  send attachments one by one
+    --export     don't do push, just export doc to stdout
+    --output [VAL]   if export is selected, output to the file
+    -b/--browse  open the couchapp in the browser
+    --force  force attachments sending
+
+    pushdocs     [OPTION]... SOURCE DEST
+    --no-atomic  send attachments one by one
+    --export     don't do push, just export doc to stdout
+    --output [VAL]   if export is selected, output to the file
+    -b/--browse  open the couchapp in the browser
+    --force  force attachments sending
+
+    vendor   [OPTION]...[-f] install|update [COUCHAPPDIR] SOURCE
+    -f/--force   force install or update
+
+    version
+</code></pre>
+
+<h3>Egy új alkalmazás generálása</h3>
+
+<p>Generáljunk egy új <strong>appdev</strong> nevű alkalmazást:</p>
+
+<pre><code>couchapp generate appdev
+
+2010-10-06 15:47:59 [INFO] /home/tombenke/sandbox/appdev generated.
+</code></pre>
+
+<p>A generált folder struktúra az alábbi lesz:</p>
+
+<pre><code>.
+|-- _attachments
+|   `-- style
+|-- evently
+|   |-- items
+|   |   `-- _changes
+|   `-- profile
+|       `-- profileReady
+|           `-- selectors
+|               `-- form
+|-- lists
+|-- shows
+|-- updates
+|-- vendor
+|   `-- couchapp
+|       |-- _attachments
+|       |-- evently
+|       |   |-- account
+|       |   |   |-- adminParty
+|       |   |   |-- loggedIn
+|       |   |   |-- loggedOut
+|       |   |   |-- loginForm
+|       |   |   |   `-- selectors
+|       |   |   |       `-- form
+|       |   |   `-- signupForm
+|       |   |       `-- selectors
+|       |   |           `-- form
+|       |   `-- profile
+|       |       |-- loggedOut
+|       |       |-- noProfile
+|       |       |   `-- selectors
+|       |       |       `-- form
+|       |       `-- profileReady
+|       `-- lib
+`-- views
+    `-- recent-items
+</code></pre>
+
+<h3>Létező alkalmazás klónozása</h3>
+
+<pre><code>couchapp clone http://localhost:5984/contacts/_design/contacts
+</code></pre>
+
+<h3>Alkalmazás feltöltése a serverre (deployment)</h3>
+
+<pre><code>couchapp push http://admin:admin@localhost:5984/contacts
+</code></pre>
+			</div>
+
+		<!-- content-wrap ends here -->
+		</div>
+
+		<!--footer starts here-->
+		<div id="footer">
+
+			<p>
+			&copy; 2010 <strong>TomBenke</strong> |
+			Design by: <a href="http://www.styleshout.com/">styleshout</a> |
+			Valid <a href="http://validator.w3.org/check?uri=referer">XHTML</a> |
+			<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a>
+			 | Courtesy <a href="http://www.openwebdesign.org" target="_blank">Open Web Design</a>
+			 <br/>
+   		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<!--a href="index.html">Bevezetés</a>&nbsp;|&nbsp;
+   		<a href="downloads.html">Letöltések</a>&nbsp;|&nbsp;
+	   	<a href="resources.html">Linkek</a-->
+   		</p>
+
+		</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body>
+</html>

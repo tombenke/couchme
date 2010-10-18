@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta name="Description" content="CouchDB, NoSQL" />
+<meta name="Keywords" content="CouchDB, NoSQL" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Distribution" content="Global" />
+<meta name="Author" content="Tamás Benke - tombenke@gmail.com" />
+<meta name="Robots" content="index,follow" />
+
+<link rel="stylesheet" href="images/Refresh.css" type="text/css" />
+
+<title>Web-es alkalmazások fejlesztése couchDB-vel és CouchApp-pal</title>
+
+
+</head>
+
+<body>
+<!-- wrap starts here -->
+<div id="wrap">
+
+		<!--header -->
+		<div id="header">
+
+			<h1 id="logo-text">Couch<span class="gray">Me</span></h1>
+			<h2 id="slogan">Web-es alkalmazások fejlesztése CouchDB-vel</h2>
+
+			<!--form class="search" method="post" action="#">
+				<p>
+	  			<input class="textbox" type="text" name="search_query" value="" />
+	 			<input class="button" type="submit" name="Submit" value="Search" />
+				</p>
+			</form-->
+
+		</div>
+
+		<!-- menu -->
+		<div  id="menu">
+			<ul>
+				<li id="current"><a href="index.html">Címlap</a></li>
+				<li><a href="downloads.html">Letöltések</a></li>
+				<li><a href="resources.html">Linkek</a></li>
+			</ul>
+		</div>
+
+		<!-- content-wrap starts here -->
+		<div id="content-wrap">
+
+			<div id="sidebar">
+
+				<h1>Tartalom</h1>
+				<div class="left-box">
+					<ul class="sidemenu">
+						<li><a href="index.html">Címlap</a></li>
+						<li><a href="intro.html">Bevezetés</a></li>
+						<li><a href="install.html">Installálás</a></li>
+						<li><a href="dataUpload.html">Adatfeltöltés</a></li>
+						<li><a href="appdev.html">Alkalmazás-fejlesztés</a></li>
+						<li><a href="views.html">Lekérdezések</a></li>
+					</ul>
+				</div>
+
+				<h1>Egyéb</h1>
+				<div class="left-box">
+					<ul class="sidemenu">
+						<li><a href="downloads.html">Letöltések</a></li>
+						<li><a href="resources.html">Linkek</a></li>
+					</ul>
+				</div>
+
+				<!--h1>Wise Words</h1>
+				<div class="left-box">
+					<p>&quot;To be concious that you are ignorant of the
+					facts is a great step to knowledge&quot; </p>
+
+					<p class="align-right">- Benjamin Disraeli</p>
+				</div>
+
+				<h1>Support Styleshout</h1>
+				<div class="left-box">
+					<p>If you are interested in supporting my work and would like to contribute, you are
+					welcome to make a small donation through the
+					<a href="http://www.styleshout.com/">donate link</a> on my website - it will
+					be a great help and will surely be appreciated.</p>
+				</div-->
+
+
+			</div>
+
+			<div id="main">
+
+				<a name="TemplateInfo"></a>
+<h1>Lekérdezések</h1>
+
+<p>Ebben a fejezetben egyszerű lekérdezéseket fogunk definiálni a <em>contacts</em>
+adatbázison, amelyet az <a href="dataUpload.html">Adatfeltöltés</a> fejezetben
+hoztunk létre.</p>
+
+<h2>contacts</h2>
+
+<p>A <em>map()</em> függvény:</p>
+
+<pre><code>function( doc )
+{
+    emit( doc._id, doc );
+};
+</code></pre>
+
+<p>A <em>reduce()</em> függvény: nincs definiálva.</p>
+
+<p>Lekérdezés:</p>
+
+<pre><code>http://localhost:5984/contacts/_design/contacts/_view/contacts
+</code></pre>
+
+<p>Eredmény:</p>
+
+<pre><code>{"total_rows":5,"offset":0,"rows":[
+{"id":"8465af0d3d78f4d4b392010b5e0170ab","key":"8465af0d3d78f4d4b392010b5e0170ab","value":{"_id":"8465af0d3d78f4d4b392010b5e0170ab","_rev":"1-4e2fc63dee5ccbab9850d5e77e6f7afa","name":"Charles Bing","age":43,"country":"USA","phone":"555-821345","email":"charlesb@exmaple.com"}},
+{"id":"8465af0d3d78f4d4b392010b5e017707","key":"8465af0d3d78f4d4b392010b5e017707","value":{"_id":"8465af0d3d78f4d4b392010b5e017707","_rev":"1-1f87adcd58afa900d8082b2f796f4f44","name":"Emma Watson","age":33,"country":"Great Britain","phone":"555-726531","email":"emma@example.com","fax":"555-726532"}},
+{"id":"8465af0d3d78f4d4b392010b5e017fa9","key":"8465af0d3d78f4d4b392010b5e017fa9","value":{"_id":"8465af0d3d78f4d4b392010b5e017fa9","_rev":"1-c70e670073125c53aae0109d727eb368","name":"Eric Quinn","age":23,"country":"USA","phone":"555-012796","fax":"555-098245"}},
+{"id":"8465af0d3d78f4d4b392010b5e0181cd","key":"8465af0d3d78f4d4b392010b5e0181cd","value":{"_id":"8465af0d3d78f4d4b392010b5e0181cd","_rev":"1-91bd3e132e9f378568df697db8a68804","name":"John Smith","age":54,"country":"Australia","phone":"55-372589","email":"jsmith@example.com","fax":"555-372590"}},
+{"id":"8465af0d3d78f4d4b392010b5e018ff3","key":"8465af0d3d78f4d4b392010b5e018ff3","value":{"_id":"8465af0d3d78f4d4b392010b5e018ff3","_rev":"1-8010f0b12b720288fe180db488827aec","name":"Jane Thomas","age":14,"country":"USA","phone":"555-210897","email":"jthomas@example.com"}}
+]}
+</code></pre>
+
+<h2>customer -ek listázása JSON formátumban</h2>
+
+<p>A list függvény (<em>_design/contacts/lists/contactsToJSON.js</em>):</p>
+
+<pre><code>function( head, req )
+{
+    start({
+        "headers": {
+            "Content-Type" : "application/json"
+        }
+    });
+    send( '{"head":' + toJSON(head) + ', ' );
+    send( '"req":' + toJSON(req) + ', ' );
+    send( '"rows":[' );
+    var row, sep = '\n';
+    while( row = getRow() )
+    {
+        send( sep + toJSON( row ) );
+        sep = ', \n';
+    }
+    return "]}";
+}
+</code></pre>
+
+<p>A lekérdezés URL-je:</p>
+
+<pre><code>http://localhost:5984/contacts/_design/contacts/_list/contactsToJSON/contacts
+</code></pre>
+
+<p>Az eredmény:</p>
+
+<pre><code>{"head":{"total_rows":5,"offset":0,"update_seq":8}, "req":{"info":{"db_name":"contacts","doc_count":6,"doc_del_count":0,"update_seq":8,"purge_seq":0,"compact_running":false,"disk_size":28761,"instance_start_time":"1287000020211987","disk_format_version":5,"committed_update_seq":8},"id":null,"uuid":"8465af0d3d78f4d4b392010b5e0191b4","method":"GET","path":["contacts","_design","contacts","_list","contactsToJSON","contacts"],"query":{},"headers":{"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8","Accept-Charset":"ISO-8859-1,utf-8;q=0.7,*;q=0.7","Accept-Encoding":"gzip,deflate","Accept-Language":"en-us,en;q=0.5","Connection":"keep-alive","Cookie":"AuthSession=","Host":"localhost:5984","Keep-Alive":"115","User-Agent":"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.10) Gecko/20100915 Ubuntu/10.04 (lucid) Firefox/3.6.10"},"body":"undefined","peer":"127.0.0.1","form":{},"cookie":{"AuthSession":""},"userCtx":{"db":"contacts","name":null,"roles":["_admin"]}}, "rows":[
+{"id":"8465af0d3d78f4d4b392010b5e0170ab","key":"8465af0d3d78f4d4b392010b5e0170ab","value":{"_id":"8465af0d3d78f4d4b392010b5e0170ab","_rev":"1-4e2fc63dee5ccbab9850d5e77e6f7afa","name":"Charles Bing","age":43,"country":"USA","phone":"555-821345","email":"charlesb@exmaple.com"}},
+{"id":"8465af0d3d78f4d4b392010b5e017707","key":"8465af0d3d78f4d4b392010b5e017707","value":{"_id":"8465af0d3d78f4d4b392010b5e017707","_rev":"1-1f87adcd58afa900d8082b2f796f4f44","name":"Emma Watson","age":33,"country":"Great Britain","phone":"555-726531","email":"emma@example.com","fax":"555-726532"}},
+{"id":"8465af0d3d78f4d4b392010b5e017fa9","key":"8465af0d3d78f4d4b392010b5e017fa9","value":{"_id":"8465af0d3d78f4d4b392010b5e017fa9","_rev":"1-c70e670073125c53aae0109d727eb368","name":"Eric Quinn","age":23,"country":"USA","phone":"555-012796","fax":"555-098245"}},
+{"id":"8465af0d3d78f4d4b392010b5e0181cd","key":"8465af0d3d78f4d4b392010b5e0181cd","value":{"_id":"8465af0d3d78f4d4b392010b5e0181cd","_rev":"1-91bd3e132e9f378568df697db8a68804","name":"John Smith","age":54,"country":"Australia","phone":"55-372589","email":"jsmith@example.com","fax":"555-372590"}},
+{"id":"8465af0d3d78f4d4b392010b5e018ff3","key":"8465af0d3d78f4d4b392010b5e018ff3","value":{"_id":"8465af0d3d78f4d4b392010b5e018ff3","_rev":"1-8010f0b12b720288fe180db488827aec","name":"Jane Thomas","age":14,"country":"USA","phone":"555-210897","email":"jthomas@example.com"}}]}
+</code></pre>
+
+<h2>age</h2>
+
+<p>A <em>map()</em> függvény:</p>
+
+<pre><code>function( doc )
+{
+    if( ! doc.country ) return;
+    emit( doc.country, doc.age );
+}
+</code></pre>
+
+<p>A <em>reduce()</em> függvény:</p>
+
+<pre><code>function( key, values, rereduce )
+{
+    var totals = sum( values );
+    return Math.round( (totals / values.length) * 100) / 100;
+}
+</code></pre>
+
+<p>Lekérdezés:</p>
+
+<pre><code>http://localhost:5984/contacts/_design/contacts/_view/age
+</code></pre>
+
+<p>Eredmény:</p>
+
+<pre><code>{"rows":[
+{"key":null,"value":33.4}
+]}
+</code></pre>
+
+<!--
+
+## viewName
+
+A _map()_ függvény:
+
+
+A _reduce()_ függvény:
+
+
+Lekérdezés:
+
+    http://localhost:5984/contacts/_design/contacts/_view/...
+
+Eredmény:
+
+
+ -->
+			</div>
+
+		<!-- content-wrap ends here -->
+		</div>
+
+		<!--footer starts here-->
+		<div id="footer">
+
+			<p>
+			&copy; 2010 <strong>TomBenke</strong> |
+			Design by: <a href="http://www.styleshout.com/">styleshout</a> |
+			Valid <a href="http://validator.w3.org/check?uri=referer">XHTML</a> |
+			<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a>
+			 | Courtesy <a href="http://www.openwebdesign.org" target="_blank">Open Web Design</a>
+			 <br/>
+   		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<!--a href="index.html">Bevezetés</a>&nbsp;|&nbsp;
+   		<a href="downloads.html">Letöltések</a>&nbsp;|&nbsp;
+	   	<a href="resources.html">Linkek</a-->
+   		</p>
+
+		</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body>
+</html>

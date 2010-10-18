@@ -22,7 +22,7 @@
 
   [Couch_One_Products]: http://www.couch.io/products "CouchOne products"
 
-  [HTTP_Bulk_Document_API]: http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API
+  [HTTP Bulk Document API]: http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API
     "HTTP Bulk Document API"
 
   [HTTP_Document_API]: http://wiki.apache.org/couchdb/HTTP_Document_API

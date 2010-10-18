@@ -182,7 +182,7 @@ Sikeres esetben az alábbi választ kapjuk:
 Mindig a teljes dokumentumot kell megadnunk, vagyis nem lehet annak csak egy-egy
 részét, vagy mezőjét felülírni.
 
-Elenőrizzük most, hogy mi tárolódik az adatbázisban:
+Ellenőrizzük most, hogy mi tárolódik az adatbázisban:
 
     curl -X GET http://localhost:5984/contacts/5fba9edd70b5b718d4bbfcb62b00c76b
 
@@ -208,7 +208,7 @@ A CouchDB lehetőséget biztosít arra, hogy ne csak egyenként, hanem egyszerre
 tömeges méretekben lehessen feltölteni, illetve módosítani dokumentumokat.
 
 Ha a CouchDB-től várjuk, hogy azonosítót rendeljen a dokumentumokhoz, akkor
-az alábbi formátumot alkalmazzuk (bulk/contacts_without_id.json):
+az alábbi formátumot alkalmazzuk (bulk/contacts\_without\_id.json):
 
     {
       "docs": [
@@ -273,7 +273,7 @@ A válaszból látjuk, hogy a CouchDB azonosítókat rendelt a dokumentumokhoz:
       "rev":"1-8010f0b12b720288fe180db488827aec"}]
 
 Ha a CouchDB-től várjuk, hogy azonosítót rendeljen a dokumentumokhoz, akkor
-az alábbi formátumot alkalmazzuk (bulk/contacts_without_id.json):
+az alábbi formátumot alkalmazzuk (bulk/contacts\_without\_id.json):
 
     {
       "docs": [
@@ -323,7 +323,7 @@ az alábbi formátumot alkalmazzuk (bulk/contacts_without_id.json):
     }
 
 A feltöltéshez ugyanazt a parancsot használjuk, de értelemszerűen az
-id-vel ellátott dokumentumokat tartalmazó file-lal ((bulk/contacts_with_id.json)):
+id-vel ellátott dokumentumokat tartalmazó file-lal ((bulk/contacts\_with\_id.json)):
 
     curl -X POST \
          -d @contacts_with_id.json \
@@ -364,5 +364,136 @@ There are now two bulk update models supported:
 
 -->
 
-A témával kapcsolatos további részletek a [HTTP_Bulk_Document_API][]
-wiki oldalon találhatóak.
+## Tesztadatok előállítása
+
+A downloads oldalról letölthető egy
+[csvconv nevű segédprogram](downloads/csvconv.zip), amelynek segítségével
+CSV fileokat konvertálhatunk JSON formátumba.
+Ezek olyan formában állíthatóak elő hogy közvetlenül feltölthetőek
+a CouchDB adatbázisba a _\_bulk\_upload_ művelet segítségével.
+
+A csvconv.zip letöltését követően bontsuk ki pl. a home folderün alatti _bin_
+aldirectory-ba:
+
+    cd ~/bin
+    unzip csvconv
+
+A létrejött folderstruktúra a következő lesz:
+
+    /home/tombenke/bin/csvconv/
+    |-- csv2json.sh
+    |-- csv2xml.sh
+    |-- csvconv.jar
+    |-- doc
+    |   |-- allclasses-frame.html
+    |   |-- allclasses-noframe.html
+    |   |-- constant-values.html
+    |   |-- deprecated-list.html
+    |   |-- help-doc.html
+    |   |-- index-all.html
+    |   |-- index.html
+    |   |-- overview-summary.html
+    |   |-- overview-tree.html
+    |   |-- package-list
+    |   |-- resources
+    |   |-- stylesheet.css
+    |   `-- uk
+    |-- lib
+    |   `-- xom-1.2b1.jar
+    `-- resources
+        `-- attsProps.txt
+
+A segédprogram maga egy _csvconv.jar_ nevű jar file, amely elsősorban
+CSV file-ok XML-lé alakítására szolgál, de JSON kimeneti formátum
+produkálására is képes. Részletes programozói dokumentációja a _doc_
+folder alatt olvasható.
+
+Ha közvetlenül ezt szeretnénk használni,
+akkor pl. az alábbi paranccsal lehet lekérdezni a hívási paramétereit:
+
+    java -jar /home/tombenke/bin/csvconv/csvconv.jar -t
+
+A végrehajtás eredménye a következő lesz:
+
+    CSVToXML 1.2 from Dave Pawson
+    Java version 1.6.0_18
+    No property File available; Quitting
+    CSVToXML 1.2 from Dave Pawson
+    Usage: java CSVToXML [options] {param=value}...
+    Options:
+      -p filename       Take properties from named file
+      -o filename       Send output to named file
+      -i filename       Take CSV input from named file
+      -f output-format  format of output file: xml | json
+      -t              Display version and timing information
+      -?              Display this message
+
+A program CSV formátumú file-okat olvas be, mint amilyen a 
+_contacts\_with\_id.csv_:
+
+    "_id","name","age","country","phone","email","fax"
+    "charlesb","Charles Bing",43,"USA","+36 555-821345","charlesb@exmaple.com",
+    "emma","Emma Watson",33,"Great Britain","+36 555-726531","emma@example.com","555-726532"
+    "ericq","Eric Quinn",23,"USA","+36 555-012796",,"555-098245"
+    "jsmith","John Smith",54,"Australia","+36 553-72589","jsmith@example.com","555-372590"
+    "jthomas","Jane Thomas",14,"USA","+36 555-210897","jthomas@example.com",
+
+
+Ezt az _contacts\_with\_id.xls_ táblázatból exportáltunk ki. 
+Minkét file megtalálható a _data/bulk/_ folderben.
+
+A konvertáláshoz szükséges még egy --a csv file-hoz hasonló nevű--
+_contacts\_with\_id.properties_ file. 
+Ez utóbbi leírja, hogy az egyes rekordok megfelelő mezőit
+milyen nevű XML elemmé, vagy JSON mezővé kell átalakítani.
+
+A properties file tartalma az alábbi:
+
+    [head]
+    comment=Freelancer data exported from Excel
+    fielddelimiter=,
+    rowdelimiter=\n
+    rootname=data
+    recordname=contact
+    fields=7
+
+    [fields]
+    field0=_id
+    field1=name
+    field2=age
+    field3=country
+    field4=phone
+    field5=email
+    field5=fax
+
+Minden egyes CSV-file beli sorból egy XML (ill. JSON) rekord elem lesz.
+
+Az összes rekord a gyökér elem alá tartozik.
+
+A __rootname__ az XML(/JSON) file gyökér elemét, a __recordname__ az egyes
+rekord elemek nevét határozza meg.
+
+A __fields__ értéke az oszlopok (mezők) számát határozza meg, és ugyanennyi
+field definíciónak kell lennie a [fields] blokkban. Itt adhatjuk meg
+az egyes rekordokon belüli mezők neveit.
+
+A konverzió egyszerűbb végrehajtása érdekében két bash script
+(_csv2json.sh_ _csv2xml.sh_ is  található a csvconv.jar mellett.
+Ezek előre definiálják a hívási paramétereket
+az XML, és JSON kimeneti formátumok előállításához.
+
+A konverzióhoz, elegendő mindössze a csv file nevét megadni kiterjesztés nélkül:
+
+    csv2json.sh contacts_with_id
+
+melynek eredményeképpen létrejön a _contacts\_with\_id.json_ file.
+Értelemszerűen xml formátumban is előállíthatunk kimeneti file-t, ehhez a
+csv2xml.sh parancsot kell használnunk.
+
+A itt leírt módszer alkalmas arra, hogy hasonló struktúrájú adathalmazokat
+táblázatkezelővel, kényelmesen szerkeszthető formában hozzunk létre,
+majd egyszerűen átalakítsuk és feltöltsük a CouchDB adatbázisba a már korábban
+leírt módon.
+
+A tömeges adatfeltöltéssel kapcsolatos további részletek a
+[HTTP Bulk Document API][] wiki oldalon találhatóak.
