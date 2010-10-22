@@ -94,11 +94,52 @@
 				<a name="TemplateInfo"></a>
 <h1>Lekérdezések</h1>
 
-<p>Ebben a fejezetben egyszerű lekérdezéseket fogunk definiálni a <strong>contacts</strong>
-adatbázison, amelyet az <a href="dataUpload.html">Adatfeltöltés</a> fejezetben
-hoztunk létre.</p>
+<p>Ebben a fejezetben egyszerű lekérdezéseket fogunk definiálni.
+A példákhoz a <strong>cogito</strong> nevű alkalmazást fogjuk felhasználni.
+A forrásfile-ok szabadon hozzáférhetőek a <a href="github.com/tombenke/cogito">cogito</a>
+nyilvános repository-jában.</p>
 
-<p>A CouchDB-ben a lekérdezések és riportok előállítására az ún. view-k szolgálnak.</p>
+<h2>Mit értünk lekérdezés alatt?</h2>
+
+<p>Amikor felépítünk egy web-es alkalmazást, sokféle tartalommal, formában és módon
+kell adatokat kinyernünk a serveren tárolt adatbázisból.
+A teljesség igénye nélkül néhány példa arra, tipikusan miket kérdezünk le:</p>
+
+<ul>
+<li>Dokumentumok egy meghatározott halmazát.</li>
+<li>Bizonyos dokumentum részeket.</li>
+<li>Többféle, egymással valamilyen logikai kapcsolatban lévő dokumentumhalmazt,
+vagy azok részeit.</li>
+<li>Csoportosított aggregátumokat (kontrol-váltás).</li>
+<li>Egyedi dokumentumokat, vagy azok egy részét</li>
+<li>Csatolt, speciális formátumú tartalmakat.</li>
+</ul>
+
+<p>A lekérdezés eredménye jellemzően JSON formátumban áll elő. Ezt attól függően,
+hogy milyen formában, és kinek kell szolgáltatni, a servernek át kell
+alakítania. Tipikus reprezenciiós formák:</p>
+
+<ul>
+<li>JSON (pl.: Ajax hívás browserből, HTTP kliens)</li>
+<li>XML (B2B üzenetváltás, adat export, HTTP kliens)</li>
+<li>plain text (böngésző)</li>
+<li>(X)HTML (böngésző)</li>
+</ul>
+
+<p>Az átalakításhoz a CouchDB két tipikus eszközt nyújt:</p>
+
+<ul>
+<li>a <strong>list</strong>-ek szolgálnak adathalmazok transzformálására</li>
+<li>a <strong>show</strong>-k pedig egyedi dokumentumok átalakítására.</li>
+</ul>
+
+<p>Ezt a két technikát külön fejezetben tárgyaljuk. Minkét esetben azonban
+előzetesen elő kell állítani a megjelenítendő adathalmazt, ill. azonosítanunk kell
+az egyedi dokumentumot, és erre valók <strong>view</strong>-k.</p>
+
+<h2>Átmeneti és Állandó view-k</h2>
+
+<p>A CouchDB-ben a lekérdezések és riportok előállítására tehát az ún. view-k szolgálnak.</p>
 
 <p>A view-k használata két lépésből áll:</p>
 
@@ -114,9 +155,9 @@ hoztunk létre.</p>
 <li>állandó (permanent).</li>
 </ul>
 
-<p>Az átmeneti view-kat alapvetően csak fejlesztés során alkalmazzuk.
-Végrehajthatók a Futon felületéről, vagy egy HTTP POST request-tel a következő
-URL-re:</p>
+<p>Az átmeneti view-kat inkább csak fejlesztés során alkalmazzuk.
+Végrehajthatók a Futon felületéről, vagy egy HTTP POST request-tet végrehajtva
+a következő formátumú URL-re:</p>
 
 <pre><code>/{dbname}/_temp_view,
 </code></pre>
@@ -144,17 +185,17 @@ megállapíthatja, hogy egy view-ról van szó.</p>
 
 <p>Az alábbi URL pl.: egy szabályos view hivatkozás:</p>
 
-<pre><code>http://localhost:5984/contacts/_design/contacts/_view/allContacts
+<pre><code>http://localhost:5984/cogito/_design/cogito/_view/contacts
 </code></pre>
 
 <p>ahol a <strong>{docid}</strong>:</p>
 
-<pre><code>_design/contacts
+<pre><code>_design/cogito
 </code></pre>
 
 <p>a <strong>{viewname}</strong> pedig:</p>
 
-<pre><code>_view/allContacts
+<pre><code>_view/contacts
 </code></pre>
 
 <p>Mindkét típusú view definiálása JavaScript függvények írásával történik.
@@ -169,12 +210,12 @@ folderekbe, és file-okba tesszük, majd a <strong>couchapp</strong> utility seg
 JSON formátumúra, és töltjük fel az adatbázisba. Helyenként, a példákban, a teljesség kedvéért
 utalunk a létrehozott, végleges JSON struktúrákra is.</p>
 
-<p>A view definiálásakor először adunk neki egy nevet, majd ezzel a névvel létrehozunk
-egy foldert abban a design dokumentumban, amelyben el akarjuk helyezni a view-t.</p>
+<p>A <em>view</em> definiálásakor először adunk neki egy nevet, majd ezzel a névvel létrehozunk
+egy foldert abban a design dokumentumban, amelyben el akarjuk helyezni a <em>view</em>-t.</p>
 
 <p>Ebben a folderben két függvényt helyezhetünk el egy-egy file-ban.
 Az egyik a <em>map()</em>, a másik a <em>reduce()</em>.
-Ez utóbbi használata opcionális, viszont <em>map()</em> megadása kötelező.</p>
+Ez utóbbi használata opcionális, viszont <strong>map()</strong> megadása kötelező.</p>
 
 <p>Definiálásuk úgy történik, hogy a view nevével létrehozott folderben elhelyezünk
 egy <strong>map.js</strong>, ill. egy <strong>reduce.js</strong> file-t, melyek egy-egy JavaScript
