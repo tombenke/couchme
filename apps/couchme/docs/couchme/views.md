@@ -1,13 +1,14 @@
 Lekérdezések
 ============
 
+[Mit értünk lekérdezés alatt?](#what_is_a_view)
 
 Ebben a fejezetben egyszerű lekérdezéseket fogunk definiálni.
 A példákhoz a __cogito__ nevű alkalmazást fogjuk felhasználni.
 A forrásfile-ok szabadon hozzáférhetőek a [cogito](github.com/tombenke/cogito)
 nyilvános repository-jában.
 
-## Mit értünk lekérdezés alatt?
+## Mit értünk lekérdezés alatt?  (#what_is_a_view)
 
 Amikor felépítünk egy web-es alkalmazást, sokféle tartalommal, formában és módon
 kell adatokat kinyernünk a serveren tárolt adatbázisból.
@@ -181,4 +182,48 @@ Ugyanakkor ezt ki lehet váltani egy script segítségével.
 
 Ezzel szemben, egy design dokumentum alá tartozó view-k bármelyike lekérdezésre kerül, 
 az maga után vonja az összes, ugyanazon design dokumentumban lévő view aktualizálását is.
+
+<!--
+A data/test alatt vannak a minta adatok.
+A project és action típusú dokumentumok tartalmaznak tag-eket is.
+
+Statikus HTML oldalak (holnap aktívvá teszem őket):
+http://localhost:5984/cogito/_design/cogito/index.html
+http://localhost:5984/cogito/_design/cogito/contacts.html
+http://localhost:5984/cogito/_design/cogito/tasks.html
+
+
+Működő view-k:
+Az össszes contact: http://localhost:5984/cogito/_design/cogito/_view/contacts
+Az összes project: http://localhost:5984/cogito/_design/cogito/_view/projects
+Az összes action (task másnéven): http://localhost:5984/cogito/_design/cogito/_view/actions
+Tag-ek száma összesen: http://localhost:5984/cogito/_design/cogito/_view/tags
+Tag-ek száma tag-enként: http://localhost:5984/cogito/_design/cogito/_view/tags?group=true
+Összes dokumentum, amiben előfordul legalább egy tag: http://localhost:5984/cogito/_design/cogito/_view/docByTag
+Dokumentumokban előforduló szavak száma (unique):  http://localhost:5984/cogito/_design/cogito/_view/docBySummary
+Dokumentumokban előforduló szavak száma (szavanként): http://localhost:5984/cogito/_design/cogito/_view/docBySummary?group=true
+Dokumentum(ok) lekérdezése egy adott Tag alapján:
+http://localhost:5984/cogito/_design/cogito/_view/docByTag?startkey="GTD"&endkey="GTD"
+Dokumentum(ok) lekérdezése Tag-range alapján (sok értelme nincs, de terheléshez jó):
+http://localhost:5984/cogito/_design/cogito/_view/docByTag?startkey="GTD"&endkey="project"
+
+Dokumentum(ok) lekérdezése a summary mezőben előforduló szó alapján:
+http://localhost:5984/cogito/_design/cogito/_view/docBySummary?key="gtd"&reduce=false
+
+Működő listák:
+HTML
+http://localhost:5984/cogito/_design/cogito/_list/html/actions
+http://localhost:5984/cogito/_design/cogito/_list/html/contacts
+http://localhost:5984/cogito/_design/cogito/_list/html/projects
+
+XML
+http://localhost:5984/cogito/_design/cogito/_list/xml/actions
+http://localhost:5984/cogito/_design/cogito/_list/xml/contacts
+http://localhost:5984/cogito/_design/cogito/_list/xml/projects
+
+JSON
+http://localhost:5984/cogito/_design/cogito/_list/json/actions
+http://localhost:5984/cogito/_design/cogito/_list/json/contacts
+http://localhost:5984/cogito/_design/cogito/_list/json/projects
+-->
 

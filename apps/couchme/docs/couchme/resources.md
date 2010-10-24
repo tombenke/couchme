@@ -50,6 +50,9 @@ Hasznos linkek
 * [Generating HTML from Javascript shows and lists](http://wiki.apache.org/couchdb/Generating%20HTML%20from%20Javascript%20shows%20and%20lists)
 * [How_to_page_through_results](http://wiki.apache.org/couchdb/How_to_page_through_results)
 * [How_to_change_the_front_page](http://wiki.apache.org/couchdb/How_to_change_the_front_page)
+* [mustache.js at github](http://github.com/janl/mustache.js/)
+* [Mustache.js introduction at CouchOne](http://blog.couchone.com/post/622014913/mustache-js)
+* [Markdown cheat-sheet](http://warpedvisions.org/projects/markdown-cheat-sheet/)
 
 ### Adat modellezés (Data modeling)
 * [A simple example of a CouchDB application schema.](http://wiki.apache.org/couchdb/ApplicationSchema)
@@ -65,6 +68,7 @@ Hasznos linkek
 ## Programozási eszközök, könyvtárak
 ### CouchApp
 * [CouchApp](http://couchapp.org/page/index)
+* [CouchApp.org: Notes on Pages Application](http://couchapp.org/page/NotesOnPagesFiles)
 
 ### Könyvtárak
 * [Getting_started_with_Java](http://wiki.apache.org/couchdb/Getting_started_with_Java?action=show&redirect=GettingStartedWithJava)
