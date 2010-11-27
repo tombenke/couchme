@@ -74,6 +74,7 @@ Hasznos linkek
 * [CouchApp](http://couchapp.org/page/index)
 * [CouchApp.org: Notes on Pages Application](http://couchapp.org/page/NotesOnPagesFiles)
 * [CouchApp group on Google](http://groups.google.com/group/couchapp/)
+* [Evented Programming With jQuery](http://yehudakatz.com/2009/04/20/evented-programming-with-jquery/)
 
 ### Könyvtárak
 * [Getting started with Java](http://wiki.apache.org/couchdb/Getting_started_with_Java?action=show&redirect=GettingStartedWithJava)

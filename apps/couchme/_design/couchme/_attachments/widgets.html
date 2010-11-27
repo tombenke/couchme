@@ -192,7 +192,7 @@ a widgetekhez szorosabban kapcsolódó file-okra és folderekre fogunk koncentr�
 
 <p>Az itt ismertetett mintapéldákat egy projektbe gyűjtöttem, ami reményeim szerint
 idővel egy kisebb katalógusként fog szolgálni az újrafelhasználható widget
-komponensek számára. A forráskód a 
+jellegű komponensek számára. A forráskód a
 <a href="https://github.com/tombenke/widgets">https://github.com/tombenke/widgets</a>
 repository-ból letölthető, a múködő változat pedig elérhető a web-en:
 <a href="http://tombenke.couchone.com/widgets/_design/widgets/index.html">http://tombenke.couchone.com/widgets/_design/widgets/index.html</a>.</p>
@@ -239,21 +239,39 @@ a jobb áttekinthetőség érdekében kihagytam:</p>
 
 <h3>Az <strong>_attachments</strong> folder</h3>
 
+<p>Ez olyan file-okat tartalmaz, amelyek demonstrációs céllal a widget-ek beágyazására
+mutatnak példákat. Minden widget-hez tartozik egy html file, és van egy index.html
+amely egy áttekintő listát ad az összes widgetről.</p>
+
 <pre><code>.
-.
-.
 |-- _attachments
+|   |-- auth.html
+|   |-- browser.html
+|   |-- contactManager.html
+|   |-- countryCombo.html
 |   |-- dbinfo.html
+|   |-- form.html
+|   |-- gmaps.html
+|   |-- hCard.html
 |   |-- helloworld.html
 |   |-- index.html
+|   |-- logout.html
+|   |-- poll.html
+|   |-- search.html
+|   |-- simpleform.html
+|   |-- tabs.html
+|   `-- wizard.html
 .
-.
-.
+</code></pre>
 
+<p>Ugyancsak ebben a folderben vannak elhelyezve a stíluslapok, képe és mindazok a
+JavaScript könyvtárak, amelyek az oldalak működéséhez szükségesek, de nem tartoznak 
+sem a CouchApp csomaghoz, sem pedig a CouchDB könyvtáraihoz.</p>
 
-.
-.
-.
+<p>Az alábbi listán pl.: a jQuery alap könyvtár, továbbá az jQuery-UI könyvtár és
+az ahhoz tartozó CSS és kép file-ok vannak felsorolva.</p>
+
+<pre><code>.
 |-- _attachments
 |   |-- scripts
 |   |   |-- gmap
@@ -281,15 +299,18 @@ a jobb áttekinthetőség érdekében kihagytam:</p>
 |   |   |   `-- jquery-ui-1.8.2.custom.css
 |   |   `-- wait16.gif
 .
-.
-.
 </code></pre>
 
 <h3>Az <strong>evently</strong> folder</h3>
 
+<p>Az <strong>evently</strong> folder áll vizsgálódásunk középpontjában, ez tartalmazza ugyanis
+az aktív komponenseket. Komponensenként egy-egy aldirectory-ban.</p>
+
+<p>Az alábbi listán két komponens folderstruktúrája látható, név szerint
+a <strong>dbinfo</strong> és a <strong>helloworld</strong>. Az egyes widgetek saját, belső folderstruktúráját
+egy további alfejezetben ismertetjük részletesen.</p>
+
 <pre><code>.
-.
-.
 |-- evently
 |   |-- dbinfo
 |   |   |-- _init
@@ -304,15 +325,11 @@ a jobb áttekinthetőség érdekében kihagytam:</p>
 |   |   `-- click
 |   |       `-- mustache.html
 .
-.
-.
 </code></pre>
 
 <h3>A <strong>vendor</strong> folder</h3>
 
 <pre><code>.
-.
-.
 |-- vendor
 |   |-- couchapp
 |   |   |-- _attachments
@@ -346,43 +363,98 @@ a jobb áttekinthetőség érdekében kihagytam:</p>
 |           |-- listgen.js
 |           `-- templating.js
 .
-.
-.
 </code></pre>
 
-<p>Evently</p>
+<p>A vendor folderben előregyártott könyvtárakat és evently widget-eket találunk.</p>
 
-<p>A declarative, couchdb friendly JQuery library for writing Javascript applications
-CouchDB API (jquery.couch.js)</p>
+<p>Számunkra most két folder érdekes:</p>
 
-<p>The JQuery library included with CouchDB itself for use by the Futon admin console is used to interact with couchdb. Some limited documentation is available from Couchone.
-CouchApp Loader (jquery.couch.app.js)</p>
+<p>A <strong>vendor/couchapp/\evently</strong> ahol két minta widget található, valamint a
+ <strong>vendor/couchapp/_attachments</strong>, amelyben a kliens számára szükséges
+következő JavaScript könyvtárakat találjuk:</p>
 
-<p>A utility for loading design document classes into your Javascript application
-Pathbinder (jquery.pathbinder.js)</p>
-
-<p>A tiny framework for triggering events based on paths in URL hash.
-Mustache</p>
-
-<p>A simple template framework</p>
+<ul>
+<li><p><strong>jquery.evently.js</strong> <br />
+Az Evently nevű, CouchDB-hez hangolt, deklaratív jQuery könyvtár,
+amivel eseménykezelést, Ajax hívásokat, és sablonokat tudunk kezelni.
+Ez képezi az általunk készítendő aktív megjelenítő komponensek bázisát.</p></li>
+<li><p><strong>jquery.couch.js</strong> <br />
+A CouchDB API-t megvalósító, adatbáziskezelést biztosító függvények.
+Ez nem feltétlenül kerül ebben a directoryban elhelyezésre.
+A CouchDB saját példányt biztosít a rajta futó alkalmazások számára, melynek
+elérési útja: "/_utils/script/jquery.couch.js".</p></li>
+<li><p><strong>jquery.couch.app.js</strong> <br />
+CouchApp betöltő program, ami ahhoz szükséges, hogy a kliens oldalon futó
+JavaScript alkalmazásunk elérhesse a design dokumentumban tárolt
+widgeteket és könyvtárakat.</p></li>
+<li><p><strong>jquery.pathbinder.js</strong> <br />
+URL hash-en alapuló oldal hivatkozások aktiválását segítő keretrendszer.
+<!-- TODO: Brrr. ezt rendesen le kell írni --></p></li>
+<li><p><strong>jquery.mustache.js</strong> <br />
+Mustache nevű, egyszerű template keretrendszer, ami a sablonokban használt 
+bajuszra emlékeztető <strong>{</strong> és <strong>}</strong> karakterekről kapta nevét.</p></li>
+</ul>
 
 <h2>Egy widget anatómiája</h2>
 
-<p>{widget-name}
+<p>Minden egyes widget külön directory-ban helyezkedik el.
+A widget-ek két helyen fordulhatnak elő: a design dokumentumban lévő evently folderben
+és a vendor folder alatt. Ezen utóbbiban vendoronként lehet egy evently folder,
+amiben a betöltő program megtalálja a widgeteket.</p>
+
+<p>Vagyis a keresési útvonalak a betöltéskor:</p>
+
+<ul>
+<li><p><strong>{design-doc}/evently/*</strong></p></li>
+<li><p><strong>{design-doc}/vendor/{vendor-name}/evently/*</strong></p></li>
+</ul>
+
+<p>Minden widget esetében három dolgot határozhatunk meg:</p>
+
+<ul>
+<li><p>Az eseményeket, amelyekre reagál.</p></li>
+<li><p>A műveleteket, amelyeket az események kiváltásakor végrehajt.</p></li>
+<li><p>A widget egyes állapotaihoz tartozó megjelenítést.</p></li>
+</ul>
+
+<p>A CouchApp lehetővé teszi számunkra, hogy egy konvencionális folder struktúrába
+helyezzük forráskódunkat, melynek logikája a következő:</p>
+
+<pre><code>{widget-name}
+    `-- {event-name}
+            |-- {template-name}.js
+            `-- {activity-name}.js
+
+
+
+{widget-name}
+    |-- _init.js
+    |-- _changes.js
     |-- {event-name}.js
     |-- {event-name}
+    |   |-- async.js
+    |   |-- before.js ???
     |   |-- after.js
+    |   |-- query.js
     |   |-- data.js
+    |   |-- all.html
     |   |-- mustache.html
-    |   <code>-- selectors.json
-    |-- {event-name}
-        |-- after.js
-        |-- mustache.html
-</code>-- selectors
-            <code>-- form
-</code>-- submit.js</p>
+    |   |-- path.txt
+    |   |-- partials
+    |   |   `-- *.html
+    |   `-- selectors.json
+        `-- selectors
+            |-- [name=something]
+            |   |-- _init
+            |   `-- keyup
+            `-- form
+                `-- submit.js
 
-<p>auth
+
+
+
+
+auth
 |-- _init.js
 |-- doLogin.js
 |-- doLogout.js
@@ -390,40 +462,107 @@ Mustache</p>
 |   |-- after.js
 |   |-- data.js
 |   |-- mustache.html
-|   <code>-- selectors.json
+|   `-- selectors.json
 |-- loggedOut
 |   |-- mustache.html
-|</code>-- selectors.json
-<code>-- loginForm
+|   `-- selectors.json
+`-- loginForm
     |-- after.js
     |-- mustache.html
-</code>-- selectors
-        <code>-- form
-</code>-- submit.js</p>
+    `-- selectors
+        `-- form
+            `-- submit.js
 
-<p>items/
-<code>-- _changes
+
+
+items/
+`-- _changes
     |-- data.js
     |-- mustache.html
-</code>-- query.json</p>
+    `-- query.json
+</code></pre>
 
 <h2>Widget példák</h2>
 
 <h2>Összefoglaló a widget-ek struktúrájáról és használatáról</h2>
 
-<p><!--
-TODO: Témát tovább kifejteni részletesen!</p>
+<!--
+TODO: Témát tovább kifejteni részletesen!
 
-<ul>
-<li><p>Widgetek elhelyezése és betöltése</p>
 
-<ul>
-<li>evently</li>
-<li>vendor/evently</li>
-</ul></li>
-<li><p>Öröklődés a widget-ek között
---></p></li>
-</ul>
+
+
+
+b19eb87e753bdbff43365558c4ee5f70
+
+
+
+
+
+
+086d192e22f47992be15ec0c475625ee
+
+
+
+
+b19eb87e753bdbff43365558c4ee5f70
+
+
+
+
+
+
+b6c02e808c76785e53def08e7d190beb
+
+
+
+
+b19eb87e753bdbff43365558c4ee5f70
+
+
+
+
+a $(document)ready() tetszőleges példányban használható.
+A megadás sorrendjében fognak meghívódni.
+
+
+
+
+b19eb87e753bdbff43365558c4ee5f70
+
+
+
+
+
+
+dd2180fe5b15223c28bb411402deeae9
+
+
+A: I would just put the code in _init.js, or _init/after.js if you wanted to run a mustache template first and then add flot.
+
+A: Indeed. I also had to make sure to include the flot js script after loader.js.
+
+
+
+868af544de1c3a41233750ef3f0d9bc1
+
+
+
+
+
+868af544de1c3a41233750ef3f0d9bc1
+
+
+
+
+
+
+b19eb87e753bdbff43365558c4ee5f70
+
+
+
+
+-->
 			</div>
 
 		<!-- content-wrap ends here -->
