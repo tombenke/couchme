@@ -59,6 +59,9 @@
 						<li><a href="dataUpload.html">Adatfeltöltés</a></li>
 						<li><a href="appdev.html">Alkalmazás-fejlesztés</a></li>
 						<li><a href="views.html">Lekérdezések</a></li>
+						<li><a href="shows.html">Dokumentum megjelenítés</a></li>
+						<li><a href="lists.html">Listakészítés</a></li>
+						<li><a href="widgets.html">Aktív megjelenítő komponensek</a></li>
 					</ul>
 				</div>
 
@@ -92,30 +95,59 @@
 			<div id="main">
 
 				<a name="TemplateInfo"></a>
-<p>http://almafa.couchone.com/marketa/<em>design/marketa/</em>list/VIR/users</p>
+<h1>Listák készítése</h1>
 
-<p>Ha az "Accept: text/html" Header változót állítják be a HTTP kliensen, akkor HTML-lel tér vissza, ha "Accept: text/xml"-t, akkor XML-lel.
-Figyelem! A böngésző alapértelmezésben HTML-t kér, ezért ezt egy dedikált klienssel lehet megnézni, pl az alábbiak szerint:</p>
+<h2>Ismerkedés a list függvényekkel</h2>
 
-<pre><code>curl -X GET http://almafa.couchone.com/marketa/_design/marketa/_list/VIR/users -H "Accept: text/xml"
+<p>A list funkciók nagyon hasonlítanak a show függvényekre.
+A feladatuk az, hogy egy kiválasztott view által visszaadott eredménylistát
+a kliens számára megfelelőre formázva állítsanak elő.</p>
+
+<p>Ezt a művelet a show függvényekhez hasonlóan server oldalon hajtódik végre.</p>
+
+<p>A list függvény hívásakor mindenképpen azonosítanunk kell a view-t, szemben a
+show-val, ahol a dokumentum megadása opcionális.</p>
+
+<p>A visszaadott végeredmény itt is különféle tartalom típus lehet.</p>
+
+<p>A list URL mintázata a következő:</p>
+
+<pre><code>/{db-name}/{design-doc-name}/_list/{list-name}/{view-name}
 </code></pre>
 
-<p>Az alábbiaknál nem kell beállítani (csak HTML-t, és csak XML-t szolgáltatnak):</p>
+<p>Ahol a <strong>{list-name}</strong> megegyezik a JavaScript file nevével, ami a megjelenítő funkciót
+tartalmazza. A <strong>{view-name}</strong> megadása kötelező.</p>
 
-<pre><code>http://almafa.couchone.com/marketa/_design/marketa/_list/basicHTML/users
-http://almafa.couchone.com/marketa/_design/marketa/_list/basicXML/users
+<p>Egy érvényes list URL-re mutat példát az alábbi kódrészlet:</p>
+
+<pre><code>/cogito/_design/cogito/_list/json/projects
 </code></pre>
 
-<p>A list-beli függvény két paramétere az alábbihoz hasonló adatszerkezettel
-rendelkezik:</p>
+<p>Ahhoz, hogy erre az URL-re válaszoljon a server, a design dokumentum alatt
+egy _list nevű directory-ban, létre kell hoznunk egy json.js nevű file-t.</p>
+
+<p>Ennek a file-nak a tartalma egyetlen függvény lesz, aminek a mintázata a következő:</p>
+
+<pre><code>function( head, req )
+{
+    var listgen = require( "vendor/droids/lib/listgen" );
+
+    listgen.to_json( head, req );
+}
+</code></pre>
+
+<p>A <strong>head</strong> paraméter tartalmazza a view által visszaadott eredménylistát:</p>
 
 <pre><code>var head = {
     "total_rows":1,
     "offset":0,
     "update_seq":15
 };
+</code></pre>
 
-var req = {
+<p>A <strong>req</strong> paraméter a HTTP request paramétereit adja át a függvénynek:</p>
+
+<pre><code>var req = {
     "info": {
         "db_name":"cogito",
         "doc_count":6,
@@ -168,7 +200,7 @@ var rows = [
         "_rev":"1-d66f461a971479cbbf0c1cac942372bc",
         "type":"user",
         "familyName":"Benke",
-        "sureName":"Tamás",
+        "surName":"Tamás",
         "company":"LSYH",
         "taxIdNumber":"15446385-213",
         "city":"Verőce",
@@ -183,13 +215,112 @@ var rows = [
         "dateOfBirth":"1963-04-19"
     }
 }];
-
-var userCtx = {
-    "db":"cogito",
-    "name":null,
-    "roles":[]
-};
 </code></pre>
+
+<p>A függvény visszatérő értéke jelenik meg a kliens felé továbbított reprezentációként.
+Például az alábbi kódrészlet egy JSON formátumú üzenettel fog visszatérni:</p>
+
+<pre><code>function( head, req )
+{
+    start({
+        "headers" : {
+            "Content-Type" : "application/json"
+        }
+    });
+    send( '{"head":' + toJSON( head ) + ', ' );
+    send( '"req":' + toJSON( req )+', ' );
+    send( '"rows":[' );
+    var row, sep = '\n';
+    while( row = getRow() )
+    {
+        send( sep + toJSON( row ) );
+        sep = ', \n';
+    }
+    return "]}";
+}
+</code></pre>
+
+<p>Például a fentebb példakét említett lekérdezés URL-je:</p>
+
+<pre><code>http://localhost:5984//cogito/_design/cogito/_list/json/projects
+</code></pre>
+
+<p>Az eredmény:</p>
+
+<pre><code>{"head":{"total_rows":3,"offset":0,"update_seq":43}, "req":{"info":{"db_name":"cogito","doc_count":6,"doc_del_count":0,"update_seq":43,"purge_seq":0,"compact_running":false,"disk_size":5161049,"instance_start_time":"1290804375904338","disk_format_version":5,"committed_update_seq":43},"id":null,"uuid":"22956cb61ab2d65b04d61be48c0000b9","method":"GET","path":["cogito","_design","cogito","_list","json","projects"],"query":{},"headers":{"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8","Accept-Charset":"ISO-8859-1,utf-8;q=0.7,*;q=0.7","Accept-Encoding":"gzip,deflate","Accept-Language":"en-us,en;q=0.5","Connection":"keep-alive","Cookie":"AuthSession=a2VydGVzejo0Q0U5MzM0QjrY7aX62VBIdraS7goCZt-j2Vh2Tg","Host":"localhost:5984","Keep-Alive":"115","User-Agent":"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101027 Ubuntu/10.04 (lucid) Firefox/3.6.12"},"body":"undefined","peer":"127.0.0.1","form":{},"cookie":{"AuthSession":"a2VydGVzejo0Q0U5MzM0QjrY7aX62VBIdraS7goCZt-j2Vh2Tg"},"userCtx":{"db":"cogito","name":null,"roles":[]}}, "rows":[
+{"id":"cogito","key":null,"value":{"_id":"cogito","_rev":"1-b18ec420bfcd56b362fbb2d9c8447988","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-10-20","started":"","deadline":"2010-12-15","summary":"cogito GTD-like web application","details":"Develop a web based application with CouchDB","tags":["project","GTD"]}},
+</code></pre>
+
+<h2>Tartalom-típus egyeztetés</h2>
+
+<p>Az alábbi kódrészlet kétféle tartalom típust képes visszaadni: HTML-t és XML-t.</p>
+
+<pre><code>function()
+{
+    provides('html',function(){
+
+        send( '&lt;html&gt;&lt;body&gt;&lt;div id="users" xmlns="http://www.cogito.org/1.0/users"&gt;' );
+
+        send('&lt;ul&gt;');
+        while( row = getRow() )
+        {
+            send('&lt;li&gt;');
+
+            send( '&lt;span class="_id"&gt;_id : "' + row.value._id + '"&lt;/span&gt;&lt;/br&gt;');
+            send( '&lt;span class="_id"&gt;_rev : "' + row.value._rev + '"&lt;/span&gt;&lt;/br&gt;');
+            send( '&lt;span class="_id"&gt;type : "' + row.value.type + '"&lt;/span&gt;&lt;/br&gt;');
+
+            send( '&lt;span class="_id"&gt;familyName : "' + row.value.familyName + '"&lt;/span&gt;&lt;/br&gt;');
+            send( '&lt;span class="_id"&gt;surName : "' + row.value.surName + '"&lt;/span&gt;&lt;/br&gt;');
+            send( '&lt;span class="_id"&gt;company : "' + row.value.company + '"&lt;/span&gt;&lt;/br&gt;');
+
+            /* Other entries ... */
+
+            send( '&lt;/li&gt;' );
+        }
+        send( '&lt;/ul&gt;' );
+        return "&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;";
+    });
+
+    provides('xml',function(){
+        send( '&lt;users xmlns="http://www.cogito.org/1.0/users"&gt;' );
+
+        while( row = getRow() )
+        {
+            var entry = new XML( '&lt;user/&gt;' );
+
+            entry._id = row.value._id;
+            entry._rev = row.value._rev;
+            entry.type = row.value.type;
+
+            entry.familyName = row.value.familyName;
+            entry.surName = row.value.surName;
+
+            /* Other entries ... */
+
+            send( entry );
+        }
+        return "&lt;/users&gt;";
+    })
+}
+</code></pre>
+
+<p>Hogy adott esetben melyik formátum fog létrejönni, azt a kérésben, a kliens által
+megadott <em>"Accept:"</em> header paraméter fogja meghatározni.</p>
+
+<p>Ha az <em>"Accept: text/html"</em> Header változót állítják be a HTTP kliensen,
+akkor HTML-lel tér vissza, ha <em>"Accept: text/xml"</em>-t, akkor XML-lel.</p>
+
+<p>Figyelem! A böngésző alapértelmezésben HTML-t kér,
+ezért ezt egy dedikált klienssel lehet megnézni, pl az alábbiak szerint:</p>
+
+<pre><code>curl -X GET http:///_list/http://localhost:5984//cogito/_design/cogito/_list/contacts/contacts -H "Accept: text/xml"
+</code></pre>
+
+<!-- TODO: Működő példa programot írni a cogito-ba -->
+
+<p>Az ilyen fajta megoldások alkalmasak arra például, hogy az adatbázisunkat lekérdezhetővé
+tegyük más rendszerek számára, RESTful felületen keresztül.</p>
 			</div>
 
 		<!-- content-wrap ends here -->

@@ -83,6 +83,7 @@ Hasznos linkek
 * [Getting started with JavaScript](http://wiki.apache.org/couchdb/Getting_started_with_JavaScript?action=show&redirect=GettingStartedWithJavaScript)
 * [Getting started with Python](http://wiki.apache.org/couchdb/Getting_started_with_Python?action=show&redirect=GettingStartedWithPython)
 * [Getting started with PHP](http://wiki.apache.org/couchdb/Getting_started_with_PHP?action=show&redirect=GettingStartedWithPhp)
+* [Divan, a C# library for CouchDB](https://github.com/gokr/Divan)
 
 ### Egyebek
 * [CouchDB Implementation](http://horicky.blogspot.com/2008/10/couchdb-implementation.html)

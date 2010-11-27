@@ -59,6 +59,9 @@
 						<li><a href="dataUpload.html">Adatfeltöltés</a></li>
 						<li><a href="appdev.html">Alkalmazás-fejlesztés</a></li>
 						<li><a href="views.html">Lekérdezések</a></li>
+						<li><a href="shows.html">Dokumentum megjelenítés</a></li>
+						<li><a href="lists.html">Listakészítés</a></li>
+						<li><a href="widgets.html">Aktív megjelenítő komponensek</a></li>
 					</ul>
 				</div>
 
@@ -245,19 +248,26 @@ A továbbiakban, külön fejezetekben, mindegyiket részletesen tárgyaljuk.</p>
 nélkül jeleníti meg. Itt helyezhetők el azok az "asset"-jellegű file-ok,
 (pl.: képek, statikus HTML oldalak, CSS file-ok) melyekre
 az aktív tartalmak (többnyire JavaScript programok) hivatkozni fognak.</p></li>
-<li><p>Az <strong>evently</strong> folder az ún. widgeteket tartalmazza. Ezek a megjelenítő retegben
+<li><p>Az <strong>evently</strong> folder az ún. widgeteket tartalmazza. Ezek a megjelenítő rétegben
 használható "mikro MVC objektumok", melyekből a web-oldal aktív tartalma összeállítható.
-Ezek lényegében, CouchDB-hez fejlesztett jQuery plugin-ek.</p></li>
+Ezek lényegében, CouchDB-hez fejlesztett jQuery plugin-ek. Ugyanitt helyezhetjük el
+saját komponenseinket is.
+(lásd.: <a href="widgets.html">Aktív megjelenítő komponensek készítése</a>, továbbá
+<a href="http://tombenke.couchone.com/widgets/_design/widgets/index.html">Widget receptek</a>.)</p></li>
 <li><p>A <strong>lists</strong> folder JavaScript állományokat tartalmaz, melyek lekérdezések
-eredményeit adó listák megjelenítésére szolgálnak.</p></li>
+eredményeit adó listák megjelenítésére szolgálnak.
+(lásd.: <a href="lists.html">Listák megjelenítése</a> fejezet.)</p></li>
 <li><p>A <strong>shows</strong> folder a lekérdezések eredményének megjelenítésére szolgáló
-file-okat JavaScript tartalmazza.</p></li>
+file-okat JavaScript tartalmazza.
+(lástd.: <a href="shows.html">Egyedi dokumentumok megjelenítése</a> fejezet.)</p></li>
 <li><p>Az <strong>updates</strong> folderben olyan JavaScript függvények vannak, melyek az adatfeltöltés
 során használatos update műveletek validálására szolgálnak.</p></li>
 <li><p>A <strong>vendor</strong> folder a könyvtárként újrafelhasználható, előre beépített
-widgeteket tárolja.</p></li>
+widgeteket és egyéb program könyvtárakat tárolja.</p></li>
 <li><p>a <strong>views</strong> folder az adatbázis lekérdezéseket megvalósító, ún. map/reduce
-függvényeket tartalmazza, amelyek az adatbázis lekérdezésére szolgálnak.</p></li>
+függvényeket tartalmazza, amelyek az adatbázis lekérdezésére szolgálnak.
+(lásd.: <a href="views.html">Lekérdezések</a> és
+<a href="view_snippets.html">Lekérdezési receptek</a> fejezetek.)</p></li>
 </ul>
 
 <p>A folderben további file-ok is vannak a design dokumentum gyökerében,

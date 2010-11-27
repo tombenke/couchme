@@ -1,0 +1,475 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta name="Description" content="CouchDB, NoSQL" />
+<meta name="Keywords" content="CouchDB, NoSQL" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Distribution" content="Global" />
+<meta name="Author" content="Tamás Benke - tombenke@gmail.com" />
+<meta name="Robots" content="index,follow" />
+
+<link rel="stylesheet" href="images/Refresh.css" type="text/css" />
+
+<title>Web-es alkalmazások fejlesztése couchDB-vel és CouchApp-pal</title>
+
+
+</head>
+
+<body>
+<!-- wrap starts here -->
+<div id="wrap">
+
+		<!--header -->
+		<div id="header">
+
+			<h1 id="logo-text">Couch<span class="gray">Me</span></h1>
+			<h2 id="slogan">Web-es alkalmazások fejlesztése CouchDB-vel</h2>
+
+			<!--form class="search" method="post" action="#">
+				<p>
+	  			<input class="textbox" type="text" name="search_query" value="" />
+	 			<input class="button" type="submit" name="Submit" value="Search" />
+				</p>
+			</form-->
+
+		</div>
+
+		<!-- menu -->
+		<div  id="menu">
+			<ul>
+				<li id="current"><a href="index.html">Címlap</a></li>
+				<li><a href="downloads.html">Letöltések</a></li>
+				<li><a href="resources.html">Linkek</a></li>
+			</ul>
+		</div>
+
+		<!-- content-wrap starts here -->
+		<div id="content-wrap">
+
+			<div id="sidebar">
+
+				<h1>Tartalom</h1>
+				<div class="left-box">
+					<ul class="sidemenu">
+						<li><a href="index.html">Címlap</a></li>
+						<li><a href="intro.html">Bevezetés</a></li>
+						<li><a href="install.html">Installálás</a></li>
+						<li><a href="dataUpload.html">Adatfeltöltés</a></li>
+						<li><a href="appdev.html">Alkalmazás-fejlesztés</a></li>
+						<li><a href="views.html">Lekérdezések</a></li>
+						<li><a href="shows.html">Dokumentum megjelenítés</a></li>
+						<li><a href="lists.html">Listakészítés</a></li>
+						<li><a href="widgets.html">Aktív megjelenítő komponensek</a></li>
+					</ul>
+				</div>
+
+				<h1>Egyéb</h1>
+				<div class="left-box">
+					<ul class="sidemenu">
+						<li><a href="downloads.html">Letöltések</a></li>
+						<li><a href="resources.html">Linkek</a></li>
+					</ul>
+				</div>
+
+				<!--h1>Wise Words</h1>
+				<div class="left-box">
+					<p>&quot;To be concious that you are ignorant of the
+					facts is a great step to knowledge&quot; </p>
+
+					<p class="align-right">- Benjamin Disraeli</p>
+				</div>
+
+				<h1>Support Styleshout</h1>
+				<div class="left-box">
+					<p>If you are interested in supporting my work and would like to contribute, you are
+					welcome to make a small donation through the
+					<a href="http://www.styleshout.com/">donate link</a> on my website - it will
+					be a great help and will surely be appreciated.</p>
+				</div-->
+
+
+			</div>
+
+			<div id="main">
+
+				<a name="TemplateInfo"></a>
+<h1>View receptek</h1>
+
+<p>Tesztadatok a mintapéldákhoz:</p>
+
+<pre><code>/* action dokumentumok: */
+
+{ "docs": [
+  {
+    "type": "action",
+    "_id": "action1",
+    "owner": "tombenke",
+    "assignedTo": "tombenke",
+    "summary": "Create the cogito web application skeleton with initial data",
+    "estimatedEffort": "100",
+    "effortDimension": "hour",
+    "created": "2010-10-20",
+    "started": "2010-10-20",
+    "finished": "",
+    "status": "CREATED",
+    "tags": ["task","GTD"]
+  }
+]
+}
+
+/* contact-ok */
+{ "docs": [
+  {
+    "type": "user",
+    "_id": "tombenke",
+    "familyName": "Benke",
+    "sureName": "Tamás",
+    "company": "LSYH",
+    "taxIdNumber": "15446385-213",
+    "city": "Verőce",
+    "zipCode": "2621",
+    "street": "Dévai u.",
+    "number": "8",
+    "mobile": "+36703175024",
+    "phone": "+3618824802",
+    "fax": "+3618824977",
+    "email": "tombenke@gmail.com",
+    "web": "http://tombenke.ath.cx",
+    "dateOfBirth": "1963-04-19"
+  }
+]
+}
+
+/* project-ek */
+{ "docs": [
+  {
+    "type": "project",
+    "_id": "cogito",
+    "sponsor": "tombenke",
+    "manager": "tombenke",
+    "created": "2010-10-20",
+    "started": "",
+    "deadline": "2010-12-15",
+    "summary": "cogito GTD-like web application",
+    "details": "Develop a web based application with CouchDB",
+    "tags": ["project","GTD"]
+  },
+  {
+    "type": "project",
+    "_id": "csvconv",
+    "sponsor": "tombenke",
+    "manager": "tombenke",
+    "created": "2010-06-01",
+    "started": "",
+    "deadline": "2010-10-18",
+    "summary": "CSV converter utility",
+    "details": "Develop a utility to convert CSV files to XML and to JSON format",
+    "tags": ["project","CouchDB","CSV"]
+  },
+  {
+    "type": "project",
+    "_id": "couchme",
+    "sponsor": "tombenke",
+    "manager": "tombenke",
+    "created": "2010-09-15",
+    "started": "",
+    "deadline": "2010-12-23",
+    "summary": "CouchMe how to use CouchDB",
+    "details": "Readings about how to develop web applications with CouchDB and CouchApp",
+    "tags": ["project","CouchDB","CouchApp"]
+  }
+]
+}
+</code></pre>
+
+<h3>Az összes project lekérdezése</h3>
+
+<p>A <strong>map()</strong> függvény:</p>
+
+<pre><code>function( doc )
+{
+    if( doc.type == 'project' )
+    {
+        emit( null, doc );
+    }
+};
+</code></pre>
+
+<p>A <strong>reduce()</strong> függvény: &mdash;</p>
+
+<p>URL: <a href="http://localhost:5984/cogito/_design/cogito/_view/projects">http://localhost:5984/cogito/<em>design/cogito/</em>view/projects</a></p>
+
+<p>Eredmény:</p>
+
+<pre><code>{"total_rows":3,"offset":0,"rows":[
+{"id":"cogito","key":null,"value":{"_id":"cogito","_rev":"1-b18ec420bfcd56b362fbb2d9c8447988","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-10-20","started":"","deadline":"2010-12-15","summary":"cogito GTD-like web application","details":"Develop a web based application with CouchDB","tags":["project","GTD"]}},
+{"id":"couchme","key":null,"value":{"_id":"couchme","_rev":"1-8b4cdf4d6e29d085fa8459ba4d8215a8","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-09-15","started":"","deadline":"2010-12-23","summary":"CouchMe how to use CouchDB","details":"Readings about how to develop web applications with CouchDB and CouchApp","tags":["project","CouchDB","CouchApp"]}},
+{"id":"csvconv","key":null,"value":{"_id":"csvconv","_rev":"1-42ff3cab63e789fef89cebd06a9a3e7e","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-06-01","started":"","deadline":"2010-10-18","summary":"CSV converter utility","details":"Develop a utility to convert CSV files to XML and to JSON format","tags":["project","CouchDB","CSV"]}}
+]}
+</code></pre>
+
+<h3>Tag-ek száma összesen:</h3>
+
+<p>A <strong>map()</strong> függvény:</p>
+
+<pre><code>function( doc )
+{
+    if( doc.tags )
+    {
+        doc.tags.forEach( function( tag )
+        {
+            emit( tag, 1 );
+        });
+    }
+}
+</code></pre>
+
+<p>A <strong>reduce()</strong> függvény:</p>
+
+<pre><code>function( keys, values )
+{
+    return sum( values );
+}
+</code></pre>
+
+<h4>Tag-ek száma összesen:</h4>
+
+<p>URL: <a href="http://localhost:5984/cogito/_design/cogito/_view/tags">http://localhost:5984/cogito/<em>design/cogito/</em>view/tags</a></p>
+
+<p>Eredmény:</p>
+
+<pre><code>{"rows":[
+{"key":null,"value":10}
+]}
+</code></pre>
+
+<h4>Tag-ek száma tag-enként:</h4>
+
+<p>URL: <a href="http://localhost:5984/cogito/_design/cogito/_view/tags?group=true">http://localhost:5984/cogito/<em>design/cogito/</em>view/tags?group=true</a></p>
+
+<p>Eredmény:</p>
+
+<pre><code>{"rows":[
+{"key":"CouchApp","value":1},
+{"key":"CouchDB","value":2},
+{"key":"CSV","value":1},
+{"key":"GTD","value":2},
+{"key":"project","value":3},
+{"key":"task","value":1}
+]}
+</code></pre>
+
+<h3>Dokumentum(ok) lekérdezése Tag-ek alapján</h3>
+
+<p>A <strong>map()</strong> függvény:</p>
+
+<pre><code>function( doc )
+{
+    if( doc.tags )
+    {
+        doc.tags.forEach( function( tag )
+        {
+            emit( tag, doc );
+        });
+    }
+}
+</code></pre>
+
+<p>A <strong>reduce()</strong> függvény: &mdash;</p>
+
+<h4>Dokumentum(ok) lekérdezése egy adott Tag alapján:</h4>
+
+<p>URL <a href="http://localhost:5984/cogito/_design/cogito/_view/docByTag?key=%22GTD%22">http://localhost:5984/cogito/<em>design/cogito/</em>view/docByTag?key=%22GTD%22</a></p>
+
+<p>Eredmény:</p>
+
+<pre><code>{"total_rows":10,"offset":4,"rows":[
+{"id":"action1","key":"GTD","value":{"_id":"action1","_rev":"1-a1ba5bbc864ea8037b61770a6e6a8ade","type":"action","owner":"tombenke","assignedTo":"tombenke","summary":"Create the cogito web application skeleton with initial data","estimatedEffort":"100","effortDimension":"hour","created":"2010-10-20","started":"2010-10-20","finished":"","status":"CREATED","tags":["task","GTD"]}},
+{"id":"cogito","key":"GTD","value":{"_id":"cogito","_rev":"1-b18ec420bfcd56b362fbb2d9c8447988","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-10-20","started":"","deadline":"2010-12-15","summary":"cogito GTD-like web application","details":"Develop a web based application with CouchDB","tags":["project","GTD"]}}
+]}
+</code></pre>
+
+<h4>Dokumentum(ok) lekérdezése Tag-range alapján:</h4>
+
+<p>URL: <a href="http://localhost:5984/cogito/_design/cogito/_view/docByTag?startkey=" title="GTD&quot;&amp;endkey=&quot;project">http://localhost:5984/cogito/<em>design/cogito/</em>view/docByTag?startkey="GTD"&amp;endkey="project"</a></p>
+
+<p>Eredmény:</p>
+
+<pre><code>{"total_rows":10,"offset":4,"rows":[
+{"id":"action1","key":"GTD","value":{"_id":"action1","_rev":"1-a1ba5bbc864ea8037b61770a6e6a8ade","type":"action","owner":"tombenke","assignedTo":"tombenke","summary":"Create the cogito web application skeleton with initial data","estimatedEffort":"100","effortDimension":"hour","created":"2010-10-20","started":"2010-10-20","finished":"","status":"CREATED","tags":["task","GTD"]}},
+{"id":"cogito","key":"GTD","value":{"_id":"cogito","_rev":"1-b18ec420bfcd56b362fbb2d9c8447988","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-10-20","started":"","deadline":"2010-12-15","summary":"cogito GTD-like web application","details":"Develop a web based application with CouchDB","tags":["project","GTD"]}},
+{"id":"cogito","key":"project","value":{"_id":"cogito","_rev":"1-b18ec420bfcd56b362fbb2d9c8447988","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-10-20","started":"","deadline":"2010-12-15","summary":"cogito GTD-like web application","details":"Develop a web based application with CouchDB","tags":["project","GTD"]}},
+{"id":"couchme","key":"project","value":{"_id":"couchme","_rev":"1-8b4cdf4d6e29d085fa8459ba4d8215a8","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-09-15","started":"","deadline":"2010-12-23","summary":"CouchMe how to use CouchDB","details":"Readings about how to develop web applications with CouchDB and CouchApp","tags":["project","CouchDB","CouchApp"]}},
+{"id":"csvconv","key":"project","value":{"_id":"csvconv","_rev":"1-42ff3cab63e789fef89cebd06a9a3e7e","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-06-01","started":"","deadline":"2010-10-18","summary":"CSV converter utility","details":"Develop a utility to convert CSV files to XML and to JSON format","tags":["project","CouchDB","CSV"]}}
+]}
+</code></pre>
+
+<h3>Összes dokumentum, amiben előfordul legalább egy tag:</h3>
+
+<p>URL: <a href="http://localhost:5984/cogito/_design/cogito/_view/docByTag">http://localhost:5984/cogito/<em>design/cogito/</em>view/docByTag</a></p>
+
+<p>Eredmény:</p>
+
+<pre><code>{"total_rows":10,"offset":0,"rows":[
+{"id":"couchme","key":"CouchApp","value":{"_id":"couchme","_rev":"1-8b4cdf4d6e29d085fa8459ba4d8215a8","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-09-15","started":"","deadline":"2010-12-23","summary":"CouchMe how to use CouchDB","details":"Readings about how to develop web applications with CouchDB and CouchApp","tags":["project","CouchDB","CouchApp"]}},
+{"id":"couchme","key":"CouchDB","value":{"_id":"couchme","_rev":"1-8b4cdf4d6e29d085fa8459ba4d8215a8","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-09-15","started":"","deadline":"2010-12-23","summary":"CouchMe how to use CouchDB","details":"Readings about how to develop web applications with CouchDB and CouchApp","tags":["project","CouchDB","CouchApp"]}},
+{"id":"csvconv","key":"CouchDB","value":{"_id":"csvconv","_rev":"1-42ff3cab63e789fef89cebd06a9a3e7e","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-06-01","started":"","deadline":"2010-10-18","summary":"CSV converter utility","details":"Develop a utility to convert CSV files to XML and to JSON format","tags":["project","CouchDB","CSV"]}},
+{"id":"csvconv","key":"CSV","value":{"_id":"csvconv","_rev":"1-42ff3cab63e789fef89cebd06a9a3e7e","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-06-01","started":"","deadline":"2010-10-18","summary":"CSV converter utility","details":"Develop a utility to convert CSV files to XML and to JSON format","tags":["project","CouchDB","CSV"]}},
+{"id":"action1","key":"GTD","value":{"_id":"action1","_rev":"1-a1ba5bbc864ea8037b61770a6e6a8ade","type":"action","owner":"tombenke","assignedTo":"tombenke","summary":"Create the cogito web application skeleton with initial data","estimatedEffort":"100","effortDimension":"hour","created":"2010-10-20","started":"2010-10-20","finished":"","status":"CREATED","tags":["task","GTD"]}},
+{"id":"cogito","key":"GTD","value":{"_id":"cogito","_rev":"1-b18ec420bfcd56b362fbb2d9c8447988","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-10-20","started":"","deadline":"2010-12-15","summary":"cogito GTD-like web application","details":"Develop a web based application with CouchDB","tags":["project","GTD"]}},
+{"id":"cogito","key":"project","value":{"_id":"cogito","_rev":"1-b18ec420bfcd56b362fbb2d9c8447988","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-10-20","started":"","deadline":"2010-12-15","summary":"cogito GTD-like web application","details":"Develop a web based application with CouchDB","tags":["project","GTD"]}},
+{"id":"couchme","key":"project","value":{"_id":"couchme","_rev":"1-8b4cdf4d6e29d085fa8459ba4d8215a8","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-09-15","started":"","deadline":"2010-12-23","summary":"CouchMe how to use CouchDB","details":"Readings about how to develop web applications with CouchDB and CouchApp","tags":["project","CouchDB","CouchApp"]}},
+{"id":"csvconv","key":"project","value":{"_id":"csvconv","_rev":"1-42ff3cab63e789fef89cebd06a9a3e7e","type":"project","sponsor":"tombenke","manager":"tombenke","created":"2010-06-01","started":"","deadline":"2010-10-18","summary":"CSV converter utility","details":"Develop a utility to convert CSV files to XML and to JSON format","tags":["project","CouchDB","CSV"]}},
+{"id":"action1","key":"task","value":{"_id":"action1","_rev":"1-a1ba5bbc864ea8037b61770a6e6a8ade","type":"action","owner":"tombenke","assignedTo":"tombenke","summary":"Create the cogito web application skeleton with initial data","estimatedEffort":"100","effortDimension":"hour","created":"2010-10-20","started":"2010-10-20","finished":"","status":"CREATED","tags":["task","GTD"]}}
+]}
+</code></pre>
+
+<h3>Dokumentum(ok) lekérdezése a summary mezőben előforduló szó alapján:</h3>
+
+<p>A <strong>map()</strong> függvény:</p>
+
+<pre><code>function( doc )
+{
+    if( doc.summary )
+    {
+        var words = doc.summary.toLowerCase().replace(/[^a-z]+/g, ' ').split(' ');
+        for( word in words )
+        {
+            emit( words[ word ], 1 );
+        }
+    }
+}
+</code></pre>
+
+<p>A <strong>reduce()</strong> függvény:</p>
+
+<pre><code>function( key, values, rereduce )
+{
+    return sum( values );
+}
+</code></pre>
+
+<p>URL: <a href="http://localhost:5984/cogito/_design/cogito/_view/docBySummary?key="gtd"&amp;reduce=false">http://localhost:5984/cogito/<em>design/cogito/</em>view/docBySummary?key="gtd"&amp;reduce=false</a></p>
+
+<p>Eredmény:</p>
+
+<pre><code>{"total_rows":22,"offset":10,"rows":[
+{"id":"cogito","key":"gtd","value":1}
+]}
+</code></pre>
+
+<h3>A <em>Summary</em> mezőben előforduló szavak száma (unique)</h3>
+
+<p>URL <a href="http://localhost:5984/cogito/_design/cogito/_view/docBySummary">http://localhost:5984/cogito/<em>design/cogito/</em>view/docBySummary</a></p>
+
+<p>Eredmény:</p>
+
+<pre><code>{"rows":[
+{"key":null,"value":22}
+]}
+</code></pre>
+
+<h3>A <em>Summary</em> mezőben előforduló szavak száma (szavanként):</h3>
+
+<p>URL: <a href="http://localhost:5984/cogito/_design/cogito/_view/docBySummary?group=true">http://localhost:5984/cogito/<em>design/cogito/</em>view/docBySummary?group=true</a></p>
+
+<p>Eredmény:</p>
+
+<pre><code>{"rows":[
+{"key":"application","value":2},
+{"key":"cogito","value":2},
+{"key":"converter","value":1},
+{"key":"couchdb","value":1},
+{"key":"couchme","value":1},
+{"key":"create","value":1},
+{"key":"csv","value":1},
+{"key":"data","value":1},
+{"key":"gtd","value":1},
+{"key":"how","value":1},
+{"key":"initial","value":1},
+{"key":"like","value":1},
+{"key":"skeleton","value":1},
+{"key":"the","value":1},
+{"key":"to","value":1},
+{"key":"use","value":1},
+{"key":"utility","value":1},
+{"key":"web","value":2},
+{"key":"with","value":1}
+]}
+</code></pre>
+
+<h2>Életkor lekérdezése contact dokumentumokból</h2>
+
+<p>A <em>map()</em> függvény:</p>
+
+<pre><code>function( doc )
+{
+    if( ! doc.country ) return;
+    emit( doc.country, doc.age );
+}
+</code></pre>
+
+<p>A <em>reduce()</em> függvény:</p>
+
+<pre><code>function( key, values, rereduce )
+{
+    var totals = sum( values );
+    return Math.round( (totals / values.length) * 100) / 100;
+}
+</code></pre>
+
+<p>Lekérdezés:</p>
+
+<pre><code>http://localhost:5984/contacts/_design/contacts/_view/age
+</code></pre>
+
+<p>Eredmény:</p>
+
+<pre><code>{"rows":[
+{"key":null,"value":33.4}
+]}
+</code></pre>
+
+<h2>viewName</h2>
+
+<p>A <em>map()</em> függvény:</p>
+
+<p>A <em>reduce()</em> függvény:</p>
+
+<p>Lekérdezés:</p>
+
+<pre><code>http://localhost:5984/contacts/_design/contacts/_view/...
+</code></pre>
+
+<p>Eredmény:</p>
+			</div>
+
+		<!-- content-wrap ends here -->
+		</div>
+
+		<!--footer starts here-->
+		<div id="footer">
+
+			<p>
+			&copy; 2010 <strong>TomBenke</strong> |
+			Design by: <a href="http://www.styleshout.com/">styleshout</a> |
+			Valid <a href="http://validator.w3.org/check?uri=referer">XHTML</a> |
+			<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a>
+			 | Courtesy <a href="http://www.openwebdesign.org" target="_blank">Open Web Design</a>
+			 <br/>
+   		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<!--a href="index.html">Bevezetés</a>&nbsp;|&nbsp;
+   		<a href="downloads.html">Letöltések</a>&nbsp;|&nbsp;
+	   	<a href="resources.html">Linkek</a-->
+   		</p>
+
+		</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body>
+</html>

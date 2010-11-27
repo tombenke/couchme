@@ -9,11 +9,14 @@ export downloads=couchme/_design/$target/_attachments/downloads
 ./md2html.sh downloads
 #./md2html.sh generate
 ./md2html.sh index
-./md2html.sh intro
 ./md2html.sh install
+./md2html.sh intro
 ./md2html.sh lists
 ./md2html.sh resources
+./md2html.sh shows
+./md2html.sh view_snippets
 ./md2html.sh views
+./md2html.sh widgets
 
 cp -r images ../../_design/$target/_attachments/
 cp -r ../$target/images ../../_design/$target/_attachments/

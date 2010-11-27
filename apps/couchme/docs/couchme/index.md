@@ -25,6 +25,25 @@ Eddig az alábbi fejezetek készültek el:
 * [Adatfeltöltés](dataUpload.html)  
   Egyedi dokumentumok, és tömeges adatok feltöltése adatbázisba.
 
+* [Lekérdezések](views.html)  
+  Adatbázis lekérdezések készítése.
+
+* [Lekérdezési receptek](view_snippets.html)  
+  Kód részletek, minták tipikus lekérdezési feladatokhoz.
+
+* [Egyedi dokumentumok megjelenítése](shows.html)  
+  Statikus és dinamikus oldalak server oldali előállítása dokumentumokból
+  és statikus tartalom elemekből.
+
+* [Listák megjelenítése](lists.html)  
+  Eredménylisták előállítása lekérdezések eredményéből.
+
+* [Aktív megjelenítő komponensek készítése](widgets.html)  
+  Böngésző oldali, kiterjesztett jQuery alapú eseménykezelés,
+  adatkezelés és megjelenítés.
+
+* [Widget receptek](http://tombenke.couchone.com/widgets/_design/widgets/index.html)  
+  Példák aktív megjelenítő komponensek készítésére.
 
 A fenti fejezetekhez kapcsolódó egyéb anyagok:
 

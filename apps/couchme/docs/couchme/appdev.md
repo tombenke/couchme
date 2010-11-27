@@ -148,24 +148,31 @@ nélkül jeleníti meg. Itt helyezhetők el azok az "asset"-jellegű file-ok,
 (pl.: képek, statikus HTML oldalak, CSS file-ok) melyekre
 az aktív tartalmak (többnyire JavaScript programok) hivatkozni fognak.
 
-* Az __evently__ folder az ún. widgeteket tartalmazza. Ezek a megjelenítő retegben
+* Az __evently__ folder az ún. widgeteket tartalmazza. Ezek a megjelenítő rétegben
 használható "mikro MVC objektumok", melyekből a web-oldal aktív tartalma összeállítható.
-Ezek lényegében, CouchDB-hez fejlesztett jQuery plugin-ek.
+Ezek lényegében, CouchDB-hez fejlesztett jQuery plugin-ek. Ugyanitt helyezhetjük el
+saját komponenseinket is.
+(lásd.: [Aktív megjelenítő komponensek készítése](widgets.html), továbbá
+[Widget receptek](http://tombenke.couchone.com/widgets/_design/widgets/index.html).)
 
 * A __lists__ folder JavaScript állományokat tartalmaz, melyek lekérdezések
 eredményeit adó listák megjelenítésére szolgálnak.
+(lásd.: [Listák megjelenítése](lists.html) fejezet.)
 
 * A __shows__ folder a lekérdezések eredményének megjelenítésére szolgáló
 file-okat JavaScript tartalmazza.
+(lástd.: [Egyedi dokumentumok megjelenítése](shows.html) fejezet.)
 
 * Az __updates__ folderben olyan JavaScript függvények vannak, melyek az adatfeltöltés
 során használatos update műveletek validálására szolgálnak.
 
 * A __vendor__ folder a könyvtárként újrafelhasználható, előre beépített
-widgeteket tárolja.
+widgeteket és egyéb program könyvtárakat tárolja.
 
 * a __views__ folder az adatbázis lekérdezéseket megvalósító, ún. map/reduce
 függvényeket tartalmazza, amelyek az adatbázis lekérdezésére szolgálnak.
+(lásd.: [Lekérdezések](views.html) és
+[Lekérdezési receptek](view_snippets.html) fejezetek.)
 
 A folderben további file-ok is vannak a design dokumentum gyökerében,
 amelyek nem tartoznak szorosan az alkalmazáshoz, de adminisztrációs

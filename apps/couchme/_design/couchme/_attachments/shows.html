@@ -95,16 +95,74 @@
 			<div id="main">
 
 				<a name="TemplateInfo"></a>
-<h1>Kód repository-k és Letölthető állományok</h1>
+<h1>Megjelenítés</h1>
 
-<ul>
-<li><a href="https://github.com/tombenke/csvconv">CSV converter utility</a></li>
-<li><a href="https://github.com/tombenke/widgets">Widget set for CouchDB based applications</a></li>
-<li><a href="https://github.com/tombenke/hunmap">Hungarian counties and cities</a></li>
-<li><a href="https://github.com/tombenke/cogito">CouchDB based GTD - like web application</a></li>
-<li><a href="downloads/contacts.zip">contacts.zip</a></li>
-<li><a href="downloads/csvconv.zip">csvconv.zip</a></li>
-</ul>
+<h2>Ismerkedés a show függvényekkel</h2>
+
+<p>A show funkciók arra szolgálnak, hogy egy meghatározott dokumentumot megjelenítsünk
+és az ehhez szükséges feldolgozást a server oldalon végezzük el.</p>
+
+<p>Szükséges tehát egy dokumentum azonosító, továbbá egy JavaScript függvény, ami
+a megjelenítést megvalósítja. Az eredmény különféle tartalom típus lehet.</p>
+
+<p>A leggyakrabban minden bizonnyal HTML-t fog produkálni a művelet, de ezzel tudunk
+szükség esetén XML, személyre-szabott JSON, plain text, vagy akár valamilyen
+bináris formátumú dokumentum reprezentációt visszaadni a kliensnek.</p>
+
+<p>A tartalom előállítást végezhetjük teljes mértékben JavaScript-ben, de
+rendelkezésünkre áll egy templating eszköz, ami sokkal hatékonyabbá, rugalmasabbá
+és nem utolsósorban áttekinthetőbbé és karbantarthatóbbá teszi az alkalmazásunkat.</p>
+
+<p>Az URL mintázat, amivel lekérhetjük a tartalmat a következőképpen fest:</p>
+
+<pre><code>/{db-name}/{design-doc-name}/_show/{show-name}/{doc-id}
+</code></pre>
+
+<p>Ahol a <strong>{show-name}</strong> megegyezik a JavaScript file nevével, ami a megjelenítő funkciót
+tartalmazza. A <strong>{doc-id}</strong> opcionális. Ha nem adjuk meg, akkor a funkció üres dokumentummal
+dolgozik. Pl.: Statikus tartalom generálásakor nincs feltétlenül szükségünk dokumentumra.</p>
+
+<p>Egy érvényes show URL-re mutat példát az alábbi kódrészlet:</p>
+
+<pre><code>/cogito/_design/cogito/_show/index
+</code></pre>
+
+<p>Ahhoz, hogy erre az URL-re válaszoljon a server, a design dokumentum alatt
+csinálnunk kell egy _show foldert, amelyben létrehozunk egy index.js nevű file-t.</p>
+
+<p>Ennek a file-nak a tartalma egyetlen függvény lesz, aminek a mintázata a következő:</p>
+
+<pre><code>function( doc, req )
+{
+
+}
+</code></pre>
+
+<p>A <strong>doc</strong> paraméter maga a dokumentum, amire az URL-ben hivatkoztunk (null, ha
+nem adtunk meg {doc-id}-t.</p>
+
+<p>A <strong>req</strong> paraméter a HTTP request paramétereit adja át a függvénynek.</p>
+
+<p>A visszatérő érték jelenik meg a kliens felé továbbított reprezentációként.
+Például az alábbi kódrészlet egy egyszerű szöveges üzenettel fog visszatérni:</p>
+
+<pre><code>function( doc, req )
+{
+    return "Jó napot.";
+}
+</code></pre>
+
+<h2>Program-könyvtárak alkalmazása</h2>
+
+<p>TODO</p>
+
+<h2>Server oldali erőforrások beillesztése</h2>
+
+<p>TODO</p>
+
+<h2>Template-ek használata</h2>
+
+<p>TODO</p>
 			</div>
 
 		<!-- content-wrap ends here -->
