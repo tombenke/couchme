@@ -99,7 +99,67 @@
 
 <h2>Bevezetés</h2>
 
-<p>A CouchApp biztosít néhány JavaSript könyvtárat, amivel a HTML oldalon belül,
+<p>Mielőtt elmerülnénk a részletekben, fontos tisztáznunk néhány alapvető kérdést,
+amely első ránézésre nem biztos, hogy mindenki számára nyilvánvaló, de megválaszolásuk
+fontos, hogy mielőbb megérthessük, hogyan is állnak össze az egyes komponensek
+egy komplett rendszerré.</p>
+
+<ol>
+<li><p>Az adatbázisban dokumentumokat tárolunk, JSON  formátumban.</p></li>
+<li><p>Az adatbázist a kliens oldalról REST API-n keresztül tudunk elérni. Ezt egy
+közönséges HTTP klienssel, vagy egy erre a célra kifejlesztett HTTP kliens
+könyvtárral tudjuk elvégezni. A CouchApp ezt még azzal egészíti ki, hogy
+kliens oldalon rendelkezésre bocsájt egy JavaScript könyvtárat, amivel a
+legfontosabb adatbázis műveleteket elvégezhetjük, ezzel elfedve az egyszerű
+REST API réteget.</p></li>
+<li><p>A server és kliens oldali programokat a készítésük során különálló folderekbe
+és file-okba helyezzük, és a feltöltés során egy speciális dokumentumba
+az ún. design-dokumentumba konvertáljuk, miután az egészet JSON-osítottuk.</p></li>
+<li><p>Amikor a megjelenítő réteget fejlesztjük, HTML oldalakat állítunk elő.
+Ezt kétféleképpen tehetjük meg:</p>
+
+<ul>
+<li><p>Teljes egészében a server oldalon állítjuk elő a végleges tartalmat.
+Erre szolgálnak a <strong>_lists</strong> és <strong>_shows</strong> folderben elhelyezett
+file-okban definiált függvények, illetve egyszerűbb esetben
+az <strong>_attachments</strong> folderben elhelyezett állományok.</p></li>
+<li><p>Aktív megjelenítő komponenseket is elhelyezünk az oldalban,
+melyek a kliens oldalon futnak, és amellett, hogy a klasszikus
+kliens oldali feladatokat (validálás, megjelenítés finomszabályozása, stb.)
+ellátják, közvetlen adatbázisműveleteket is végrehajtanak, és az oldal
+struktúráját is jelentősen befolyásolják, a kliens oldali template-ek
+alkalmazásával.</p>
+
+<p>Természetesen, ezen utóbbi esetben is, az alap oldalstruktúrát a server
+oldalon fogjuk előállítani (lásd.: <strong>_shows</strong>, <strong>_lists</strong>, <strong>_attachments</strong>).</p></li>
+</ul></li>
+<li><p>Léteznek olyan könyvtárak (pl. a mustache, melyet a template kezeléshez alkalmazunk)
+melyek mind kliens mind pedig server oldalon felhasználásra kerülnek.
+Ezek mindegyike a design dokumentumba van bekódolva, és az oldal betöltődését
+követően egy külön erre a célra szolgáló JavaScript alkalmazás végzi el
+azok letöltését, és az oldalba történő beágyazását, aktiválását.</p></li>
+</ol>
+
+<p>Szeretném kiemelni, hogy ebben a fejezetben a kliens oldali aktív megjelenítő komponensekre
+fókuszálunk. Ezeknek is két olyan tuljadonságára, ami "aktívvá" teszi őket:</p>
+
+<ul>
+<li><p>Adatbázis műveleteket és egyéb server irányú kéréseket hajtanak végre.</p></li>
+<li><p>Interakciókat végeznek a felhasználóval, és esetleg egymással.</p></li>
+</ul>
+
+<p>Ebből kifolyólag teljesen mindegy, hogy a komponenseket magába foglaló HTML oldal
+hogyan állt elő: statikus, vagy dinamikus módon.</p>
+
+<p>Éppen ezért, hogy a lényegre tudjunk koncentrálni,
+a widget mintákat gyűjteménybe foglaló
+<a href="http://tombenke.couchone.com/widgets/_design/widgets/index.html">Widget receptek</a>
+projekt is egyszerű, statikus HTML oldalakat alkalmaz a példák szemléltetésére.</p>
+
+<h2>Tájékozódás a folder-struktúrában</h2>
+
+<p>A CouchApp-pal készült alkalmazások JavaScript-tel valósítják meg a program logikát.
+A CouchApp biztosít néhány JavaSript könyvtárat, amivel a HTML oldalon belül,
 kiterjesztett jQuery komponenseket használhatunk.</p>
 
 <p>Ezeket a kiterjesztett jQuery komponensek tulajdonképpen apró MVC kontrollerekként
@@ -114,16 +174,256 @@ definiálhatunk logikai eseményeket, melyeket trigger műveletekkel lehet aktiv
 Minden egyes állapothoz tartozik egy megjelenítő template, és egy adatmodell,
 amit a kiváltó esemény tölt fel, és ez az adat megjeleníthető a template-en keresztül.</p>
 
-<p>Az eseménykezelés, a megjelenítés és az adatok kezelése el van
-különítve egymástól, és egy megfelelő formában kialaktott folderstruktúrában,
-külön-külön forrásfile-okban helyezkedik el.</p>
+<p>Ezeket az aktív megjelenítő komponenseket továbbiakban widget-eknek fogjuk nevezni.</p>
 
-<p>Ezeket a továbbiakban
-widget-eknek fogjuk nevezni.</p>
+<p>A widget-ek implementációjában az eseménykezelés, a megjelenítés és az adatok
+kezelése el van különítve egymástól, és egy megfelelő formában kialaktott
+folderstruktúrában, külön-külön forrásfile-okban helyezkedik el.</p>
 
-<p>TODO: Témát kifejteni részletesen</p>
+<p>A CouchDB-s alkalmazásainkat a CouchApp segédprogram felhasználásával készítjük.
+Ez a segédprogram támogat bennünket abban, hogy prototípus alkalmazásokat
+generálhassunk. Ezek egy előre definiált folderstruktúrával rendelkeznek, és
+rögtön tartalmazzák azokat a program könyvtárakat, amelyekre a böngésző oldalon
+a megjelenítőréteget alapozhatjuk.</p>
 
-<!-- Evently is just a shortcut for wiring up jQuery widgets -->
+<p>Az <a href="appdev.html">Alkalmazás-fejlesztés / Egy alkalmazás struktúrája</a> című fejezet
+ismerteti egy couchApp által generált folderstruktúra elemeit, ezért itt csak
+a widgetekhez szorosabban kapcsolódó file-okra és folderekre fogunk koncentrálni.</p>
+
+<p>Az itt ismertetett mintapéldákat egy projektbe gyűjtöttem, ami reményeim szerint
+idővel egy kisebb katalógusként fog szolgálni az újrafelhasználható widget
+komponensek számára. A forráskód a 
+<a href="https://github.com/tombenke/widgets">https://github.com/tombenke/widgets</a>
+repository-ból letölthető, a múködő változat pedig elérhető a web-en:
+<a href="http://tombenke.couchone.com/widgets/_design/widgets/index.html">http://tombenke.couchone.com/widgets/_design/widgets/index.html</a>.</p>
+
+<p>A widgets design dokumentum folder strutúráján keresztül szeretném bemutatni, hogy
+az egyes komponensek hol találhatóak. Az ábra nem teljes, bizonyos részleteket
+a jobb áttekinthetőség érdekében kihagytam:</p>
+
+<pre><code>/widgets/_design/widgets
+    |-- _attachments
+    |   |-- scripts
+    |   |   `-- gmap
+    |   `-- style
+    |       `-- smoothness
+    |           `-- images
+    |-- evently
+    |   |-- auth
+    |   |-- browser
+    |   |-- contactManager
+    |   |-- contactform
+    |   |-- countryCombo
+    |   |-- dbinfo
+    |   |-- hCard
+    |   |-- helloworld
+    |   |-- items
+    |   |-- logout
+    |   |-- profile
+    |   |-- searchform
+    |   |-- searchresults
+    |   |-- searchresults_reduced
+    |   |-- simpleform
+    |   `-- wizard
+    |-- vendor
+    |   |-- couchapp
+    |   |   |-- _attachments
+    |   |   |-- evently
+    |   |   |   |-- account
+    |   |   |   `-- profile
+    |   |   `-- lib
+    |   `-- droids
+    |       `-- lib
+    `-- views
+</code></pre>
+
+<h3>Az <strong>_attachments</strong> folder</h3>
+
+<pre><code>.
+.
+.
+|-- _attachments
+|   |-- dbinfo.html
+|   |-- helloworld.html
+|   |-- index.html
+.
+.
+.
+
+
+.
+.
+.
+|-- _attachments
+|   |-- scripts
+|   |   |-- gmap
+|   |   |   `-- jquery.gmap-1.1.0-min.js
+|   |   |-- jquery-1.4.2.min.js
+|   |   `-- jquery-ui-1.8.2.custom.min.js
+|   |-- style
+|   |   |-- main.css
+|   |   |-- smoothness
+|   |   |   |-- images
+|   |   |   |   |-- ui-anim_basic_16x16.gif
+|   |   |   |   |-- ui-bg_flat_0_aaaaaa_40x100.png
+|   |   |   |   |-- ui-bg_flat_75_ffffff_40x100.png
+|   |   |   |   |-- ui-bg_glass_55_fbf9ee_1x400.png
+|   |   |   |   |-- ui-bg_glass_65_ffffff_1x400.png
+|   |   |   |   |-- ui-bg_glass_75_dadada_1x400.png
+|   |   |   |   |-- ui-bg_glass_75_e6e6e6_1x400.png
+|   |   |   |   |-- ui-bg_glass_95_fef1ec_1x400.png
+|   |   |   |   |-- ui-bg_highlight-soft_75_cccccc_1x100.png
+|   |   |   |   |-- ui-icons_222222_256x240.png
+|   |   |   |   |-- ui-icons_2e83ff_256x240.png
+|   |   |   |   |-- ui-icons_454545_256x240.png
+|   |   |   |   |-- ui-icons_888888_256x240.png
+|   |   |   |   `-- ui-icons_cd0a0a_256x240.png
+|   |   |   `-- jquery-ui-1.8.2.custom.css
+|   |   `-- wait16.gif
+.
+.
+.
+</code></pre>
+
+<h3>Az <strong>evently</strong> folder</h3>
+
+<pre><code>.
+.
+.
+|-- evently
+|   |-- dbinfo
+|   |   |-- _init
+|   |   |   |-- after.js
+|   |   |   `-- mustache.html
+|   |   `-- version
+|   |       |-- data.js
+|   |       `-- mustache.html
+|   |-- helloworld
+|   |   |-- _init
+|   |   |   `-- mustache.html
+|   |   `-- click
+|   |       `-- mustache.html
+.
+.
+.
+</code></pre>
+
+<h3>A <strong>vendor</strong> folder</h3>
+
+<pre><code>.
+.
+.
+|-- vendor
+|   |-- couchapp
+|   |   |-- _attachments
+|   |   |   |-- jquery.couch.app.js
+|   |   |   |-- jquery.couch.app.util.js
+|   |   |   |-- jquery.evently.js
+|   |   |   |-- jquery.mustache.js
+|   |   |   |-- jquery.pathbinder.js
+|   |   |   `-- loader.js
+|   |   |-- evently
+|   |   |   |-- README.md
+|   |   |   |-- account
+|   |   |   `-- profile
+|   |   |-- lib
+|   |   |   |-- atom.js
+|   |   |   |-- cache.js
+|   |   |   |-- code.js
+|   |   |   |-- docform.js
+|   |   |   |-- linkup.js
+|   |   |   |-- list.js
+|   |   |   |-- markdown.js
+|   |   |   |-- md5.js
+|   |   |   |-- mustache.js
+|   |   |   |-- path.js
+|   |   |   |-- redirect.js
+|   |   |   |-- utils.js
+|   |   |   `-- validate.js
+|   |   `-- metadata.json
+|   `-- droids
+|       `-- lib
+|           |-- listgen.js
+|           `-- templating.js
+.
+.
+.
+</code></pre>
+
+<p>Evently</p>
+
+<p>A declarative, couchdb friendly JQuery library for writing Javascript applications
+CouchDB API (jquery.couch.js)</p>
+
+<p>The JQuery library included with CouchDB itself for use by the Futon admin console is used to interact with couchdb. Some limited documentation is available from Couchone.
+CouchApp Loader (jquery.couch.app.js)</p>
+
+<p>A utility for loading design document classes into your Javascript application
+Pathbinder (jquery.pathbinder.js)</p>
+
+<p>A tiny framework for triggering events based on paths in URL hash.
+Mustache</p>
+
+<p>A simple template framework</p>
+
+<h2>Egy widget anatómiája</h2>
+
+<p>{widget-name}
+    |-- {event-name}.js
+    |-- {event-name}
+    |   |-- after.js
+    |   |-- data.js
+    |   |-- mustache.html
+    |   <code>-- selectors.json
+    |-- {event-name}
+        |-- after.js
+        |-- mustache.html
+</code>-- selectors
+            <code>-- form
+</code>-- submit.js</p>
+
+<p>auth
+|-- _init.js
+|-- doLogin.js
+|-- doLogout.js
+|-- loggedIn
+|   |-- after.js
+|   |-- data.js
+|   |-- mustache.html
+|   <code>-- selectors.json
+|-- loggedOut
+|   |-- mustache.html
+|</code>-- selectors.json
+<code>-- loginForm
+    |-- after.js
+    |-- mustache.html
+</code>-- selectors
+        <code>-- form
+</code>-- submit.js</p>
+
+<p>items/
+<code>-- _changes
+    |-- data.js
+    |-- mustache.html
+</code>-- query.json</p>
+
+<h2>Widget példák</h2>
+
+<h2>Összefoglaló a widget-ek struktúrájáról és használatáról</h2>
+
+<p><!--
+TODO: Témát tovább kifejteni részletesen!</p>
+
+<ul>
+<li><p>Widgetek elhelyezése és betöltése</p>
+
+<ul>
+<li>evently</li>
+<li>vendor/evently</li>
+</ul></li>
+<li><p>Öröklődés a widget-ek között
+--></p></li>
+</ul>
 			</div>
 
 		<!-- content-wrap ends here -->
