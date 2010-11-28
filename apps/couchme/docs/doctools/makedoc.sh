@@ -12,6 +12,7 @@ export downloads=couchme/_design/$target/_attachments/downloads
 ./md2html.sh install
 ./md2html.sh intro
 ./md2html.sh lists
+./md2html.sh mustache
 ./md2html.sh resources
 ./md2html.sh shows
 ./md2html.sh view_snippets

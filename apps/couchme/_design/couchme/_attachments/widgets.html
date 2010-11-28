@@ -378,11 +378,6 @@ következő JavaScript könyvtárakat találjuk:</p>
 Az Evently nevű, CouchDB-hez hangolt, deklaratív jQuery könyvtár,
 amivel eseménykezelést, Ajax hívásokat, és sablonokat tudunk kezelni.
 Ez képezi az általunk készítendő aktív megjelenítő komponensek bázisát.</p></li>
-<li><p><strong>jquery.couch.js</strong> <br />
-A CouchDB API-t megvalósító, adatbáziskezelést biztosító függvények.
-Ez nem feltétlenül kerül ebben a directoryban elhelyezésre.
-A CouchDB saját példányt biztosít a rajta futó alkalmazások számára, melynek
-elérési útja: "/_utils/script/jquery.couch.js".</p></li>
 <li><p><strong>jquery.couch.app.js</strong> <br />
 CouchApp betöltő program, ami ahhoz szükséges, hogy a kliens oldalon futó
 JavaScript alkalmazásunk elérhesse a design dokumentumban tárolt
@@ -395,11 +390,93 @@ Mustache nevű, egyszerű template keretrendszer, ami a sablonokban használt
 bajuszra emlékeztető <strong>{</strong> és <strong>}</strong> karakterekről kapta nevét.</p></li>
 </ul>
 
+<p>Fontos megemlítenünk még két könyvtárat.
+Ezek közvetlenül a CouchDB server hatásköre alá tartoznak, és nem szükséges
+belőlük adatbázisonként, vagy akár design dokumentumonként külön példányt
+tárolnunk:</p>
+
+<ul>
+<li><p><strong>/_utils/script/jquery.couch.js</strong> <br />
+A CouchDB API-t megvalósító, adatbáziskezelést biztosító függvények.
+Ha adatbáziskezelő műeleteket akarunk végezni és nem szeretnénk bajlódni
+a REST API implementálásával, akkor erre mindenképpen szükségünk lesz.</p></li>
+<li><p><strong>/_utils/script/couch.js</strong> <br />
+Ez a jQuery plugin egyébként egy még alapvetőbb JavaScript osztály kiterjesztése,
+melyet <strong>couch.js</strong>-nek hívnak, és XMLHttpRequest-re épülő interfészt
+valósít meg a CouchDB server és a kliens oldal között.
+Tulajdonképpen a <strong>jquery.couch.js</strong> ennek az osztálynak a kiterjesztése.
+Közvetlenül nem hívjuk, csak a <strong>jquery.couch.js</strong>-en keresztül.</p></li>
+</ul>
+
+<h2>Kliens oldali alkalmazás futtatása</h2>
+
+<p>Mindenekelőtt vizsgáljuk meg, hogyan kerülnek a server oldalon tárolt aktív
+komponenseink, továbbá a beépített könyvtárak a kliensre, amikor az oldalt
+a böngészőbe betöltjük!</p>
+
+<p>Az előkészületeket, a <strong>$.couch.app( appFun, opts )</strong> függvény hívásával
+végezhetjük el. Ez tulajdonképpen egy olyan jQuery plugin, ami a widget-ek
+futtatási környezetének beállítására szolgál.</p>
+
+<p>Az <strong>opts</strong> paraméter-rel adhatjuk meg a plugin konfigurációs paramétereit.
+Megadása nem kötelező:</p>
+
+<pre><code>opts.urlPrefix  // URL prefix, pl.: http://localhost:5984
+opts.db         // db-name, default: /{widgets}/_design/widgets/index.html
+opts.design     // design document, default: /widgets/_design/{widgets}/index.html
+</code></pre>
+
+<p>Használatakor a paraméterként átadott <strong>appFun</strong> függvény meghívódik,
+amikor az oldal betöltődött és készen áll a működésre. Ekkor hívási paraméterként
+kap egy <strong>app</strong> nevű objektumot, amely a megfelelő adatbázis kapcsolatot
+hivatott biztosítani, és a CouchApp helper műveletekhez biztosít hozzáférést.</p>
+
+<p>Ebben a függvényben kell elhelyeznünk azt a kódot, ami a widget-einket elhelyezi
+az oldalon.
+Az <strong>app</strong> paramétert az oldalon elhelyezni kívánt widget-eknek is át kell
+adnunk az inicializáláskor, mert nekik is szükségük lehet a helper műveletekre és
+az adatbázis kapcsolatot nyújtó műveletekre, pl.: egy combo box adattal történő
+feltöltésekor.</p>
+
+<p>Egy tipikus oldal és az <strong>appFunc</strong> paraméterként átadott függvény
+a következőképpen néz ki:</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;mouseMe widget&lt;/title&gt;
+        &lt;link rel="stylesheet" href="style/main.css" type="text/css"&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+
+        &lt;h1&gt;mouseMe widget&lt;/h1&gt;
+
+        &lt;div id="mouseMe"&gt;Move your mouse over me!&lt;/div&gt;
+
+    &lt;/body&gt;
+    &lt;script src="vendor/couchapp/loader.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" charset="utf-8"&gt;
+        $.couch.app( function( app )
+        {
+            $("#mouseMe").evently( "mouseMe", app );
+        });
+    &lt;/script&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>A fenti példában az oldal tartalmaz egy <strong>mouseMe</strong> azonosítójú
+helyfoglaló <strong>div</strong> tag-et, melyet  amelyhez hozzákapcsoljuk 
+a widgetünket.</p>
+
+<p>Ettől kezdve a widget reagálni fog a benne definiált eseményekre.</p>
+
 <h2>Egy widget anatómiája</h2>
+
+<h3>Hol helyezzük el a widget-ek kódját?</h3>
 
 <p>Minden egyes widget külön directory-ban helyezkedik el.
 A widget-ek két helyen fordulhatnak elő: a design dokumentumban lévő evently folderben
-és a vendor folder alatt. Ezen utóbbiban vendoronként lehet egy evently folder,
+és a vendor folder alatt. Ezen utóbbiban vendor-onként lehet egy evently folder,
 amiben a betöltő program megtalálja a widgeteket.</p>
 
 <p>Vagyis a keresési útvonalak a betöltéskor:</p>
@@ -413,78 +490,566 @@ amiben a betöltő program megtalálja a widgeteket.</p>
 
 <ul>
 <li><p>Az eseményeket, amelyekre reagál.</p></li>
-<li><p>A műveleteket, amelyeket az események kiváltásakor végrehajt.</p></li>
+<li><p>A műveleteket (Ajax hívás, adatok tárolása, stb.),
+amelyeket az események kiváltásakor végrehajt.</p></li>
 <li><p>A widget egyes állapotaihoz tartozó megjelenítést.</p></li>
 </ul>
 
 <p>A CouchApp lehetővé teszi számunkra, hogy egy konvencionális folder struktúrába
-helyezzük forráskódunkat, melynek logikája a következő:</p>
+helyezzük forráskódunkat.
+A meghatározott nevű JavaScript, text és HTML file-okat helyezhetünk el.
+Az egyes foldereknek és file-oknak meghatározott szerepe van, és meglehetősen nagy
+rugalmasságot biztosít számunkra, hogy a megfelelő komplexitású összeállítást
+válasszuk, ami optimálisan illeszkedik a widget feladatának ellátásához.</p>
+
+<p>Az igazság az, hogy a konfigurálhatóságnak kicsit túlságosan nagy is
+a szabadságfoka, ezért első nekifutásra nem mindig könnyű áttekinteni, hogy
+hogyan is működik a komponens.</p>
+
+<p>Hogy megkönnyítsük az ismerkedési folyamatot, némi önmérsékletet fogunk tanúsítani,
+és a lehetséges kombinációknak csak egy szűkített részhalmazát fogjuk tárgyalni.
+Ez nem szűkíti a lehetőségeinket, ugyanakkor talán hozzásegít ahhoz, hogy mások
+számára olvashatóbb, közérthetőbb alkalmazásokat készítsünk.</p>
+
+<h3>Események és állapotok</h3>
+
+<p>A legegyszerűbb eset, amikor a widget csak eseményekre reagál, és az ezeket kezelő
+funkciókat közvetlenül a widget-et reprezentáló folder alá helyezzük <strong>.js</strong>
+kiterjesztéssel.</p>
 
 <pre><code>{widget-name}
-    `-- {event-name}
-            |-- {template-name}.js
-            `-- {activity-name}.js
+    |-- {event_1-name}.js
+    |-- {event_2-name}.js
+    .
+    .
+    .
+    `-- {event_n-name}.js
+</code></pre>
 
+<p>Az esemény nevek szabványos jQuery események (pl.: click), melyeket valamilyen
+felhasználói integakcióval (pl. kattintás) aktiválunk,
+vagy virtuális esemény-nevek lehetnek, melyeket trigger-elhetünk.</p>
 
+<p>Egy ilyen, nagyon egyszerű widget struktúrája látható az alábbi ábrán:</p>
 
-{widget-name}
+<pre><code>mouseMe/
+`-- mouseenter.js
+</code></pre>
+
+<p>A mouseenter.js file tartalma a következő:</p>
+
+<pre><code>function(e)
+{
+    alert( "You moved the mouse over me." );
+}
+</code></pre>
+
+<p>Léteznek speciális nevű események, mint pl.: az <strong>_init</strong> és a <strong>_changes</strong>.
+Az <strong>_init</strong> automatikusan meghívódik a widget létrehozását követően, de
+trigger-elhetjük is.</p>
+
+<p>A widget-ünket felfoghatjuk állapotgépként is.
+Az egyes események egy-egy állapotot reprezentálnak, melyekbe azok aktiválásakor
+kerül a komponens. Az <strong>_init</strong> esemény felfogható annak az eseménynek,
+ami a kezdő állapotba helyezi a komponensünket.</p>
+
+<p>A következő widget két eseményt kezel, ill. két "állapottal" bír, melyekbe
+akkor kerül, ha az eseményeket aktiválják. Értelemszerűen ebből az <strong>_init</strong> az,
+amibe létrehozás után automatikusan beáll.</p>
+
+<p>Ha rákattintanak, akkor pedig "átmegy" a <strong>click</strong> állapotba.</p>
+
+<pre><code>helloworld/
+|-- click
+|   `-- mustache.html
+`-- _init
+    `-- mustache.html
+</code></pre>
+
+<p>Az ábrán látható, hogy itt az eseményekhez (állapotokhoz) külön folderek tartoznak,
+és mindkét folderben található egy <em>_mustache.html</em> nevű HTML template file.</p>
+
+<p>A mustache template használatát a
+<a href="mustache.html">"HTML sablonok készítése mustache-sal"</a> című fejezet ismerteti.</p>
+
+<p>Amikor egy widget bekerül egy állapotba, akkor az adott állapothoz tartozó
+megjelenését a kiváltott eseményhez tartozó mustache.html template fogja meghatározni.
+A fenti példában szereplő két template a következőképpen néz ki:</p>
+
+<p>_init/mustache:</p>
+
+<pre><code>&lt;h3&gt;Hello World!&lt;/h3&gt;
+</code></pre>
+
+<p>click/mustache:</p>
+
+<pre><code>&lt;h2&gt;What a wonderful World!&lt;/h2&gt;
+</code></pre>
+
+<p>Nem túl nehéz kitalálni, hogy az alapállapotban a <em>"Hello World!"</em> fog megjelenni,
+majd, miután rákattintottunk ez átvált a <em>What a wonderful World!</em> feliratra.</p>
+
+<p>Egy widget lehetséges struktúrájának általánosabb leírását szemlélteti a következő ábra:</p>
+
+<pre><code>{widget-name}
     |-- _init.js
     |-- _changes.js
     |-- {event-name}.js
-    |-- {event-name}
-    |   |-- async.js
-    |   |-- before.js ???
-    |   |-- after.js
-    |   |-- query.js
-    |   |-- data.js
-    |   |-- all.html
-    |   |-- mustache.html
-    |   |-- path.txt
-    |   |-- partials
-    |   |   `-- *.html
-    |   `-- selectors.json
+    `-- {event-name}
+        |-- async.js
+        |-- after.js
+        |-- before.js
+        |-- data.js
+        |-- mustache.html
+        |-- path.txt
+        |-- partials
+        |   `-- *.html
+        |-- query.js
+        `-- selectors.json
         `-- selectors
             |-- [name=something]
             |   |-- _init
             |   `-- keyup
             `-- form
                 `-- submit.js
-
-
-
-
-
-auth
-|-- _init.js
-|-- doLogin.js
-|-- doLogout.js
-|-- loggedIn
-|   |-- after.js
-|   |-- data.js
-|   |-- mustache.html
-|   `-- selectors.json
-|-- loggedOut
-|   |-- mustache.html
-|   `-- selectors.json
-`-- loginForm
-    |-- after.js
-    |-- mustache.html
-    `-- selectors
-        `-- form
-            `-- submit.js
-
-
-
-items/
-`-- _changes
-    |-- data.js
-    |-- mustache.html
-    `-- query.json
 </code></pre>
 
-<h2>Widget példák</h2>
+<p>Az ábrán látszik, hogy egy-egy esemény alatt számos további forrásfile
+helyezhető el, ezen felül tartozhat az eseményhez egy <strong>selectors</strong> elem.</p>
 
-<h2>Összefoglaló a widget-ek struktúrájáról és használatáról</h2>
+<p>Ahogy azt említettük, ezek az esemény alapján elnevezett folderek tulajdonképpen
+a widget állapotait reprezentálják, amelybe az adott nevű esemény(ek)  bebillentik.</p>
+
+<p>Ha ebből a nézőpontból vizsgáljuk a kérdést, akkor kijelenthetjük, hogy az állapotok
+viselkedésének finomhangolását az állapotot leíró folderben lévő file-pk végzik el.</p>
+
+<p>Tekintsük át, hogy mik lehetnek egy ilyen állapot-leíró folderben:</p>
+
+<ul>
+<li><p><strong>selectors.json</strong>, vagy <strong>selectors</strong> folder <br />
+Azokat az eseményeket határozza meg, amelyekre az adott állapotban lévő
+widget reagál. Itt helyezzük el azokat a függvényeket, amelyek az egyes
+események kiváltásakor a widget válasz reakcióját prgoramozzák.</p>
+
+<p>Az MVC Controller-ének feleltethető meg.
+A selector-okat a soron következő fejezetben részletesebben tárgyaljuk.</p></li>
+<li><p><strong>mustache.html</strong> <br />
+Az adott állapothoz tartozó megjelenítő sablon (View, az MVC filozófia szerint).</p></li>
+<li><p><strong>partials</strong> <br />
+A <strong>mustache.html</strong> beágyazott HTML részeket is megjeleíthet. Ezeket lehet
+ebben a folderben elhelyezni. Munstache szintakszis szerint leírt HTML oldalak.
+A mustache lehetővé teszi rekurzív módon a beágyazást, vagyis a partials-ban
+elhelyezett template-ek további template-eket ágyazhatnak be magukba.</p></li>
+<li><p><strong>data.js</strong> <br />
+A widget-nek küldött adatok feldogozását végzi.
+Az MVC filozófia szerint a modell-nek feleltethető meg.
+Visszatérőértékként továbbítja a JSON struktúrába rendezett adatokat
+a mustache.html template-hez, ami beágyazza az adatokat a sablonba.</p>
+
+<p>A file egyetlen függvényt tartalmaz, ami paraméterként a kiváltó eseményt és
+az átadott adatokat kapja meg.</p></li>
+<li><p><strong>before.js</strong> <br />
+Amikor az esemény aktiválásra kerül, először ez a függvény hívódik meg.
+Ezt követi csak a <strong>data.js</strong> hívása, ami után a sablon megjeleítése és végül
+az <strong>after.js</strong> végrehajtása következik.</p>
+
+<p>A file egyetlen függvényt tartalmaz, ami paraméterként a kiváltó eseményt
+kapja meg.</p></li>
+<li><p><strong>after.js</strong> <br />
+Az esemény aktiválását követő utolsó, befejező lépés.
+A file egyetlen függvényt tartalmaz, ami paraméterként a kiváltó eseményt
+kapja meg.</p></li>
+<li><p><strong>async.js</strong>
+A <strong>before</strong>, <strong>data</strong> és <strong>after</strong> végrehajtása szinkron módon történik.
+Ez tökéletesen megfelel akkor, ha az eseményt triggerelő objektum átadja
+a kezelendő és esetleg a mustache.html-lel megjelenítendő adatokat, vagy
+azok esetleg közvetlenül a <strong>before</strong> funkcióban állíthatók elő.</p>
+
+<p>Gyakran szükség van azonban aszinkron lefutásra. Ez akkor fordul elő, ha
+például az adatbázisból szeretnénk adatokat lekérni, majd azzal feltölteni
+a megjelenítő sablont.</p>
+
+<p>Ekkor az <strong>async</strong> műveletbe helyezzünk el egy Ajax hívást, ami a sikeres
+végrehajtást követően, "visszahívja" a <strong>data</strong> függvényt a servertől
+kapott adatokkal. Ekkor a sablon a frissen kapott adatokkal fog megjelenni.</p></li>
+<li><p><strong>query.js</strong> <br />
+Lásd. az "Eseményekhez tartozó query kifejezések definiálása" c. fejezetben.</p></li>
+<li><p><strong>path.txt</strong> <br />
+Lásd.: "Oldalon belüli path kifejezések" c. fejezetet.</p></li>
+</ul>
+
+<h3>Szinkron lefutású állapotváltás</h3>
+
+<p>Adatok átmeneti tárolására, átadására, sablonba ágyazására mutat példát
+a <strong>widgetEventFlowDemo</strong> komponens:</p>
+
+<pre><code>widgetEventFlowDemo/
+`-- _init
+    |-- after.js
+    |-- before.js
+    |-- data.js
+    `-- mustache.html
+</code></pre>
+
+<p>Az egyetlen esemény a widget inicializálása. Az állapotátmenet során
+végrehajtott adatkezelési műveletek szinkron módon hajtódnak végre.</p>
+
+<p>Elsőként a before.js hívódik meg:</p>
+
+<pre><code>function(e)
+{
+    alert('_init.before() : initialize the app data (planets) to display.');
+
+    $$(this).title = "The planets of the solar system:";
+    $$(this).planets = [
+        { "name" : "Mercury" },
+        { "name" : "Venus" },
+        { "name" : "Earth" },
+        { "name" : "Mars" },
+        { "name" : "Jupiter" },
+        { "name" : "Saturn" },
+        { "name" : "Neptune" },
+        { "name" : "Uranus" },
+        { "name" : "Pluto" }
+    ];
+}
+</code></pre>
+
+<p>A <strong>$$()</strong> függvény segítségével rendelhetünk hozzá lokális változókat a widgethez.
+Esetünkben egy string-et, és egy objektum listát.</p>
+
+<p>Az alert() függvény jelzi, amikor a funkció aktiválódik. A <strong>before</strong> után a
+<strong>data</strong> hívódik meg:</p>
+
+<pre><code>function( e, data )
+{
+    alert('_init.data() returns to template with data stored in app.');
+    return {
+        "title" : $$(this).title,
+        "planets" : $$(this).planets
+    };
+}
+</code></pre>
+
+<p>Ez szintén jelzi a meghívódását az alert-tel, majd a widget-ben eltárol adatokat
+behelyezi egy olyan struktúrába, amiből a megjelenítő kényelmesen
+beillesztheti a sablonba a változók értékeit.</p>
+
+<p>A <strong>mustache.html</strong> sablon a következőképpen fest:</p>
+
+<pre><code>&lt;h1&gt;{{title}}&lt;/h1&gt;
+    &lt;ul&gt;
+    {{#planets}}
+        &lt;li&gt;{{name}}&lt;/li&gt;
+    {{/planets}}
+    &lt;/ul&gt;
+</code></pre>
+
+<p>Ez először kihelyezi a <strong>{{title}}</strong>-t, majd a planets tömbőn végig iterál.
+Az iterációt a <strong>{{#planets}} ... {{/planets}}</strong> blokk képviseli.
+A közrefogott szakasz annyiszor fog ismétlődni, ahány eleme van a listának, és
+minden egyes elemre ki fog fejtődni. Ebben a blokkban a lista elemeiben lévő
+mezőkre hivatkozhatunk, ami esetünkben egyetlen mezőt, a <strong>{{name}}</strong>-et jelenti.</p>
+
+<p>Végül az <strong>after</strong> is aktiválásra kerül:</p>
+
+<pre><code>function(e)
+{
+    alert('_init.after() called after rendering the template filled with app data.');
+}
+</code></pre>
+
+<p>Aminek nincs más feladata, mint jelezni, hogy a végrehajtás befejeződött.</p>
+
+<p>A különböző állapotváltások saját <strong>before / data / after</strong> funkciókkal rendelkeznek.
+Egy adott állapotváltás vagy szinkron, vagy aszinkron módon zajlik.</p>
+
+<h3>Aszinkron lefutású állapotváltás</h3>
+
+<p>Az aszinkron állapotváltás szemléltetésére nézzük meg a <strong>countryCombo_async</strong>
+widget működését:</p>
+
+<pre><code>countryCombo_async/
+`-- _init
+    |-- async.js
+    |-- data.js
+    `-- mustache.html
+</code></pre>
+
+<p>A template lényegében egy <strong>options</strong> listát vár, amiből a <strong>value / key</strong> értékekkel
+fel tudja tölteni az alábbi struktúrát:</p>
+
+<pre><code>&lt;select&gt;
+    {{#options}}
+        &lt;option value="{{value}}"&gt;{{key}}&lt;/option&gt;
+    {{/options}}
+&lt;/select&gt;
+</code></pre>
+
+<p>Ehhez először is szükségünk van egy eredménylistára, amit az adatbázisból tudunk
+lekérni egy view segítségével.</p>
+
+<p>Ha az adatbázisba feltöltöttük a countries.json állományt, akkor az alábbi formátumú
+dokumentumok állnak rendelkezésre az országokra vonatkozóan:</p>
+
+<pre><code>...
+{ "_id" : "AGO", "type" : "country", "name" : "Angola" },
+{ "_id" : "AIA", "type" : "country", "name" : "Anguilla" },
+{ "_id" : "ALA", "type" : "country", "name" : "Åland Islands" },
+...
+</code></pre>
+
+<p>A <strong>countries</strong> view <strong>map()</strong> függvénye a következőképpen néz ki:</p>
+
+<pre><code>function(doc) {
+  if (doc.type &amp;&amp; doc.type == 'country') {
+    emit( doc.name, doc._id );
+  }
+};
+</code></pre>
+
+<p>Ha próbaképpen lekérjük a view-t egy böngészővel,
+akkor az alábbi listát kapjuk eredményül:</p>
+
+<pre><code>{"total_rows":246,"offset":0,"rows":[
+    {"id":"AFG","key":"Afghanistan","value":"AFG"},
+    {"id":"ALA","key":"\u00c5land Islands","value":"ALA"},
+    {"id":"ALB","key":"Albania","value":"ALB"},
+    {"id":"DZA","key":"Algeria","value":"DZA"},
+
+    ...
+
+    {"id":"ESH","key":"Western Sahara","value":"ESH"},
+    {"id":"YEM","key":"Yemen","value":"YEM"},
+    {"id":"ZMB","key":"Zambia","value":"ZMB"},
+    {"id":"ZWE","key":"Zimbabwe","value":"ZWE"}
+]
+</code></pre>
+
+<p>Az <strong>async.js</strong> tartalma ami az imént említett view-t meg fogja hívni, és
+az aszinkron módon visszaadott eredményt tovább fogja adni a <strong>data</strong>
+függvénynek, a következőképpen néz ki:</p>
+
+<pre><code>function( callback )
+{
+    var app = $$(this).app;
+
+    app.view(
+        "countries",
+        {
+            success : function( results )
+            {
+                callback( results );
+            }
+        }
+    );
+}
+</code></pre>
+
+<p>A függvény az <strong>app</strong> objektum segítségével lekéri a "countries" azonosítójú
+view eredményét, majd az eredménylistával meghívja az argumentumként kapott
+<strong>callback</strong> nevű függvényt, ami nem más mint a <strong>data</strong> függvény:</p>
+
+<pre><code>function( viewResults )
+{
+    return { options : viewResults.rows };
+}
+</code></pre>
+
+<p>A <strong>data</strong> egyszerűen kiveszi az eredménylistából a <strong>rows</strong> nevű listát, és
+átadja a sablonnak <strong>options</strong> néven.</p>
+
+<p>A sablon végighalad az <strong>options</strong> elemein, kiveszi a <strong>key / value</strong> párokat,
+és beágyazza őket az <strong>option</strong> elemekbe:</p>
+
+<pre><code>&lt;span class="countryCombo"&gt;
+    &lt;select name="country" id="country" class="countryCombo" tabindex="8" &gt;
+        {{#options}}
+            &lt;option value="{{value}}"&gt;{{key}}&lt;/option&gt;
+        {{/options}}
+    &lt;/select&gt;
+&lt;/span&gt;
+</code></pre>
+
+<h3>Selector-ok használata</h3>
+
+<p>Ebben az alfejezetben azt vizsgáljuk meg közelebbről, hogy lehet az egyes
+állapotokhoz hozzárendelni olyan eseményeket, amelyek egy másik állapotba viszik
+át a komponensünket.</p>
+
+<p>A mustache.html template-ben ehelyezhetünk olyan HTML elemeket, amelyek felhasználói
+interakciókra képesek reagálni. Ilyen elemek például a form-okon belüli gombok,
+vagy a hiper-linkek. De egyszerű alap események is detektálhatóak, mintpéldául
+az egér mozgatása, vagy a kattintás egy objektumon.</p>
+
+<p>A selector-ok szolgálnak arra, hogy a widget egy meghatározott állapotában őt
+érő eseményekre hogyan reagáljon.</p>
+
+<p>Példaképpen a <strong>wizard</strong> komponenst fogjuk ennek szemléltetésére bemutatni:</p>
+
+<pre><code>wizard/
+|-- decline
+|   `-- mustache.html
+|-- finish
+|   |-- data.js
+|   `-- mustache.html
+|-- _init
+|   |-- data.js
+|   |-- mustache.html
+|   `-- selectors
+|       `-- input.button
+|           `-- click.js
+|-- step2
+|   |-- data.js
+|   |-- mustache.html
+|   `-- selectors
+|       |-- input.button
+|       |   `-- click.js
+|       |-- input.field[name=login]
+|       |   `-- change.js
+|       `-- input.field[name=password]
+|           `-- change.js
+`-- step3
+    |-- data.js
+    |-- mustache.html
+    `-- selectors
+        `-- input.button
+            `-- click.js
+</code></pre>
+
+<p>A wizard az <strong>_init</strong> állapottal kezdi a működését, majd a <strong>step2</strong> és <strong>step3</strong>
+következik, befejezésképpen pedig a <strong>finish</strong> állapot következik.</p>
+
+<p>Mivel most csak a selector-okra koncentrálunk, válasszuk ki a <strong>step2</strong>-t,
+melynek sablonja így néz ki:</p>
+
+<pre><code>&lt;h1&gt;Step 2&lt;/h1&gt;
+&lt;div class="wizard-panel"&gt;
+
+    &lt;div  class="form"&gt;
+        &lt;fieldset&gt;
+            &lt;legend&gt;&amp;nbsp;Login parameters&amp;nbsp;&lt;/legend&gt;
+
+            &lt;p&gt;
+                &lt;label for="userName" class="left"&gt;Username:&lt;/label&gt;
+                &lt;input type="text"
+                       name="userName"
+                       id="userName"
+                       class="field"
+                       value="{{#widgetPayload}}{{userName}}{{/widgetPayload}}"
+                       tabindex="1" /&gt;
+            &lt;/p&gt;
+
+            &lt;p&gt;
+                &lt;label for="password" class="left"&gt;Password:&lt;/label&gt;
+                &lt;input type="password"
+                       name="password"
+                       id="password"
+                       class="field"
+                       value="{{#widgetPayload}}{{password}}{{/widgetPayload}}"
+                       tabindex="2" /&gt;
+            &lt;/p&gt;
+
+            &lt;p&gt;
+                &lt;label for="password_again" class="left"&gt;Password (again):&lt;/label&gt;
+                &lt;input type="password"
+                       name="password_again"
+                       id="password_again"
+                       class="field"
+                       value="{{#widgetPayload}}{{password}}{{/widgetPayload}}"
+                       tabindex="3" /&gt;
+            &lt;/p&gt;
+
+        &lt;/fieldset&gt;
+        &lt;p&gt;
+            &lt;input type="button" name="button" id="back" class="button" value="Back" tabindex="4" /&gt;
+            &lt;input type="button" name="button" id="next" class="button" value="Next" tabindex="5" /&gt;
+        &lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>Az adatok ennél a widget-nél nem a <strong>$$()</strong> függvény segítségével tárolódnak.
+Az <strong>_init</strong> állapotban létrehozásra kerül egy <strong>widgetPayload</strong> objektum, amit
+az egyes állapotok közötti átmeneteket kiváltó triggerek adják át
+paraméterként egymásnak.</p>
+
+<p>A wizard egyes lapjaihoz tartozó form-ok beillesztik az aktuális értéket a megfelelő
+mezőbe, ahogy az a fenti sablonon is tanulmányozható. Az állapotátmenetet kiváltó
+eseményeket kezelő függvények pedig kiveszik a mezőkből az aktuális értékeket,
+és berakják a <strong>widgetPayload</strong> objektumba, majd továbbítják azt az új állapotnak.</p>
+
+<p>Figyeljük meg, hogy a sablonban van két beviteli mező (input.field) mező,
+és két nyomógomb (input.button). Mindegyik elem azonosítható <em>name</em>,
+<em>value</em>, vagy <em>id</em> attributumával.
+A <strong>step2</strong>-höz tartozó selector ezekre az elemekre hivatkozik.</p>
+
+<pre><code>|-- step2
+   `-- selectors
+       |-- input.button
+       |   `-- click.js
+       |-- input.field[name=login]
+       |   `-- change.js
+       `-- input.field[name=password]
+           `-- change.js
+</code></pre>
+
+<p>Ha valaki rákattint egy <em>input.button</em> selector-ral azonosítható elemre, akkor
+az ahhoz rendelt <strong>click.js</strong> file-ban definiált függvény hívódik meg:</p>
+
+<pre><code>function(e)
+{
+    var widgetPayload = e.data.args[1];
+    var widget = $(this);
+    var app = $$(widget).app;
+
+    widgetPayload.userName = $('#userName').attr('value');
+    widgetPayload.password = $('#password').attr('value');
+
+    if( widget.attr( 'value' ) == 'Back' )
+    {
+        widget.trigger( '_init', widgetPayload );
+    }
+    else
+    {
+        widget.trigger( 'step3', widgetPayload );
+    }
+}
+</code></pre>
+
+<p>a függvény behelyezi a <strong>userName</strong> és <strong>password</strong> mezők atuális értékét a
+<strong>widgetPayload</strong> objektumba, majd meghatározza, hogy melyik gombra kattintott
+a felhasználó. Ez az érték <em>Back</em>, vagy <em>Next</em> lehet. Ettől függően a widget
+megtriggereli saját magát azzal az eseménnyel, amibe át kell váltania:
+a <em>Back</em> esetében az <strong>_init</strong>-be, a <em>Next</em> esetében pedig a <strong>step3</strong>-ba, és
+egyúttal paraméterként átadja a <strong>widgetPayload</strong> objektumot az aktualizált
+adattartalommal.</p>
+
+<p>TODO: Mintákat írni további selector-okra (form, anchor, stb.)</p>
+
+<p>TODO: Adatbáziskezelő műveletekre példákat betenni.</p>
+
+<p>Addig is, bemelegítő olvasmámy, hogyan lehet adatbázis műveleteket végezni, ha
+egy esemény kiváltását követően valamit írni, olvasni vagy törölni akarunk:</p>
+
+<p><a href="http://www.couch.io/page/library-jquery-couch-js-database">Bevezetés az app.db() használatába</a></p>
+
+<h3>Widget-ek összeláncolása</h3>
+
+<p>A widget-ek nem csak saját maguknak küldhetnek trigger eseményeket, hanem egymásnak is.
+Ez az egyik legfontosabb képesség, ami lehetővé teszi, hogy komplex megoldásokat
+egyszerű elemekből építsünk fel, és azokat kooperációra bírjuk, üzenetváltási
+képességgel ruházzuk fel.</p>
+
+<p>TODO: Mintát írni. <!-- http://couchapp.org/docs/_design/docs/index.html#/topic/account --></p>
+
+<h3>Eseményekhez tartozó query kifejezések definiálása</h3>
+
+<p>TODO: <!-- Leírni az eseményekhez tartozó query kifejezések definiálását. --></p>
+
+<h3>Oldalon belüli path kifejezések</h3>
+
+<p>TODO: <!-- Leírni oldalon belüli path kifejezéseket --></p>
 
 <!--
 TODO: Témát tovább kifejteni részletesen!
@@ -495,6 +1060,40 @@ TODO: Témát tovább kifejteni részletesen!
 
 b19eb87e753bdbff43365558c4ee5f70
 
+
+
+widget-ek paraméterezése
+- Ajax async/sync widget-ek, 
+- pl: combo feltöltő, URL-lel, id, class tabindex paraméterekkel.
+
+
+a62f921b9e6811853326802388fe487e
+
+
+
+
+
+8b1c314d2ccb1b8fe6825fe74603e288
+
+
+
+
+
+144d85bfe9b32ca3aba744456b9b249e
+
+
+
+Pushing to the database
+
+I still don't know how to do that. :) You can always use $.ajax.
+
+Try $$(this).app.db.saveDoc(my_doc, success_handler); 
+(see evently/profile/profileReady/selectors/form/submit.js after 
+couchapp generate).
+
+
+
+1c97465df88fd25d400a37ff48e3b3b9
 
 
 
@@ -560,6 +1159,36 @@ A: Indeed. I also had to make sure to include the flot js script after loader.js
 b19eb87e753bdbff43365558c4ee5f70
 
 
+
+
+
+81b7fae38d90103ddec0449b225b3f0c
+
+
+
+$.couch.app( appFun, opts )
+
+
+
+89fe4e78b811d6c77ec85c1db6f62b43
+
+
+
+Használat:
+A paraméterként átadott __appFun__ függvény meghívódik, amikor az oldal betöltődött
+és készen áll a működésre.
+
+A CouchApp átadja számára az __app__ objektumot, amely a megfelelő adatbázis
+kapcsolatot hivatott biztosítani, és a CouchApp helper műveletekhez biztosít hozzáférést.
+
+pl.:
+$.couch.app(function(app) {
+   app.db.view(...)
+   ...
+});
+
+Mellékhatások:
+$.couch.urlPrefix = urlPrefix;
 
 
 -->
