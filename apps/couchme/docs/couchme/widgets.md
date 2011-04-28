@@ -11,7 +11,7 @@ egy komplett rendszerré.
 
 1.  Az adatbázisban dokumentumokat tárolunk, JSON  formátumban.
 
-4.  Az adatbázist a kliens oldalról REST API-n keresztül tudunk elérni. Ezt egy
+2.  Az adatbázist a kliens oldalról REST API-n keresztül tudunk elérni. Ezt egy
     közönséges HTTP klienssel, vagy egy erre a célra kifejlesztett HTTP kliens
     könyvtárral tudjuk elvégezni. A CouchApp ezt még azzal egészíti ki, hogy
     kliens oldalon rendelkezésre bocsájt egy JavaScript könyvtárat, amivel a
@@ -938,82 +938,70 @@ TODO: <!-- Leírni oldalon belüli path kifejezéseket -->
 
 
 <!--
-TODO: Témát tovább kifejteni részletesen!
+    TODO: Témát tovább kifejteni részletesen!
+
+ 
+    # widget-ek paraméterezése
+    - Ajax async/sync widget-ek,
+    - pl: combo feltöltő, URL-lel, id, class tabindex paraméterekkel.
+    - after-rel ráállni a selected értékre
+ 
+    # Összetett widget-ek készítése
+ 
+    # widget-ek összekapcsolása triggerekkel
+
+    # Pushing to the database
+
+    I still don't know how to do that. :) You can always use $.ajax.
+
+    Try $$(this).app.db.saveDoc(my_doc, success_handler);
+    (see evently/profile/profileReady/selectors/form/submit.js after
+    couchapp generate).
+
+    # db API leírása példákkal
+    
+    # Widgetek elhelyezése és betöltése
+        * evently
+        * vendor/evently
 
 
--------------------------------------------------------------------------------
-widget-ek paraméterezése
-- Ajax async/sync widget-ek, 
-- pl: combo feltöltő, URL-lel, id, class tabindex paraméterekkel.
-- after-rel ráállni a selected értékre
--------------------------------------------------------------------------------
-Összetett widget-ek készítése
--------------------------------------------------------------------------------
-widget-ek összekapcsolása triggerekkel
--------------------------------------------------------------------------------
-Pushing to the database
-
-I still don't know how to do that. :) You can always use $.ajax.
-
-Try $$(this).app.db.saveDoc(my_doc, success_handler); 
-(see evently/profile/profileReady/selectors/form/submit.js after 
-couchapp generate).
-
-db API leírása példákkal
--------------------------------------------------------------------------------
+    # Öröklődés a widget-ek között
 
 
+    # a $(document)ready() tetszőleges példányban használható.
+    A megadás sorrendjében fognak meghívódni.
+
+    # Q & A
+
+    * Q: How can I use another jQuery library in evently functions? Even with hardcoded data: http://people.iola.dk/olau/flot/examples/basic.html
+
+    A: I would just put the code in _init.js, or _init/after.js if you wanted to run a mustache template first and then add flot.
+
+    A: Indeed. I also had to make sure to include the flot js script after loader.js.
 
 
-* Widgetek elhelyezése és betöltése
-    * evently
-    * vendor/evently
+    # API
 
--------------------------------------------------------------------------------
+    $.couch.app( appFun, opts )
 
-* Öröklődés a widget-ek között
+        opts.urlPrefix  // URL prefix: http://localhost:5984
+        opts.db         // db-name, default: /{widgets}/_design/widgets/index.html
+        opts.design     // design document, default: /widgets/_design/{widgets}/index.html
 
--------------------------------------------------------------------------------
+    Használat:
+    A paraméterként átadott __appFun__ függvény meghívódik, amikor az oldal betöltődött
+    és készen áll a működésre.
 
-a $(document)ready() tetszőleges példányban használható.
-A megadás sorrendjében fognak meghívódni.
+    A CouchApp átadja számára az __app__ objektumot, amely a megfelelő adatbázis
+    kapcsolatot hivatott biztosítani, és a CouchApp helper műveletekhez biztosít hozzáférést.
 
--------------------------------------------------------------------------------
+    pl.:
+    $.couch.app(function(app) {
+       app.db.view(...)
+       ...
+    });
 
-* Q: How can I use another jQuery library in evently functions? Even with hardcoded data: http://people.iola.dk/olau/flot/examples/basic.html
+    Mellékhatások:
+    $.couch.urlPrefix = urlPrefix;
 
-A: I would just put the code in _init.js, or _init/after.js if you wanted to run a mustache template first and then add flot.
-
-A: Indeed. I also had to make sure to include the flot js script after loader.js.
-
--------------------------------------------------------------------------------
--------------------------------------------------------------------------------
--------------------------------------------------------------------------------
--------------------------------------------------------------------------------
--------------------------------------------------------------------------------
-# API
-
-$.couch.app( appFun, opts )
-
-    opts.urlPrefix  // URL prefix: http://localhost:5984
-    opts.db         // db-name, default: /{widgets}/_design/widgets/index.html
-    opts.design     // design document, default: /widgets/_design/{widgets}/index.html
-
-Használat:
-A paraméterként átadott __appFun__ függvény meghívódik, amikor az oldal betöltődött
-és készen áll a működésre.
-
-A CouchApp átadja számára az __app__ objektumot, amely a megfelelő adatbázis
-kapcsolatot hivatott biztosítani, és a CouchApp helper műveletekhez biztosít hozzáférést.
-
-pl.:
-$.couch.app(function(app) {
-   app.db.view(...)
-   ...
-});
-
-Mellékhatások:
-$.couch.urlPrefix = urlPrefix;
-
-
--->
+ -->

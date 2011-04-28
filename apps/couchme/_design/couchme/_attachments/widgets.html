@@ -1052,146 +1052,16 @@ képességgel ruházzuk fel.</p>
 <p>TODO: <!-- Leírni oldalon belüli path kifejezéseket --></p>
 
 <!--
-TODO: Témát tovább kifejteni részletesen!
+    TODO: Témát tovább kifejteni részletesen!
 
 
 
 
+49d02913873df8f685f135a5e8d97ff4
 
-b19eb87e753bdbff43365558c4ee5f70
 
 
-
-widget-ek paraméterezése
-- Ajax async/sync widget-ek, 
-- pl: combo feltöltő, URL-lel, id, class tabindex paraméterekkel.
-
-
-a62f921b9e6811853326802388fe487e
-
-
-
-
-
-8b1c314d2ccb1b8fe6825fe74603e288
-
-
-
-
-
-144d85bfe9b32ca3aba744456b9b249e
-
-
-
-Pushing to the database
-
-I still don't know how to do that. :) You can always use $.ajax.
-
-Try $$(this).app.db.saveDoc(my_doc, success_handler); 
-(see evently/profile/profileReady/selectors/form/submit.js after 
-couchapp generate).
-
-
-
-1c97465df88fd25d400a37ff48e3b3b9
-
-
-
-
-
-086d192e22f47992be15ec0c475625ee
-
-
-
-
-b19eb87e753bdbff43365558c4ee5f70
-
-
-
-
-
-
-b6c02e808c76785e53def08e7d190beb
-
-
-
-
-b19eb87e753bdbff43365558c4ee5f70
-
-
-
-
-a $(document)ready() tetszőleges példányban használható.
-A megadás sorrendjében fognak meghívódni.
-
-
-
-
-b19eb87e753bdbff43365558c4ee5f70
-
-
-
-
-
-
-dd2180fe5b15223c28bb411402deeae9
-
-
-A: I would just put the code in _init.js, or _init/after.js if you wanted to run a mustache template first and then add flot.
-
-A: Indeed. I also had to make sure to include the flot js script after loader.js.
-
-
-
-868af544de1c3a41233750ef3f0d9bc1
-
-
-
-
-
-868af544de1c3a41233750ef3f0d9bc1
-
-
-
-
-
-
-b19eb87e753bdbff43365558c4ee5f70
-
-
-
-
-
-81b7fae38d90103ddec0449b225b3f0c
-
-
-
-$.couch.app( appFun, opts )
-
-
-
-89fe4e78b811d6c77ec85c1db6f62b43
-
-
-
-Használat:
-A paraméterként átadott __appFun__ függvény meghívódik, amikor az oldal betöltődött
-és készen áll a működésre.
-
-A CouchApp átadja számára az __app__ objektumot, amely a megfelelő adatbázis
-kapcsolatot hivatott biztosítani, és a CouchApp helper műveletekhez biztosít hozzáférést.
-
-pl.:
-$.couch.app(function(app) {
-   app.db.view(...)
-   ...
-});
-
-Mellékhatások:
-$.couch.urlPrefix = urlPrefix;
-
-
--->
+ -->
 			</div>
 
 		<!-- content-wrap ends here -->

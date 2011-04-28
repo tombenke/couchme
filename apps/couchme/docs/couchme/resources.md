@@ -26,6 +26,7 @@ Hasznos linkek
 * [Complete HTTP API Reference](http://wiki.apache.org/couchdb/Complete_HTTP_API_Reference)
 * [API Cheatsheet](http://wiki.apache.org/couchdb/API_Cheatsheet?action=show&redirect=ApiCheatSheet)
 * [HTTP status list](http://wiki.apache.org/couchdb/HTTP_status_list)
+* [eCouch - an Erlang application that provides access to CouchDb servers.](http://code.google.com/p/ecouch/)
 
 ### Dokumentum kezelés
 * [Document Update Handlers](http://wiki.apache.org/couchdb/Document_Update_Handlers)
